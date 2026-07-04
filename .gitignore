@@ -1,0 +1,8 @@
+# nothing sensitive should ever live in this repo
+.env
+.env.*
+*.log
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
