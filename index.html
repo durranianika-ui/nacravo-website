@@ -19,11 +19,11 @@
 <meta property="og:description" content="One accountable team for cleaning and maintenance in Downtown Dubai, Business Bay and DIFC. Every job documented with photos. Book on WhatsApp.">
 <meta property="og:url" content="https://www.nacravo.com/">
 <meta property="og:site_name" content="Nacravo">
-<meta property="og:image" content="https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1200&q=80">
+<meta property="og:image" content="https://nacravo-website.vercel.app/images/hero-team-1280.jpg">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Nacravo — Premium Home Cleaning & Maintenance in Dubai">
 <meta name="twitter:description" content="One accountable team for cleaning and maintenance in Dubai. Every job documented with photos.">
-<meta name="twitter:image" content="https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1200&q=80">
+<meta name="twitter:image" content="https://nacravo-website.vercel.app/images/hero-team-1280.jpg">
 <meta property="og:locale" content="en_AE">
 <!-- Geo / local SEO -->
 <meta name="geo.region" content="AE-DU">
@@ -37,10 +37,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
-<!-- Preconnect to image CDN for faster loads -->
-<link rel="preconnect" href="https://images.unsplash.com" crossorigin>
 <!-- Preload the hero image so it paints as early as possible (better LCP) -->
-<link rel="preload" as="image" href="https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&q=80&w=600" imagesrcset="https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&q=80&w=400 400w, https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&q=80&w=600 600w, https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&q=80&w=800 800w, https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&q=80&w=1200 1200w" imagesizes="(max-width:600px) 92vw,(max-width:900px) 100vw,560px" fetchpriority="high">
+<link rel="preload" as="image" href="images/hero-team-1280.jpg" imagesrcset="images/hero-team-760.jpg 760w, images/hero-team-1280.jpg 1280w" imagesizes="(max-width:600px) 92vw,(max-width:900px) 100vw,560px" fetchpriority="high">
 
 <!-- ============ Structured data (SEO: LocalBusiness) ============ -->
 <script type="application/ld+json">
@@ -49,7 +47,7 @@
   "@type": "HomeAndConstructionBusiness",
   "name": "Nacravo",
   "description": "Premium home cleaning and maintenance for Downtown Dubai, Business Bay and DIFC.",
-  "image": "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=1200&q=80",
+  "image": "https://nacravo-website.vercel.app/images/hero-team-1280.jpg",
   "url": "https://www.nacravo.com/",
   "telephone": "+971581082601",
   "email": "info@nacravo.com",
@@ -165,7 +163,7 @@ section{padding:72px 0}
 /* services */
 .svc-cols{display:grid;grid-template-columns:1fr 1fr;gap:24px}
 .svc-card{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden}
-.svc-card .svc-photo{height:190px}
+.svc-card .svc-photo{aspect-ratio:4/3}
 .svc-card .svc-photo img{width:100%;height:100%;object-fit:cover}
 .svc-card .svc-body{padding:28px}
 .svc-card h3{font-size:20px;margin-bottom:6px}
@@ -216,11 +214,11 @@ section{padding:72px 0}
 
 /* proof / results gallery */
 .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.gal-cell{position:relative;height:230px;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#EAE4D6}
+.gal-cell{position:relative;aspect-ratio:3/2;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#EAE4D6}
 .gal-cell img{width:100%;height:100%;object-fit:cover;transition:.4s}
 .gal-cell:hover img{transform:scale(1.04)}
 .gal-cell .gal-tag{position:absolute;bottom:10px;left:10px;background:rgba(46,55,43,.85);color:var(--pearl);font-size:12px;font-weight:500;font-family:'Plus Jakarta Sans';padding:5px 11px;border-radius:8px;letter-spacing:.02em}
-@media(max-width:760px){.gallery{grid-template-columns:1fr 1fr}.gal-cell{height:170px}}
+@media(max-width:760px){.gallery{grid-template-columns:1fr 1fr}.gal-cell{aspect-ratio:3/2}}
 @media(max-width:480px){.gallery{grid-template-columns:1fr}}
 
 /* faq */
@@ -346,12 +344,12 @@ footer{content-visibility:auto;contain-intrinsic-size:auto 500px}
   /* ---- IMAGE CARDS: fluid 4:3, tight margins, no clipping ---- */
   .img-card,.hero-img,.quality-img{height:auto}
   .hero-img,.quality-img{aspect-ratio:4/3}
-  .svc-card .svc-photo{height:auto;aspect-ratio:16/10}
+  .svc-card .svc-photo{height:auto;aspect-ratio:4/3}
   .quality-grid{gap:18px}
 
   /* ---- GALLERY ---- */
   .gallery{grid-template-columns:1fr;gap:14px}
-  .gal-cell{height:auto;aspect-ratio:4/3;border-radius:20px}
+  .gal-cell{height:auto;aspect-ratio:3/2;border-radius:20px}
   .gal-cell .gal-tag{bottom:8px;left:8px;font-size:11.5px;padding:4px 10px}
 
   /* ---- STEPS / TRUST (smaller pills) ---- */
@@ -421,7 +419,7 @@ footer{content-visibility:auto;contain-intrinsic-size:auto 500px}
   <div class="wrap hero-grid">
     <div>
       <span class="eyebrow">Cleaning &amp; maintenance · Downtown · Business Bay · DIFC</span>
-      <h1><span class="d-only">Book once. Never think about it again.</span><span class="m-only">Cleaning and maintenance you don't have to chase.</span></h1>
+      <h1>The Difference You'll Notice. The Service You'll Remember.</h1>
       <p class="lead"><span class="d-only">Premium home cleaning and maintenance for Dubai's professional core. One accountable team — vetted, trained, and dispatched by us. Every job documented with before-and-after photos.</span><span class="m-only">Book once. Our vetted team arrives, completes the job, and shares proof with before-and-after photos.</span></p>
       <div class="hero-cta">
         <!-- Main CTA is WhatsApp focused -->
@@ -440,8 +438,7 @@ footer{content-visibility:auto;contain-intrinsic-size:auto 500px}
     <div>
       <div class="img-card hero-img">
         <!-- Hero: professional cleaner in a bright Dubai apartment -->
-        <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=900&q=80" decoding="async" srcset="https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&q=80&w=400 400w, https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&q=80&w=600 600w, https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&q=80&w=800 800w, https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&q=80&w=1200 1200w" sizes="(max-width:600px) 92vw,(max-width:900px) 100vw,560px"
-             alt="Professional Nacravo cleaner working in a bright modern Dubai apartment" width="900" height="840" fetchpriority="high">
+        <img src="images/hero-team-1280.jpg" srcset="images/hero-team-760.jpg 760w, images/hero-team-1280.jpg 1280w" sizes="(max-width:600px) 92vw,(max-width:900px) 100vw,560px" alt="The Nacravo team — vetted cleaning and maintenance professionals in Dubai" width="1280" height="960" fetchpriority="high" decoding="async">
       </div>
     </div>
   </div>
@@ -496,8 +493,7 @@ footer{content-visibility:auto;contain-intrinsic-size:auto 500px}
       <div class="svc-card">
         <div class="svc-photo">
           <!-- Cleaning service image -->
-          <img src="https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&w=800&q=80" decoding="async" srcset="https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&q=80&w=400 400w, https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&q=80&w=600 600w, https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&q=80&w=800 800w, https://images.unsplash.com/photo-1600585152220-90363fe7e115?auto=format&fit=crop&q=80&w=1200 1200w" sizes="(max-width:600px) 92vw,(max-width:760px) 100vw,540px"
-               alt="Spotless modern Dubai kitchen after a Nacravo cleaning service" width="800" height="380" loading="lazy">
+          <img src="images/svc-cleaning-1200.jpg" srcset="images/svc-cleaning-760.jpg 760w, images/svc-cleaning-1200.jpg 1200w" sizes="(max-width:600px) 92vw,(max-width:760px) 100vw,540px" alt="Nacravo cleaning team with professional equipment in Dubai" width="1200" height="960" loading="lazy" decoding="async">
         </div>
         <div class="svc-body">
           <h3>Cleaning</h3>
@@ -515,8 +511,7 @@ footer{content-visibility:auto;contain-intrinsic-size:auto 500px}
       <div class="svc-card">
         <div class="svc-photo">
           <!-- Maintenance / technician image -->
-          <img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=800&q=80" decoding="async" srcset="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=400 400w, https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=600 600w, https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=800 800w, https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&q=80&w=1200 1200w" sizes="(max-width:600px) 92vw,(max-width:760px) 100vw,540px"
-               alt="Nacravo maintenance technician servicing an air-conditioning unit" width="800" height="380" loading="lazy">
+          <img src="images/svc-maintenance-1200.jpg" srcset="images/svc-maintenance-760.jpg 760w, images/svc-maintenance-1200.jpg 1200w" sizes="(max-width:600px) 92vw,(max-width:760px) 100vw,540px" alt="Nacravo maintenance technician servicing an electrical panel" width="1200" height="960" loading="lazy" decoding="async">
         </div>
         <div class="svc-body">
           <h3>Maintenance</h3>
@@ -565,8 +560,7 @@ footer{content-visibility:auto;contain-intrinsic-size:auto 500px}
   <div class="wrap quality-grid">
     <div class="img-card quality-img">
       <!-- Team / service quality image -->
-      <img src="https://images.unsplash.com/photo-1628177142898-93e36e4e3a50?auto=format&fit=crop&w=900&q=80" decoding="async" srcset="https://images.unsplash.com/photo-1628177142898-93e36e4e3a50?auto=format&fit=crop&q=80&w=400 400w, https://images.unsplash.com/photo-1628177142898-93e36e4e3a50?auto=format&fit=crop&q=80&w=600 600w, https://images.unsplash.com/photo-1628177142898-93e36e4e3a50?auto=format&fit=crop&q=80&w=800 800w, https://images.unsplash.com/photo-1628177142898-93e36e4e3a50?auto=format&fit=crop&q=80&w=1200 1200w" sizes="(max-width:600px) 92vw,540px"
-           alt="Nacravo technician cleaning with care and attention to detail" width="900" height="720" loading="lazy">
+      <img src="images/team-quality-1280.jpg" srcset="images/team-quality-760.jpg 760w, images/team-quality-1280.jpg 1280w" sizes="(max-width:600px) 92vw,540px" alt="The uniformed Nacravo team — a trained crew you will recognise" width="1280" height="853" loading="lazy" decoding="async">
     </div>
     <div>
       <span class="eyebrow">Our team</span>
@@ -658,12 +652,12 @@ footer{content-visibility:auto;contain-intrinsic-size:auto 500px}
       <p>Every visit is documented with photos — here are the spotless spaces our team leaves behind across Downtown, Business Bay and DIFC.</p>
     </div>
     <div class="gallery">
-      <div class="gal-cell"><img src="https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=560&q=80" decoding="async" srcset="https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&q=80&w=400 400w, https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&q=80&w=600 600w, https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&q=80&w=800 800w, https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&q=80&w=1200 1200w" sizes="(max-width:480px) 92vw,(max-width:760px) 45vw,360px" alt="Spotless modern kitchen cleaned by Nacravo in Dubai" width="560" height="380" loading="lazy"><span class="gal-tag">Kitchen · deep clean</span></div>
-      <div class="gal-cell"><img src="https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=560&q=80" decoding="async" srcset="https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&q=80&w=400 400w, https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&q=80&w=600 600w, https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&q=80&w=800 800w, https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&q=80&w=1200 1200w" sizes="(max-width:480px) 92vw,(max-width:760px) 45vw,360px" alt="Sparkling clean bathroom after a Nacravo deep clean" width="560" height="380" loading="lazy"><span class="gal-tag">Bathroom · deep clean</span></div>
-      <div class="gal-cell"><img src="https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&w=560&q=80" decoding="async" srcset="https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&q=80&w=400 400w, https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&q=80&w=600 600w, https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&q=80&w=800 800w, https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&q=80&w=1200 1200w" sizes="(max-width:480px) 92vw,(max-width:760px) 45vw,360px" alt="Immaculate living room after Nacravo cleaning service" width="560" height="380" loading="lazy"><span class="gal-tag">Living room · regular clean</span></div>
-      <div class="gal-cell"><img src="https://images.unsplash.com/photo-1631049035182-249067d7618e?auto=format&fit=crop&w=560&q=80" decoding="async" srcset="https://images.unsplash.com/photo-1631049035182-249067d7618e?auto=format&fit=crop&q=80&w=400 400w, https://images.unsplash.com/photo-1631049035182-249067d7618e?auto=format&fit=crop&q=80&w=600 600w, https://images.unsplash.com/photo-1631049035182-249067d7618e?auto=format&fit=crop&q=80&w=800 800w, https://images.unsplash.com/photo-1631049035182-249067d7618e?auto=format&fit=crop&q=80&w=1200 1200w" sizes="(max-width:480px) 92vw,(max-width:760px) 45vw,360px" alt="Freshly cleaned bedroom in a Dubai apartment" width="560" height="380" loading="lazy"><span class="gal-tag">Bedroom · move-in clean</span></div>
-      <div class="gal-cell"><img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=560&q=80" decoding="async" srcset="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=400 400w, https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=600 600w, https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=800 800w, https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=1200 1200w" sizes="(max-width:480px) 92vw,(max-width:760px) 45vw,360px" alt="Tidy, cleaned lounge after Nacravo service" width="560" height="380" loading="lazy"><span class="gal-tag">Lounge · regular clean</span></div>
-      <div class="gal-cell"><img src="https://images.unsplash.com/photo-1613545325278-f24b0cae1224?auto=format&fit=crop&w=560&q=80" decoding="async" srcset="https://images.unsplash.com/photo-1613545325278-f24b0cae1224?auto=format&fit=crop&q=80&w=400 400w, https://images.unsplash.com/photo-1613545325278-f24b0cae1224?auto=format&fit=crop&q=80&w=600 600w, https://images.unsplash.com/photo-1613545325278-f24b0cae1224?auto=format&fit=crop&q=80&w=800 800w, https://images.unsplash.com/photo-1613545325278-f24b0cae1224?auto=format&fit=crop&q=80&w=1200 1200w" sizes="(max-width:480px) 92vw,(max-width:760px) 45vw,360px" alt="Bright, spotless open-plan space cleaned by Nacravo" width="560" height="380" loading="lazy"><span class="gal-tag">Open-plan · post-construction</span></div>
+      <div class="gal-cell"><img src="images/ba-bathroom-1080.jpg" srcset="images/ba-bathroom-600.jpg 600w, images/ba-bathroom-1080.jpg 1080w" sizes="(max-width:480px) 92vw,(max-width:760px) 45vw,360px" alt="Bathroom before and after a Nacravo deep clean" width="1080" height="864" loading="lazy" decoding="async"><span class="gal-tag">Bathroom · deep clean</span></div>
+      <div class="gal-cell"><img src="images/ba-sofa-1080.jpg" srcset="images/ba-sofa-600.jpg 600w, images/ba-sofa-1080.jpg 1080w" sizes="(max-width:480px) 92vw,(max-width:760px) 45vw,360px" alt="Sofa and rug before and after Nacravo upholstery cleaning" width="1080" height="720" loading="lazy" decoding="async"><span class="gal-tag">Sofa &amp; upholstery · deep clean</span></div>
+      <div class="gal-cell"><img src="images/ba-ducts-1080.jpg" srcset="images/ba-ducts-600.jpg 600w, images/ba-ducts-1080.jpg 1080w" sizes="(max-width:480px) 92vw,(max-width:760px) 45vw,360px" alt="AC duct before and after a Nacravo deep clean" width="1080" height="720" loading="lazy" decoding="async"><span class="gal-tag">AC ducts · deep clean</span></div>
+      <div class="gal-cell"><img src="images/ba-windows-1080.jpg" srcset="images/ba-windows-600.jpg 600w, images/ba-windows-1080.jpg 1080w" sizes="(max-width:480px) 92vw,(max-width:760px) 45vw,360px" alt="Windows before and after a Nacravo exterior clean" width="1080" height="720" loading="lazy" decoding="async"><span class="gal-tag">Windows · exterior clean</span></div>
+      <div class="gal-cell"><img src="images/ba-office-1080.jpg" srcset="images/ba-office-600.jpg 600w, images/ba-office-1080.jpg 1080w" sizes="(max-width:480px) 92vw,(max-width:760px) 45vw,360px" alt="Office before and after a Nacravo turnover clean" width="1080" height="720" loading="lazy" decoding="async"><span class="gal-tag">Office · turnover clean</span></div>
+      <div class="gal-cell"><img src="images/ba-living-1080.jpg" srcset="images/ba-living-600.jpg 600w, images/ba-living-1080.jpg 1080w" sizes="(max-width:480px) 92vw,(max-width:760px) 45vw,360px" alt="Living room before and after a Nacravo clean" width="1080" height="720" loading="lazy" decoding="async"><span class="gal-tag">Living room · regular clean</span></div>
     </div>
   </div>
 </section>
