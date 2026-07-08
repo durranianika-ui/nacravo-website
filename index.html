@@ -1,6 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- ============================================================
+     Nacravo Analytics — central configuration ("env" for a static site)
+     All tracking IDs live HERE, in one place. Add an ID and that
+     platform can be wired in GTM (recommended) or, if you flip
+     LOAD_PIXELS_DIRECTLY to true, loaded straight from this file.
+     Leave a value empty to keep that platform OFF.
+     ============================================================ -->
+<script>
+  window.NACRAVO_TRACKING = {
+    // Google
+    GTM_ID: "GTM-KD4PH4XP",
+    GA4_ID: "G-N2VGBEBELF",      // configure the GA4 Config tag inside GTM
+    GOOGLE_ADS_ID: "",          // AW-XXXXXXXXX
+    ADS_FORM_LABEL: "",
+    ADS_WHATSAPP_LABEL: "",
+    ADS_CALL_LABEL: "",
+    // Other marketing platforms (all optional, wire in GTM or direct)
+    META_PIXEL_ID: "",          // Meta / Facebook Pixel
+    CLARITY_ID: "",             // Microsoft Clarity
+    LINKEDIN_PARTNER_ID: "",    // LinkedIn Insight Tag
+    TIKTOK_PIXEL_ID: "",        // TikTok Pixel
+    PINTEREST_TAG_ID: "",       // Pinterest Tag
+    // Load the pixels above directly from this file instead of via GTM tags?
+    // Keep FALSE to manage everything in GTM (recommended — avoids double-counting).
+    LOAD_PIXELS_DIRECTLY: false
+  };
+</script>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KD4PH4XP');</script>
+<!-- End Google Tag Manager -->
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Nacravo — Premium Home Cleaning & Maintenance in Dubai</title>
@@ -392,6 +426,10 @@ footer{content-visibility:auto;contain-intrinsic-size:auto 500px}
 </style>
 </head>
 <body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KD4PH4XP"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
 
 <!-- KEYSTONE SVG SYMBOL -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="ks" viewBox="0 0 100 100"><path d="M28,30 Q28,18 50,18 Q72,18 72,30 L78,82 L22,82 Z" fill="currentColor"/><path d="M44,54 L49,61 L60,46" stroke="#F5F2EC" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol><symbol id="ksf" viewBox="0 0 100 100"><path d="M28,30 Q28,18 50,18 Q72,18 72,30 L78,82 L22,82 Z" fill="currentColor"/><path d="M44,54 L49,61 L60,46" stroke="#2E372B" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol></svg>
@@ -407,7 +445,7 @@ footer{content-visibility:auto;contain-intrinsic-size:auto 500px}
       <a href="#faq">FAQ</a>
     </nav>
     <div class="nav-cta">
-      <a href="#contact" class="btn btn-ghost">Get a quote</a>
+      <a href="#contact" class="btn btn-ghost" data-track="quote" data-track-label="Nav: Get a quote">Get a quote</a>
       <!-- Primary CTA → WhatsApp (compact label on mobile so the logo has room) -->
       <a href="https://wa.me/971581082601" target="_blank" rel="noopener" class="btn btn-primary nav-wa" aria-label="Book on WhatsApp"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm4.52 11.99c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.8-.79.97-.14.16-.29.18-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.51.11-.11.25-.29.37-.43.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.43h-.48c-.16 0-.42.06-.64.31-.22.25-.84.82-.84 2 0 1.18.86 2.32.98 2.48.12.16 1.69 2.58 4.1 3.62.57.25 1.02.4 1.37.51.57.18 1.1.16 1.51.1.46-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.11-.22-.17-.47-.29Z"/></svg><span class="lbl-full">Book on WhatsApp</span><span class="lbl-short">WhatsApp</span></a>
     </div>
@@ -427,7 +465,7 @@ footer{content-visibility:auto;contain-intrinsic-size:auto 500px}
           <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm0 18.15h-.01a8.2 8.2 0 0 1-4.18-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.23 8.23 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.24-8.24a8.2 8.2 0 0 1 8.23 8.25c0 4.54-3.7 8.23-8.23 8.23Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.8-.79.97-.14.16-.29.18-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.51.11-.11.25-.29.37-.43.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.43h-.48c-.16 0-.42.06-.64.31-.22.25-.84.82-.84 2 0 1.18.86 2.32.98 2.48.12.16 1.69 2.58 4.1 3.62.57.25 1.02.4 1.37.51.57.18 1.1.16 1.51.1.46-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.11-.22-.17-.47-.29Z"/></svg>
           WhatsApp us now
         </a>
-        <a href="#contact" class="btn btn-ghost">Request a quote →</a>
+        <a href="#contact" class="btn btn-ghost" data-track="quote" data-track-label="Hero: Request a quote">Request a quote →</a>
       </div>
       <div class="trust">
         <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>One team, never a marketplace</span>
@@ -490,7 +528,7 @@ footer{content-visibility:auto;contain-intrinsic-size:auto 500px}
       <p>Cleaning and maintenance under one roof — book a single service or bundle them, all delivered by the same trained team.</p>
     </div>
     <div class="svc-cols">
-      <div class="svc-card">
+      <div class="svc-card" data-track="service" data-service-name="Cleaning">
         <div class="svc-photo">
           <!-- Cleaning service image -->
           <img src="images/hero3-lg.jpg" srcset="images/hero3-sm.jpg 900w, images/hero3-lg.jpg 1408w" sizes="(max-width:600px) 92vw,(max-width:760px) 100vw,540px" alt="Nacravo housekeeper deep-cleaning a Dubai bedroom" width="1408" height="768" loading="lazy" decoding="async">
@@ -508,7 +546,7 @@ footer{content-visibility:auto;contain-intrinsic-size:auto 500px}
           </div>
         </div>
       </div>
-      <div class="svc-card">
+      <div class="svc-card" data-track="service" data-service-name="Maintenance">
         <div class="svc-photo">
           <!-- Maintenance / technician image -->
           <img src="images/svc-maintenance2-lg.jpg" srcset="images/svc-maintenance2-sm.jpg 820w, images/svc-maintenance2-lg.jpg 1408w" sizes="(max-width:600px) 92vw,(max-width:760px) 100vw,540px" alt="Nacravo technician testing an electrical socket during a maintenance visit" width="1408" height="768" loading="lazy" decoding="async">
@@ -613,7 +651,7 @@ footer{content-visibility:auto;contain-intrinsic-size:auto 500px}
           <li><span class="ck">✓</span>Before-and-after photo report</li>
           <li><span class="ck">✓</span>Materials included</li>
         </ul>
-        <a href="#contact" class="btn btn-ghost" style="width:100%;justify-content:center">Get a quote</a>
+        <a href="#contact" class="btn btn-ghost" style="width:100%;justify-content:center" data-track="quote" data-track-label="Single booking: Get a quote">Get a quote</a>
       </div>
       <div class="pkg feat gold">
         <span class="tag">Most popular</span>
@@ -625,7 +663,7 @@ footer{content-visibility:auto;contain-intrinsic-size:auto 500px}
           <li><span class="ck" style="color:var(--clay)">✓</span>10% off every service</li>
           <li><span class="ck" style="color:var(--clay)">✓</span>Named backup you've already met</li>
         </ul>
-        <a href="https://wa.me/971581082601?text=Hello%20Nacravo%2C%20I%27d%20like%20to%20join%20Gold%20Club." target="_blank" rel="noopener" class="btn btn-primary" style="width:100%;justify-content:center;background:var(--clay)">Join Gold Club</a>
+        <a href="https://wa.me/971581082601?text=Hello%20Nacravo%2C%20I%27d%20like%20to%20join%20Gold%20Club." target="_blank" rel="noopener" class="btn btn-primary" style="width:100%;justify-content:center;background:var(--clay)" data-track="booking" data-service-name="Gold Club" data-track-label="Join Gold Club">Join Gold Club</a>
       </div>
       <div class="pkg">
         <h3>Landlord &amp; AMC</h3>
@@ -636,7 +674,7 @@ footer{content-visibility:auto;contain-intrinsic-size:auto 500px}
           <li><span class="ck">✓</span>Invoices &amp; photo reports</li>
           <li><span class="ck">✓</span>Priority response</li>
         </ul>
-        <a href="#contact" class="btn btn-ghost" style="width:100%;justify-content:center">Talk to us</a>
+        <a href="#contact" class="btn btn-ghost" style="width:100%;justify-content:center" data-track="quote" data-track-label="Landlord/AMC: Talk to us">Talk to us</a>
       </div>
     </div>
     <p class="center" style="margin-top:22px;font-size:13px;color:#7A7156">Gold Club AED 100/month, recommended pricing — final pricing confirmed at launch.</p>
@@ -818,7 +856,7 @@ footer{content-visibility:auto;contain-intrinsic-size:auto 500px}
       </div>
       <div>
         <h4>Get started</h4>
-        <a href="#contact">Book a service</a><a href="#contact">Get a quote</a><a href="https://wa.me/971581082601" target="_blank" rel="noopener">WhatsApp</a><a href="mailto:info@nacravo.com">info@nacravo.com</a>
+        <a href="#contact" data-track="booking" data-track-label="Footer: Book a service">Book a service</a><a href="#contact" data-track="quote" data-track-label="Footer: Get a quote">Get a quote</a><a href="https://wa.me/971581082601" target="_blank" rel="noopener">WhatsApp</a><a href="mailto:info@nacravo.com">info@nacravo.com</a>
       </div>
     </div>
     <div class="foot-bottom">
@@ -920,6 +958,11 @@ footer{content-visibility:auto;contain-intrinsic-size:auto 500px}
     // Show confirmation, then open WhatsApp
     status.className = "form-status ok";
     window.open(waURL, "_blank");
+
+    // Track the successful lead (fires once; de-duped in the tracker)
+    if (window.nacravoTrack) {
+      window.nacravoTrack.formSubmit("enquiry_form", { service_name: f.service, lead_type: "whatsapp" });
+    }
   });
 
   // Clear the invalid state as the user fixes a field
@@ -958,5 +1001,137 @@ footer{content-visibility:auto;contain-intrinsic-size:auto 500px}
 })();
 </script>
 
+<!-- ============================================================
+     Nacravo Analytics — dataLayer tracking utility (vanilla JS)
+     Pushes standardized events to GTM's dataLayer. GA4, Google Ads,
+     Meta, Clarity, LinkedIn and TikTok conversions are built on these
+     events INSIDE GTM. Safe by design: never throws, never blocks UI.
+     Events: page_view, form_submit, generate_lead, whatsapp_click,
+             phone_click, quote_click, booking_click, service_view,
+             outbound_click
+     ============================================================ -->
+<script>
+(function () {
+  "use strict";
+  var BUSINESS_NAME = "Nacravo", LOCATION = "Dubai";
+  window.dataLayer = window.dataLayer || [];
+
+  function push(event, params) {
+    try {
+      var o = { event: event, business_name: BUSINESS_NAME, location: LOCATION,
+                page_path: location.pathname + location.search, page_title: document.title };
+      if (params) { for (var k in params) { if (Object.prototype.hasOwnProperty.call(params, k) && params[k] !== undefined) o[k] = params[k]; } }
+      window.dataLayer.push(o);
+    } catch (e) {}
+  }
+
+  var recent = {}, DEDUP_MS = 1200;
+  function dup(key) { var now = Date.now(), last = recent[key]; recent[key] = now; return last && (now - last) < DEDUP_MS; }
+
+  function pageView(p) { push("page_view", p); }
+  function formSubmit(name, p) {
+    if (dup("form:" + name)) return;
+    p = p || {}; p.form_name = name; if (!p.lead_type) p.lead_type = "form";
+    push("form_submit", p); push("generate_lead", p);
+  }
+  function whatsapp(p) { p = p || {}; if (dup("wa:" + (p.link_url || p.button_text || "x"))) return; p.lead_type = "whatsapp"; push("whatsapp_click", p); }
+  function phone(p)    { p = p || {}; if (dup("tel:" + (p.link_url || p.button_text || "x"))) return; p.lead_type = "phone"; push("phone_click", p); }
+  function quote(p)    { p = p || {}; if (dup("quote:" + (p.button_text || "x"))) return; p.lead_type = "quote"; push("quote_click", p); }
+  function booking(p)  { p = p || {}; if (dup("book:" + (p.button_text || "x"))) return; p.lead_type = "booking"; push("booking_click", p); }
+  function service(name, p) { p = p || {}; if (dup("svc:" + name)) return; p.service_name = name; push("service_view", p); }
+  function outbound(url, p) { p = p || {}; if (dup("out:" + url)) return; p.link_url = url; push("outbound_click", p); }
+  function cta(type, lbl) { if (dup("cta:" + type + ":" + lbl)) return; push("cta_click", { cta_type: type, button_text: lbl }); }
+
+  window.nacravoTrack = { pageView: pageView, formSubmit: formSubmit, whatsapp: whatsapp,
+    phone: phone, quote: quote, booking: booking, service: service, outbound: outbound, cta: cta, push: push };
+
+  function labelOf(el) {
+    return (el.getAttribute("data-track-label") || (el.textContent || "").replace(/\s+/g, " ").trim()).slice(0, 80);
+  }
+
+  document.addEventListener("click", function (e) {
+    var t = e.target;
+    if (!t || !t.closest) return;
+    var anchor  = t.closest("a");
+    var tracked = t.closest("[data-track]");
+
+    if (tracked) {
+      var kind = tracked.getAttribute("data-track"), lbl = labelOf(tracked);
+      var svc = tracked.getAttribute("data-service-name") || undefined;
+      if (kind === "quote") { quote({ button_text: lbl }); cta("quote", lbl); }
+      else if (kind === "booking") { booking({ button_text: lbl, service_name: svc }); cta("booking", lbl); }
+      else if (kind === "service") service(svc || lbl, { button_text: lbl });
+    }
+
+    if (anchor && !anchor.hasAttribute("data-no-track")) {
+      var href = anchor.getAttribute("href") || "", text = labelOf(anchor);
+      if (/wa\.me|api\.whatsapp\.com|whatsapp:\/\//i.test(href)) { whatsapp({ link_url: href, button_text: text }); return; }
+      if (/^tel:/i.test(href)) { phone({ link_url: href, button_text: text }); return; }
+      if (/^mailto:/i.test(href)) { push("generate_lead", { lead_type: "email", link_url: href, button_text: text }); return; }
+      if (/^https?:\/\//i.test(href)) {
+        try { var u = new URL(href, location.href); if (u.host !== location.host) outbound(u.href, { button_text: text }); } catch (err) {}
+      }
+    }
+  }, true);
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", function () { pageView(); });
+  else pageView();
+})();
+</script>
+
+<!-- ============================================================
+     Nacravo Analytics — OPTIONAL direct pixel loaders
+     Dormant by default. Only runs if NACRAVO_TRACKING.LOAD_PIXELS_DIRECTLY
+     is true AND the platform's ID is filled in. RECOMMENDED: leave the flag
+     false and add GA4 / Meta / Clarity / LinkedIn / TikTok as tags in GTM
+     instead — that avoids double-counting. Use these only if you are NOT
+     wiring a given platform through GTM.
+     ============================================================ -->
+<script>
+(function () {
+  "use strict";
+  var C = window.NACRAVO_TRACKING || {};
+  if (!C.LOAD_PIXELS_DIRECTLY) return;
+  try {
+    // GA4 + Google Ads (gtag.js)
+    if (/^G-/.test(C.GA4_ID || "")) {
+      var g = document.createElement("script"); g.async = true;
+      g.src = "https://www.googletagmanager.com/gtag/js?id=" + C.GA4_ID;
+      document.head.appendChild(g);
+      window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+      window.gtag("js", new Date());
+      window.gtag("config", C.GA4_ID);
+      if (/^AW-/.test(C.GOOGLE_ADS_ID || "")) window.gtag("config", C.GOOGLE_ADS_ID);
+    }
+    // Meta / Facebook Pixel
+    if (C.META_PIXEL_ID) {
+      !function (f, b, e, v, n, t, s) { if (f.fbq) return; n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments) }; if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = "2.0"; n.queue = []; t = b.createElement(e); t.async = !0; t.src = v; s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s) }(window, document, "script", "https://connect.facebook.net/en_US/fbevents.js");
+      window.fbq("init", C.META_PIXEL_ID); window.fbq("track", "PageView");
+    }
+    // Microsoft Clarity
+    if (C.CLARITY_ID) {
+      (function (c, l, a, r, i, t, y) { c[a] = c[a] || function () { (c[a].q = c[a].q || []).push(arguments) }; t = l.createElement(r); t.async = 1; t.src = "https://www.clarity.ms/tag/" + i; y = l.getElementsByTagName(r)[0]; y.parentNode.insertBefore(t, y); })(window, document, "clarity", "script", C.CLARITY_ID);
+    }
+    // LinkedIn Insight Tag
+    if (C.LINKEDIN_PARTNER_ID) {
+      window._linkedin_partner_id = C.LINKEDIN_PARTNER_ID;
+      window._linkedin_data_partner_ids = window._linkedin_data_partner_ids || [];
+      window._linkedin_data_partner_ids.push(C.LINKEDIN_PARTNER_ID);
+      (function (l) { if (!l) { window.lintrk = function (a, b) { window.lintrk.q.push([a, b]) }; window.lintrk.q = [] } var s = document.getElementsByTagName("script")[0]; var b = document.createElement("script"); b.type = "text/javascript"; b.async = true; b.src = "https://snap.licdn.com/li.lms-analytics/insight.min.js"; s.parentNode.insertBefore(b, s); })(window.lintrk);
+    }
+    // TikTok Pixel
+    if (C.TIKTOK_PIXEL_ID) {
+      !function (w, d, t) { w.TiktokAnalyticsObject = t; var ttq = w[t] = w[t] || []; ttq.methods = ["page", "track", "identify", "instances", "debug", "on", "off", "once", "ready", "alias", "group", "enableCookie", "disableCookie"]; ttq.setAndDefer = function (t, e) { t[e] = function () { t.push([e].concat(Array.prototype.slice.call(arguments, 0))) } }; for (var i = 0; i < ttq.methods.length; i++) ttq.setAndDefer(ttq, ttq.methods[i]); ttq.instance = function (t) { for (var e = ttq._i[t] || [], n = 0; n < ttq.methods.length; n++) ttq.setAndDefer(e, ttq.methods[n]); return e }; ttq.load = function (e, n) { var i = "https://analytics.tiktok.com/i18n/pixel/events.js"; ttq._i = ttq._i || {}; ttq._i[e] = []; ttq._i[e]._u = i; ttq._t = ttq._t || {}; ttq._t[e] = +new Date; ttq._o = ttq._o || {}; ttq._o[e] = n || {}; var o = d.createElement("script"); o.type = "text/javascript"; o.async = !0; o.src = i + "?sdkid=" + e + "&lib=" + t; var a = d.getElementsByTagName("script")[0]; a.parentNode.insertBefore(o, a) }; ttq.load(C.TIKTOK_PIXEL_ID); ttq.page(); }(window, document, "ttq");
+    }
+    // Pinterest Tag
+    if (C.PINTEREST_TAG_ID) {
+      !function (e) { if (!window.pintrk) { window.pintrk = function () { window.pintrk.queue.push(Array.prototype.slice.call(arguments)) }; var n = window.pintrk; n.queue = []; n.version = "3.0"; var t = document.createElement("script"); t.async = !0; t.src = e; var r = document.getElementsByTagName("script")[0]; r.parentNode.insertBefore(t, r) } }("https://s.pinimg.com/ct/core.js");
+      window.pintrk("load", C.PINTEREST_TAG_ID); window.pintrk("page");
+    }
+  } catch (e) {}
+})();
+</script>
+
 </body>
 </html>
+
