@@ -897,8 +897,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   function validEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()); }
   function validPhone(v) { return /[0-9]{7,}/.test(v.replace(/[\s()+-]/g, "")); }
 
+  // One-shot guard: a completed enquiry fires the conversion and opens WhatsApp
+  // exactly once — even on double-click or repeat submit (prevents duplicate leads).
+  var leadSent = false;
+
   form.addEventListener("submit", function (e) {
     e.preventDefault(); // never submit normally — we build a WhatsApp message instead
+    if (leadSent) return;
 
     var f = {
       name:     form.name.value.trim(),
@@ -955,21 +960,60 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     var message = encodeURIComponent(lines.join("\n"));
     var waURL = "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + message;
 
-    // Show confirmation, then open WhatsApp
-    status.className = "form-status ok";
-    window.open(waURL, "_blank");
+    // ---- Valid, complete enquiry from here: lock the flow (no duplicates) ----
+    leadSent = true;
+    var submitBtn = form.querySelector('button[type="submit"]');
+    if (submitBtn) submitBtn.disabled = true;
+    status.className = "form-status ok"; // "Opening WhatsApp with your enquiry…"
 
-    // Track the successful lead (fires once; de-duped in the tracker)
-    if (window.nacravoTrack) {
-      window.nacravoTrack.formSubmit("enquiry_form", { service_name: f.service, lead_type: "whatsapp" });
+    // Reserve a WhatsApp tab *inside* the click gesture so the popup blocker can't
+    // stop it. We point this tab at WhatsApp only AFTER tracking has fired.
+    var waWin = null;
+    try { waWin = window.open("about:blank", "_blank"); } catch (err) {}
+
+    // "Lead saved": keep a lightweight client-side record. The real lead is
+    // delivered over WhatsApp; this is a local audit trail and never blocks the flow.
+    try {
+      var store = JSON.parse(localStorage.getItem("nacravo_leads") || "[]");
+      store.push({ ts: new Date().toISOString(), name: f.name, phone: f.phone,
+                   email: f.email, service: f.service, property: f.property,
+                   location: f.location });
+      localStorage.setItem("nacravo_leads", JSON.stringify(store));
+    } catch (err) {}
+
+    // Open WhatsApp exactly once — after tracking, or after a safety timeout.
+    var opened = false;
+    function openWhatsApp() {
+      if (opened) return; opened = true;
+      if (waWin && !waWin.closed) { try { waWin.location.href = waURL; return; } catch (err) {} }
+      window.location.href = waURL; // same-tab fallback (mobile / blocked popup)
     }
 
-    // Redirect this tab to the thank-you page (Google Ads conversion landing).
-    // WhatsApp already opened in its own tab/app above, so this doesn't interrupt it.
-    // The short delay lets the dataLayer form_submit / generate_lead events fire first.
-    setTimeout(function () {
-      window.location.href = "/thank-you";
-    }, 700);
+    // ---- Fire tracking through GTM (the single tracking layer), THEN WhatsApp ----
+    // One dataLayer event drives BOTH tags in GTM: GA4 `generate_lead` and the
+    // Google Ads conversion. GTM runs them, then calls eventCallback; eventTimeout
+    // caps the wait so there is no visible delay and it can never hang.
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      event: "generate_lead",
+      form_name: "enquiry_form",
+      lead_type: "whatsapp",
+      service_name: f.service,
+      property_type: f.property,
+      location: f.location,
+      value: 0,
+      currency: "AED",
+      eventTimeout: 1200,
+      eventCallback: openWhatsApp
+    });
+    // Legacy event kept for any existing GTM trigger (does not double generate_lead).
+    if (window.nacravoTrack) {
+      window.nacravoTrack.push("form_submit", { form_name: "enquiry_form", lead_type: "whatsapp", service_name: f.service });
+    }
+
+    // Backstop: if GTM never loads (e.g. blocked), eventCallback won't run — open
+    // WhatsApp anyway, just above eventTimeout so tracking wins whenever GTM is present.
+    setTimeout(openWhatsApp, 1500);
   });
 
   // Clear the invalid state as the user fixes a field
