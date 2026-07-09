@@ -963,6 +963,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     if (window.nacravoTrack) {
       window.nacravoTrack.formSubmit("enquiry_form", { service_name: f.service, lead_type: "whatsapp" });
     }
+
+    // Redirect this tab to the thank-you page (Google Ads conversion landing).
+    // WhatsApp already opened in its own tab/app above, so this doesn't interrupt it.
+    // The short delay lets the dataLayer form_submit / generate_lead events fire first.
+    setTimeout(function () {
+      window.location.href = "/thank-you";
+    }, 700);
   });
 
   // Clear the invalid state as the user fixes a field
