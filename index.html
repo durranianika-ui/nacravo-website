@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- Google Consent Mode v2 — defaults set BEFORE GTM loads -->
+<script>
+window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
+(function(){var c=null;try{c=JSON.parse(localStorage.getItem('nacravo_consent'));}catch(e){}
+ var a=(c&&c.analytics)?'granted':'denied',d=(c&&c.ad)?'granted':'denied';
+ gtag('consent','default',{ad_storage:d,ad_user_data:d,ad_personalization:d,analytics_storage:a,functionality_storage:'granted',security_storage:'granted',wait_for_update:500});
+ if(c){gtag('consent','update',{ad_storage:d,ad_user_data:d,ad_personalization:d,analytics_storage:a});}
+})();
+</script>
 <!-- ============================================================
      Nacravo Analytics — central configuration ("env" for a static site)
      All tracking IDs live HERE, in one place. Add an ID and that
@@ -64,8 +73,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <meta name="geo.placename" content="Dubai">
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
 
-<!-- Favicon (inline SVG keystone, no extra request) -->
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M28,30 Q28,18 50,18 Q72,18 72,30 L78,82 L22,82 Z' fill='%233B4636'/%3E%3C/svg%3E">
+<!-- Favicon — visible on both dark and light browser tabs (brand keystone) -->
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
 
 <!-- Fonts (kept exactly as original) -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -94,9 +108,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   },
   "openingHoursSpecification": {
     "@type": "OpeningHoursSpecification",
-    "dayOfWeek": ["Saturday","Sunday","Monday","Tuesday","Wednesday","Thursday"],
-    "opens": "08:00",
-    "closes": "20:00"
+    "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+    "opens": "07:00",
+    "closes": "22:00"
   }
 }
 </script>
@@ -114,6 +128,36 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     {"@type":"Question","name":"Do you offer same-day service?","acceptedAnswer":{"@type":"Answer","text":"Yes, subject to availability — and Gold Club members get same-day priority. Any urgency surcharge is always shown in your quote upfront."}},
     {"@type":"Question","name":"Which areas do you cover?","acceptedAnswer":{"@type":"Answer","text":"Downtown Dubai, Business Bay and DIFC. We stay focused on these districts on purpose — it's how we keep arrival times tight and quality consistent."}}
   ]
+}
+</script>
+
+<!-- ============ Structured data (SEO: Organization + ContactPoint) ============ -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Nacravo LLC",
+  "alternateName": "Nacravo",
+  "url": "https://www.nacravo.com/",
+  "logo": "https://www.nacravo.com/android-chrome-512x512.png",
+  "email": "info@nacravo.com",
+  "telephone": "+971581082601",
+  "areaServed": "AE",
+  "address": {"@type": "PostalAddress", "addressLocality": "Dubai", "addressCountry": "AE"},
+  "contactPoint": [
+    {"@type": "ContactPoint", "telephone": "+971581082601", "email": "info@nacravo.com", "contactType": "customer service", "areaServed": "AE", "availableLanguage": ["English"]},
+    {"@type": "ContactPoint", "email": "info@nacravo.com", "contactType": "privacy", "areaServed": "AE", "availableLanguage": ["English"]}
+  ]
+}
+</script>
+<!-- ============ Structured data (SEO: WebSite) ============ -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Nacravo",
+  "url": "https://www.nacravo.com/",
+  "inLanguage": "en"
 }
 </script>
 
@@ -297,6 +341,9 @@ footer a{color:#BBC4B0;font-size:14px;display:block;padding:4px 0;transition:.15
 footer a:hover{color:var(--pearl)}
 .foot-brand{display:flex;align-items:center;gap:10px;color:var(--pearl);font-family:'Plus Jakarta Sans';font-weight:500;font-size:22px;margin-bottom:12px}
 .foot-tag{font-size:13px;color:#9AA391;max-width:260px;line-height:1.6}
+.foot-legal{border-top:1px solid #46523F;padding-top:18px;margin-bottom:16px;display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px}
+.foot-legal a{display:inline;color:#9AA391;padding:0}
+.foot-legal a:hover{color:var(--pearl)}
 .foot-bottom{border-top:1px solid #46523F;padding-top:20px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:13px;color:#8A9380}
 @media(max-width:760px){.foot-grid{grid-template-columns:1fr 1fr}}
 
@@ -423,6 +470,32 @@ footer{content-visibility:auto;contain-intrinsic-size:auto 500px}
 }
 /* respect reduced-motion preference */
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important;animation:none!important}.reveal{opacity:1!important;transform:none!important}}
+
+/* ============ COOKIE CONSENT (Consent Mode v2) ============ */
+.cc-banner{position:fixed;left:16px;right:16px;bottom:16px;z-index:9999;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 10px 34px rgba(46,55,43,.20);padding:18px 20px;max-width:780px;margin:0 auto;display:none}
+.cc-banner.show{display:block}
+.cc-banner h2{font-size:16px;margin-bottom:6px}
+.cc-banner p{font-size:13.5px;color:#44483D;margin-bottom:12px}
+.cc-banner a{color:var(--sage);text-decoration:underline}
+.cc-row{display:flex;gap:10px;flex-wrap:wrap}
+.cc-btn{font-family:'Inter';font-weight:500;font-size:14px;padding:10px 18px;border-radius:10px;border:1px solid var(--line);cursor:pointer;background:#fff;color:var(--moss)}
+.cc-btn:hover{background:#ECE6D8}
+.cc-btn.primary{background:var(--sage);color:var(--pearl);border-color:var(--sage)}
+.cc-btn.primary:hover{background:#6E7E61}
+.cc-modal{position:fixed;inset:0;z-index:10000;background:rgba(46,55,43,.45);display:none;align-items:center;justify-content:center;padding:20px}
+.cc-modal.show{display:flex}
+.cc-card{background:var(--pearl);border-radius:18px;max-width:480px;width:100%;padding:26px;max-height:90vh;overflow:auto}
+.cc-card h2{font-size:20px;margin-bottom:8px}
+.cc-card>p{font-size:14px;color:#54594C;margin-bottom:8px}
+.cc-opt{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid var(--line)}
+.cc-opt .t{font-family:'Plus Jakarta Sans';font-weight:500;font-size:15px}
+.cc-opt small{color:var(--stone);font-size:12.5px;display:block;margin-top:3px;max-width:320px}
+.cc-opt input{width:20px;height:20px;accent-color:var(--sage);margin-top:2px}
+.cc-opt input:disabled{opacity:.5}
+.cc-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.foot-legal button{display:inline;color:#9AA391;background:none;border:none;font:inherit;font-size:13px;cursor:pointer;padding:0}
+.foot-legal button:hover{color:var(--pearl)}
+@media(max-width:600px){.cc-row .cc-btn{flex:1;text-align:center}}
 </style>
 </head>
 <body>
@@ -731,7 +804,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <div class="row"><div><div class="lbl">WhatsApp</div><div class="val"><a href="https://wa.me/971581082601" target="_blank" rel="noopener">+971 58 108 2601</a></div></div></div>
         <div class="row"><div><div class="lbl">Email</div><div class="val"><a href="mailto:info@nacravo.com">info@nacravo.com</a></div></div></div>
         <div class="row"><div><div class="lbl">Service area</div><div class="val">Downtown · Business Bay · DIFC</div></div></div>
-        <div class="row"><div><div class="lbl">Hours</div><div class="val">Sat–Thu, 8:00 AM – 8:00 PM</div></div></div>
+        <div class="row"><div><div class="lbl">Hours</div><div class="val">Monday – Sunday, 7:00 AM – 10:00 PM (GST/UAE)</div></div></div>
       </div>
 
       <!-- Enquiry form: JS builds a WhatsApp message on submit -->
@@ -817,9 +890,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <label for="time">Preferred time</label>
             <select id="time" name="time">
               <option value="">Select…</option>
-              <option>Morning (8am–12pm)</option>
-              <option>Afternoon (12pm–4pm)</option>
-              <option>Evening (4pm–8pm)</option>
+              <option>Morning (7am–12pm)</option>
+              <option>Afternoon (12pm–5pm)</option>
+              <option>Evening (5pm–10pm)</option>
             </select>
           </div>
         </div>
@@ -856,11 +929,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </div>
       <div>
         <h4>Get started</h4>
-        <a href="#contact" data-track="booking" data-track-label="Footer: Book a service">Book a service</a><a href="#contact" data-track="quote" data-track-label="Footer: Get a quote">Get a quote</a><a href="https://wa.me/971581082601" target="_blank" rel="noopener">WhatsApp</a><a href="mailto:info@nacravo.com">info@nacravo.com</a>
+        <a href="#contact" data-track="booking" data-track-label="Footer: Book a service">Book a service</a><a href="#contact" data-track="quote" data-track-label="Footer: Get a quote">Get a quote</a><a href="/legal">Legal Center</a><a href="mailto:info@nacravo.com">info@nacravo.com</a>
       </div>
     </div>
+    <nav class="foot-legal" aria-label="Legal">
+      <a href="/privacy-policy">Privacy Policy</a><a href="/terms-of-service">Terms of Service</a><a href="/cookie-policy">Cookie Policy</a><a href="/refund-policy">Refund &amp; Cancellation</a><a href="/data-deletion">Data Deletion</a><a href="/accessibility">Accessibility</a><a href="/security">Security</a><a href="/acceptable-use">Acceptable Use</a><a href="/legal">Legal Center</a><a href="/sitemap">Sitemap</a><button type="button" onclick="return nacravoCookieSettings()">Cookie settings</button>
+    </nav>
     <div class="foot-bottom">
-      <span>© 2026 Nacravo · DHH Group. All rights reserved.</span>
+      <span>© 2026 Nacravo LLC · DHH Group. All Rights Reserved.</span>
       <span>Downtown · Business Bay · DIFC · Dubai, UAE</span>
     </div>
   </div>
@@ -1180,6 +1256,56 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       window.pintrk("load", C.PINTEREST_TAG_ID); window.pintrk("page");
     }
   } catch (e) {}
+})();
+</script>
+
+<!-- ============ COOKIE CONSENT BANNER (Google Consent Mode v2) ============ -->
+<div class="cc-banner" id="ccBanner" role="dialog" aria-modal="false" aria-label="Cookie consent">
+  <h2>We value your privacy</h2>
+  <p>We use essential cookies to run this site and, with your consent, analytics and advertising cookies (Google, Meta, Microsoft) to improve our service and marketing. See our <a href="/cookie-policy">Cookie Policy</a>.</p>
+  <div class="cc-row">
+    <button class="cc-btn primary" id="ccAccept">Accept all</button>
+    <button class="cc-btn" id="ccReject">Reject non-essential</button>
+    <button class="cc-btn" id="ccPrefs">Preferences</button>
+  </div>
+</div>
+<div class="cc-modal" id="ccModal" role="dialog" aria-modal="true" aria-labelledby="ccModalTitle">
+  <div class="cc-card">
+    <h2 id="ccModalTitle">Cookie preferences</h2>
+    <p>Choose which cookies Nacravo may use. Essential cookies are always on because the site cannot work without them.</p>
+    <div class="cc-opt"><div><span class="t">Essential</span><small>Required for security and core functionality. Always active.</small></div><input type="checkbox" checked disabled aria-label="Essential cookies (always on)"></div>
+    <div class="cc-opt"><div><span class="t">Analytics</span><small>Google Analytics (GA4) — aggregate usage measurement.</small></div><input type="checkbox" id="ccAnalytics" aria-label="Analytics cookies"></div>
+    <div class="cc-opt"><div><span class="t">Advertising</span><small>Google Ads, Meta, Microsoft — ad measurement and personalisation.</small></div><input type="checkbox" id="ccAds" aria-label="Advertising cookies"></div>
+    <div class="cc-actions">
+      <button class="cc-btn primary" id="ccSave">Save preferences</button>
+      <button class="cc-btn" id="ccClose">Cancel</button>
+    </div>
+  </div>
+</div>
+<script>
+(function(){"use strict";
+ var KEY="nacravo_consent";
+ function get(){try{return JSON.parse(localStorage.getItem(KEY));}catch(e){return null;}}
+ function apply(c){
+   var a=c.analytics?'granted':'denied',d=c.ad?'granted':'denied';
+   if(typeof gtag==='function'){gtag('consent','update',{ad_storage:d,ad_user_data:d,ad_personalization:d,analytics_storage:a});}
+   try{window.dataLayer=window.dataLayer||[];window.dataLayer.push({event:'consent_update',consent_analytics:c.analytics,consent_ad:c.ad});}catch(e){}
+ }
+ function save(c){c.ts=new Date().toISOString();c.v="1.0";try{localStorage.setItem(KEY,JSON.stringify(c));}catch(e){}apply(c);hide();}
+ var banner=document.getElementById('ccBanner'),modal=document.getElementById('ccModal');
+ function show(){if(banner)banner.classList.add('show');}
+ function hide(){if(banner)banner.classList.remove('show');}
+ function openModal(){var c=get()||{};var a=document.getElementById('ccAnalytics'),d=document.getElementById('ccAds');if(a)a.checked=!!c.analytics;if(d)d.checked=!!c.ad;modal.classList.add('show');}
+ function closeModal(){modal.classList.remove('show');}
+ document.getElementById('ccAccept').addEventListener('click',function(){save({analytics:true,ad:true});});
+ document.getElementById('ccReject').addEventListener('click',function(){save({analytics:false,ad:false});});
+ document.getElementById('ccPrefs').addEventListener('click',openModal);
+ document.getElementById('ccSave').addEventListener('click',function(){save({analytics:document.getElementById('ccAnalytics').checked,ad:document.getElementById('ccAds').checked});closeModal();});
+ document.getElementById('ccClose').addEventListener('click',closeModal);
+ modal.addEventListener('click',function(e){if(e.target===modal)closeModal();});
+ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModal();});
+ window.nacravoCookieSettings=function(){openModal();return false;};
+ if(!get())show();
 })();
 </script>
 
