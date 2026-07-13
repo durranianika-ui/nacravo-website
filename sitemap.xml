@@ -61,6 +61,12 @@
     <priority>0.4</priority>
   </url>
   <url>
+    <loc>https://www.nacravo.com/application</loc>
+    <lastmod>2026-07-13</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.4</priority>
+  </url>
+  <url>
     <loc>https://www.nacravo.com/sitemap</loc>
     <lastmod>2026-07-11</lastmod>
     <changefreq>monthly</changefreq>

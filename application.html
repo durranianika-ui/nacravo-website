@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script>
+window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
+(function(){var c=null;try{c=JSON.parse(localStorage.getItem('nacravo_consent'));}catch(e){}
+ var a=(c&&c.analytics)?'granted':'denied',d=(c&&c.ad)?'granted':'denied';
+ gtag('consent','default',{ad_storage:d,ad_user_data:d,ad_personalization:d,analytics_storage:a,functionality_storage:'granted',security_storage:'granted',wait_for_update:500});
+ if(c){gtag('consent','update',{ad_storage:d,ad_user_data:d,ad_personalization:d,analytics_storage:a});}
+})();
+</script>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-KD4PH4XP');</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Nacravo LLC &ndash; Google Ads Reporting Application</title>
+<meta name="description" content="Information about Nacravo LLC's internal Google Ads Reporting application — an internal-only tool used by authorized employees that securely accesses Google Ads data via Google OAuth 2.0 for campaign management, reporting, analytics and optimization.">
+<meta name="keywords" content="Nacravo Google Ads Reporting application, Google OAuth 2.0, Google Ads API internal use, Limited Use, campaign reporting, role-based access, OAuth token security">
+<meta name="author" content="Nacravo LLC">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<link rel="canonical" href="https://www.nacravo.com/application">
+<meta name="theme-color" content="#3B4636">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Nacravo">
+<meta property="og:title" content="Nacravo LLC – Google Ads Reporting Application">
+<meta property="og:description" content="Nacravo LLC's internal Google Ads Reporting application — used only by authorized employees, accessing Google Ads data via Google OAuth 2.0 for campaign management, reporting, analytics and optimization.">
+<meta property="og:url" content="https://www.nacravo.com/application">
+<meta property="og:image" content="https://www.nacravo.com/android-chrome-512x512.png">
+<meta property="og:locale" content="en_AE">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Nacravo LLC – Google Ads Reporting Application">
+<meta name="twitter:description" content="Internal-only application used by authorized Nacravo employees, accessing Google Ads data via Google OAuth 2.0 for reporting, analytics and optimization.">
+<meta name="twitter:image" content="https://www.nacravo.com/android-chrome-512x512.png">
+<meta name="geo.region" content="AE-DU">
+<meta name="geo.placename" content="Dubai">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--pearl:#F5F2EC;--sage:#7E8F70;--moss:#3B4636;--euca:#C9D2BF;--sand:#E8E0D0;
+--stone:#8C8880;--clay:#B9876B;--line:#E2DCCF;--moss-deep:#2E372B}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;color:var(--moss);background:var(--pearl);line-height:1.65;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column}
+h1,h2,h3,h4,.dsp{font-family:'Plus Jakarta Sans',sans-serif;font-weight:500;letter-spacing:-0.01em;color:var(--moss)}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+.wrap{max-width:1000px;margin:0 auto;padding:0 24px;width:100%}
+.eyebrow{font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:var(--sage);font-weight:500;font-family:'Plus Jakarta Sans'}
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:'Inter';font-weight:500;font-size:15px;padding:13px 24px;border-radius:10px;border:1px solid transparent;cursor:pointer;transition:.18s;white-space:nowrap}
+.btn-primary{background:var(--sage);color:var(--pearl)}.btn-primary:hover{background:#6E7E61}
+.btn-ghost{background:transparent;color:var(--moss);border-color:var(--line)}.btn-ghost:hover{background:#ECE6D8}
+.keystone{display:inline-block;vertical-align:middle}
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid var(--sage);outline-offset:2px;border-radius:4px}
+.skip{position:absolute;left:-9999px;top:0;background:var(--moss);color:var(--pearl);padding:10px 16px;border-radius:0 0 8px 0;z-index:100}
+.skip:focus{left:0}
+/* nav */
+header.nav{position:sticky;top:0;z-index:50;background:rgba(245,242,236,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:68px;max-width:1140px;margin:0 auto;padding:0 24px}
+.brand{display:flex;align-items:center;gap:10px;font-family:'Plus Jakarta Sans';font-weight:500;font-size:22px;color:var(--moss)}
+.nav-links{display:flex;gap:26px;font-size:14px;font-weight:500}
+.nav-links a{color:#5A5F52;transition:.15s}.nav-links a:hover{color:var(--moss)}
+.nav-cta .btn{padding:10px 18px}
+@media(max-width:820px){.nav-links{display:none}}
+/* breadcrumb */
+.crumb{font-size:13px;color:var(--stone);padding:20px 0 0}
+.crumb a{color:var(--sage)}.crumb a:hover{color:var(--moss)}
+.crumb span{margin:0 7px;color:var(--line)}
+/* legal hero */
+.lhero{padding:26px 0 34px;border-bottom:1px solid var(--line)}
+.lhero h1{font-size:40px;line-height:1.12;margin:12px 0 12px}
+.lhero p.lead{font-size:18px;color:#54594C;max-width:720px}
+.meta-badges{margin-top:16px;display:flex;flex-wrap:wrap;gap:10px}
+.badge{font-size:13px;color:var(--stone);display:inline-flex;align-items:center;gap:8px;background:#ECE6D8;padding:6px 13px;border-radius:999px}
+/* body */
+main{flex:1}
+.doc{padding:40px 0 64px}
+.doc-grid{display:grid;grid-template-columns:230px 1fr;gap:44px;align-items:start}
+.toc{position:sticky;top:88px;font-size:13.5px;border:1px solid var(--line);border-radius:14px;padding:18px 18px;background:#fff}
+.toc h2{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--sage);margin:0 0 10px}
+.toc a{display:block;color:#54594C;padding:5px 0;line-height:1.35;border-bottom:1px solid #F0EBDF}
+.toc a:last-child{border-bottom:none}.toc a:hover{color:var(--moss)}
+.prose{max-width:720px}
+.prose h2{font-size:23px;margin:34px 0 12px;padding-top:10px;scroll-margin-top:84px}
+.prose h2:first-child{margin-top:0}
+.prose h3{font-size:17.5px;margin:22px 0 8px}
+.prose p{margin:0 0 14px;color:#3F463A}
+.prose ul,.prose ol{margin:0 0 16px 20px}
+.prose li{margin:0 0 7px;color:#3F463A}
+.prose strong{color:var(--moss)}
+.prose a{color:var(--sage);text-decoration:underline;text-underline-offset:2px}
+.prose a:hover{color:var(--moss)}
+.callout{background:#fff;border:1px solid var(--line);border-left:3px solid var(--sage);border-radius:12px;padding:18px 20px;margin:18px 0}
+.callout.key{border-left-color:var(--clay);background:#FBF7F1}
+.callout p:last-child{margin-bottom:0}
+.company-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px 22px;margin:18px 0;font-size:14.5px}
+.company-card dl{display:grid;grid-template-columns:130px 1fr;gap:8px 16px;margin:0}
+.company-card dt{color:var(--stone);font-family:'Plus Jakarta Sans';font-weight:500}
+.company-card dd{margin:0;color:var(--moss)}
+.company-card a{color:var(--sage);text-decoration:underline}
+.dl-table{width:100%;border-collapse:collapse;margin:8px 0 20px;font-size:14px}
+.dl-table th,.dl-table td{text-align:left;padding:10px 12px;border:1px solid var(--line);vertical-align:top}
+.dl-table th{background:#EEE9DC;font-family:'Plus Jakarta Sans';font-weight:500;color:var(--moss)}
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.contact-box{background:var(--moss);color:var(--pearl);border-radius:16px;padding:26px 26px;margin:26px 0 0}
+.contact-box h2,.contact-box h3{color:var(--pearl);font-size:18px;margin-bottom:6px}
+.contact-box p{color:#C9D2BF;font-size:14.5px;margin-bottom:12px}
+.contact-box a{color:var(--pearl);text-decoration:underline}
+/* footer */
+footer{background:var(--moss-deep);color:#BBC4B0;padding:52px 0 26px;margin-top:20px}
+.foot-in{max-width:1140px;margin:0 auto;padding:0 24px}
+.foot-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:30px;margin-bottom:32px}
+footer h2.fh{color:var(--pearl);font-size:14px;margin-bottom:13px;font-weight:500;font-family:'Plus Jakarta Sans';letter-spacing:0}
+footer a{color:#BBC4B0;font-size:14px;display:block;padding:4px 0;transition:.15s}
+footer a:hover{color:var(--pearl)}
+.foot-brand{display:flex;align-items:center;gap:10px;color:var(--pearl);font-family:'Plus Jakarta Sans';font-weight:500;font-size:22px;margin-bottom:12px}
+.foot-tag{font-size:13px;color:#9AA391;max-width:280px;line-height:1.6}
+.foot-co{font-size:12.5px;color:#8A9380;margin-top:12px;line-height:1.7}
+.foot-co a{display:inline;color:#9AA391;padding:0;text-decoration:underline}
+.foot-legal{border-top:1px solid #46523F;padding-top:18px;margin-bottom:16px;display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px}
+.foot-legal a{display:inline;color:#9AA391;padding:0}
+.foot-legal a:hover{color:var(--pearl)}
+.foot-legal button{display:inline;color:#9AA391;background:none;border:none;font:inherit;font-size:13px;cursor:pointer;padding:0}
+.foot-legal button:hover{color:var(--pearl)}
+.foot-bottom{border-top:1px solid #46523F;padding-top:20px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:13px;color:#8A9380}
+/* cookie consent */
+.cc-banner{position:fixed;left:16px;right:16px;bottom:16px;z-index:9999;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 10px 34px rgba(46,55,43,.20);padding:18px 20px;max-width:780px;margin:0 auto;display:none}
+.cc-banner.show{display:block}
+.cc-banner h2{font-size:16px;margin-bottom:6px}
+.cc-banner p{font-size:13.5px;color:#44483D;margin-bottom:12px}
+.cc-banner a{color:var(--sage);text-decoration:underline}
+.cc-row{display:flex;gap:10px;flex-wrap:wrap}
+.cc-btn{font-family:'Inter';font-weight:500;font-size:14px;padding:10px 18px;border-radius:10px;border:1px solid var(--line);cursor:pointer;background:#fff;color:var(--moss)}
+.cc-btn:hover{background:#ECE6D8}
+.cc-btn.primary{background:var(--sage);color:var(--pearl);border-color:var(--sage)}
+.cc-btn.primary:hover{background:#6E7E61}
+.cc-modal{position:fixed;inset:0;z-index:10000;background:rgba(46,55,43,.45);display:none;align-items:center;justify-content:center;padding:20px}
+.cc-modal.show{display:flex}
+.cc-card{background:var(--pearl);border-radius:18px;max-width:480px;width:100%;padding:26px;max-height:90vh;overflow:auto}
+.cc-card h2{font-size:20px;margin-bottom:8px}
+.cc-card>p{font-size:14px;color:#54594C;margin-bottom:8px}
+.cc-opt{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;padding:14px 0;border-bottom:1px solid var(--line)}
+.cc-opt .t{font-family:'Plus Jakarta Sans';font-weight:500;font-size:15px}
+.cc-opt small{color:var(--stone);font-size:12.5px;display:block;margin-top:3px;max-width:320px}
+.cc-opt input{width:20px;height:20px;accent-color:var(--sage);margin-top:2px}
+.cc-opt input:disabled{opacity:.5}
+.cc-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+@media(max-width:820px){.doc-grid{grid-template-columns:1fr;gap:24px}.toc{position:static;top:auto}}
+@media(max-width:760px){.foot-grid{grid-template-columns:1fr 1fr}.company-card dl{grid-template-columns:1fr}}
+@media(max-width:600px){
+  .wrap{padding-left:max(20px,env(safe-area-inset-left));padding-right:max(20px,env(safe-area-inset-right))}
+  .lhero h1{font-size:clamp(1.8rem,7.4vw,2.2rem)}.lhero p.lead{font-size:16px}
+  .prose h2{font-size:20px}
+  .cc-row .cc-btn{flex:1;text-align:center}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebPage", "name": "Nacravo LLC – Google Ads Reporting Application", "description": "Information about Nacravo LLC's internal Google Ads Reporting application, which securely accesses Google Ads data via Google OAuth 2.0 for internal campaign management, reporting, analytics and optimization.", "url": "https://www.nacravo.com/application", "inLanguage": "en", "dateModified": "2026-07-13", "isPartOf": {"@type": "WebSite", "name": "Nacravo", "url": "https://www.nacravo.com/"}, "publisher": {"@type": "Organization", "name": "Nacravo LLC", "url": "https://www.nacravo.com/", "logo": "https://www.nacravo.com/android-chrome-512x512.png"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.nacravo.com/"}, {"@type": "ListItem", "position": 2, "name": "Application Information", "item": "https://www.nacravo.com/application"}]}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "SoftwareApplication", "name": "Nacravo Google Ads Reporting Application", "applicationCategory": "BusinessApplication", "operatingSystem": "Web", "url": "https://www.nacravo.com/application", "publisher": {"@type": "Organization", "name": "Nacravo LLC", "url": "https://www.nacravo.com/"}, "description": "An internal-only application used by authorized Nacravo LLC employees to securely access Google Ads data via Google OAuth 2.0 for campaign management, reporting, analytics, KPI dashboards, budget monitoring, conversion tracking and optimization. Not offered to the general public.", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD", "availability": "https://schema.org/InStock"}, "isAccessibleForFree": true}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "Organization", "name": "Nacravo LLC", "alternateName": "Nacravo", "url": "https://www.nacravo.com/", "logo": "https://www.nacravo.com/android-chrome-512x512.png", "email": "privacy@nacravo.com", "telephone": "+971581082601", "areaServed": "AE", "address": {"@type": "PostalAddress", "addressLocality": "Dubai", "addressCountry": "AE"}}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebSite", "name": "Nacravo", "url": "https://www.nacravo.com/", "inLanguage": "en"}</script>
+</head>
+<body>
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KD4PH4XP" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<a href="#main" class="skip">Skip to content</a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="ks" viewBox="0 0 100 100"><path d="M28,30 Q28,18 50,18 Q72,18 72,30 L78,82 L22,82 Z" fill="currentColor"/><path d="M44,54 L49,61 L60,46" stroke="#F5F2EC" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol><symbol id="ksf" viewBox="0 0 100 100"><path d="M28,30 Q28,18 50,18 Q72,18 72,30 L78,82 L22,82 Z" fill="currentColor"/><path d="M44,54 L49,61 L60,46" stroke="#2E372B" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol></svg>
+<header class="nav">
+  <div class="nav-in">
+    <a href="/" class="brand" aria-label="Nacravo — home"><svg class="keystone" width="30" height="30" style="color:var(--moss)" aria-hidden="true"><use href="#ks"/></svg>nacravo</a>
+    <nav class="nav-links" aria-label="Primary">
+      <a href="/#services">Services</a>
+      <a href="/#why">Why us</a>
+      <a href="/#packages">Membership</a>
+      <a href="/#faq">FAQ</a>
+      <a href="/legal">Legal</a>
+    </nav>
+    <div class="nav-cta">
+      <a href="https://wa.me/971581082601" target="_blank" rel="noopener" class="btn btn-primary" aria-label="Book on WhatsApp">Book on WhatsApp</a>
+    </div>
+  </div>
+</header>
+<main id="main">
+  <div class="wrap">
+    <nav class="crumb" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span>Application Information</nav>
+  </div>
+  <section class="lhero">
+    <div class="wrap">
+      <span class="eyebrow">Application Information</span>
+      <h1>Google Ads Reporting Application</h1>
+      <p class="lead">An internal application owned and operated by Nacravo LLC, used only by authorized employees to manage and report on Nacravo's own Google Ads advertising. It securely accesses Google Ads data through Google OAuth 2.0, after user authorization.</p>
+      <div class="meta-badges">
+        <span class="badge">Last updated: 13 July 2026</span>
+        <span class="badge">Internal business application</span>
+      </div>
+    </div>
+  </section>
+  <section class="doc">
+    <div class="wrap">
+      <div class="doc-grid">
+        <nav class="toc" aria-label="On this page"><h2>On this page</h2>
+          <a href="#overview">1. Overview</a>
+          <a href="#company">2. Company &amp; Contact</a>
+          <a href="#purpose">3. What the Application Does</a>
+          <a href="#access">4. Who Can Use It</a>
+          <a href="#oauth">5. Google OAuth &amp; Data Access</a>
+          <a href="#security">6. Security &amp; Token Protection</a>
+          <a href="#sharing">7. No Sale or Third-Party Sharing</a>
+          <a href="#revoke">8. Revoking Access</a>
+          <a href="#limited-use">9. Google API Services User Data Policy</a>
+          <a href="#policies">10. Related Policies</a>
+          <a href="#contact">11. Contact</a>
+        </nav>
+        <div class="prose">
+<h2 id="overview">1. Overview</h2>
+<p>This page describes the <strong>Nacravo Google Ads Reporting Application</strong> (the "Application"), an internal software tool <strong>owned and operated by Nacravo LLC</strong> ("Nacravo", "we", "us" or "our"). The Application exists so that our own marketing team can manage and report on Nacravo's Google Ads advertising in one secure place.</p>
+<div class="callout key">
+  <p><strong>The Application is an internal, employee-only tool. It is not a product or service offered to the general public, and it is not sold, licensed, or shared with any third party.</strong></p>
+</div>
+<p>The Application securely accesses Google Ads data through <strong>Google OAuth 2.0</strong>, and only after an authorized user explicitly grants authorization on Google's own sign-in screens. It exists solely to help Nacravo run its advertising more effectively.</p>
+
+<h2 id="company">2. Company &amp; Contact Information</h2>
+<div class="company-card"><dl>
+  <dt>Application owner</dt><dd>Nacravo LLC</dd>
+  <dt>Application name</dt><dd>Nacravo Google Ads Reporting Application</dd>
+  <dt>Country</dt><dd>United Arab Emirates</dd>
+  <dt>Registered office</dt><dd>Dubai, United Arab Emirates</dd>
+  <dt>Website</dt><dd><a href="https://www.nacravo.com/">www.nacravo.com</a></dd>
+  <dt>Contact email</dt><dd><a href="mailto:privacy@nacravo.com">privacy@nacravo.com</a></dd>
+  <dt>Phone / WhatsApp</dt><dd><a href="tel:+971581082601">+971 58 108 2601</a></dd>
+</dl></div>
+
+<h2 id="purpose">3. What the Application Does</h2>
+<p>The Application is used <strong>exclusively</strong> for Nacravo's own internal advertising operations. Specifically, authorized employees use it for:</p>
+<ul>
+  <li><strong>Campaign management</strong> &mdash; organising and maintaining Nacravo's Google Ads campaigns;</li>
+  <li><strong>Reporting</strong> &mdash; generating performance reports on our own advertising;</li>
+  <li><strong>Analytics</strong> &mdash; analysing campaign and conversion data to understand results;</li>
+  <li><strong>KPI dashboards</strong> &mdash; presenting key performance indicators for internal review;</li>
+  <li><strong>Budget monitoring</strong> &mdash; tracking spend against planned budgets;</li>
+  <li><strong>Conversion tracking</strong> &mdash; measuring which campaigns generate enquiries;</li>
+  <li><strong>Optimization</strong> &mdash; improving the performance and efficiency of our campaigns.</li>
+</ul>
+<p>The Application is <strong>not</strong> used to build profiles of website visitors, to provide services to the general public, or for any purpose beyond managing Nacravo's own advertising.</p>
+
+<h2 id="access">4. Who Can Use It</h2>
+<p>Access to the Application is <strong>restricted to authorized Nacravo employees</strong> who need it to perform their marketing role. <strong>Access is controlled using role-based access controls (RBAC)</strong>, so each user only receives the minimum permissions required for their responsibilities. The Application <strong>does not provide services to the general public</strong> and is not available for public sign-up.</p>
+
+<h2 id="oauth">5. Google OAuth &amp; Data Access</h2>
+<p>The Application connects to Google's advertising and analytics platforms through <strong>Google OAuth 2.0</strong> and the <strong>Google Ads API</strong>, under strict controls:</p>
+<div class="callout key">
+  <p><strong>Access happens only after user authorization.</strong> An authorized employee signs in and grants access on Google's own OAuth consent screen — Nacravo never sees or handles the Google sign-in.</p>
+  <p><strong>Google account passwords are never stored.</strong> Authentication takes place entirely on Google's servers.</p>
+  <p><strong>Only the minimum OAuth scopes required</strong> for campaign management, reporting and analytics are requested — and no others.</p>
+  <p><strong>OAuth tokens are encrypted and protected</strong> in transit and at rest, and are used only to perform the authorised actions.</p>
+</div>
+<p>The Google services the Application may connect to are:</p>
+<div class="tbl-scroll"><table class="dl-table">
+  <tr><th>Google service / API</th><th>Purpose</th></tr>
+  <tr><td>Google OAuth 2.0</td><td>Secure authentication and authorisation (no password is shared with Nacravo).</td></tr>
+  <tr><td>Google Ads API</td><td>Internal campaign management, reporting, analytics, budget monitoring, conversion tracking and optimization.</td></tr>
+  <tr><td>Google Analytics (GA4)</td><td>Aggregate measurement to support advertising reporting.</td></tr>
+</table></div>
+
+<h2 id="security">6. Security &amp; Token Protection</h2>
+<p>We protect the data the Application handles with technical and organisational safeguards, including <strong>TLS encryption in transit (HTTPS)</strong>, <strong>encryption at rest for sensitive data such as OAuth tokens</strong>, role-based access controls, least-privilege permissions and monitoring. Our full security practices are described in our <a href="/security">Security Policy</a>.</p>
+
+<h2 id="sharing">7. No Sale or Third-Party Sharing</h2>
+<p>Data accessed through the Application is used only for Nacravo's internal advertising operations. <strong>It is not sold, licensed, rented, or shared with any third party</strong>, and it is not used to build advertising profiles of individuals. Nacravo's use of information received from Google APIs adheres to the <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener">Google API Services User Data Policy</a>, including its <strong>Limited Use</strong> requirements.</p>
+
+<h2 id="revoke">8. Revoking Access</h2>
+<p><strong>Users can revoke the Application's Google access at any time</strong> directly from their Google Account, under <a href="https://myaccount.google.com/permissions" target="_blank" rel="noopener">Google Account &rarr; Security &rarr; Third-party access</a>. Revoking access immediately prevents the Application from accessing any further data. You can also request deletion of any stored tokens or data through our <a href="/data-deletion">Data Deletion</a> page.</p>
+
+<h2 id="limited-use">9. Google API Services User Data Policy</h2>
+<p>Nacravo's use of information received from Google APIs adheres to the <a href="https://developers.google.com/terms/api-services-user-data-policy" target="_blank" rel="noopener">Google API Services User Data Policy</a>, including the <strong>Limited Use</strong> requirements. In summary, data obtained through Google OAuth and the Google Ads API is used only to provide and improve the internal features described above, is not transferred to others except as necessary to provide those features or as required by law, is not used for advertising profiling, and is not read by humans except with consent, for security, to comply with law, or where the data is aggregated and anonymised.</p>
+
+<h2 id="policies">10. Related Policies</h2>
+<p>This Application, and Nacravo's handling of data more broadly, are governed by our published policies:</p>
+<ul>
+  <li><a href="/privacy-policy">Privacy Policy</a> &mdash; how we collect, use, protect and share personal information, including Google OAuth and the Google Ads API.</li>
+  <li><a href="/terms-of-service">Terms of Service</a> &mdash; the terms that govern use of our website and services.</li>
+  <li><a href="/security">Security Policy</a> &mdash; our technical and organisational security measures.</li>
+  <li><a href="/data-deletion">Data Deletion</a> &mdash; how to request revocation and deletion of data.</li>
+</ul>
+
+<h2 id="contact">11. Contact</h2>
+<p>If you have questions about the Nacravo Google Ads Reporting Application, please contact us.</p>
+<div class="contact-box"><h2>Questions about this application?</h2><p>Contact the Nacravo team and we will respond promptly.</p><p>Nacravo LLC, Dubai, United Arab Emirates<br>Email: <a href="mailto:privacy@nacravo.com">privacy@nacravo.com</a><br>Phone / WhatsApp: <a href="https://wa.me/971581082601">+971 58 108 2601</a><br>Website: <a href="https://www.nacravo.com/">www.nacravo.com</a></p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<footer>
+  <div class="foot-in">
+    <div class="foot-grid">
+      <div>
+        <div class="foot-brand"><svg class="keystone" width="27" height="27" style="color:var(--pearl)" aria-hidden="true"><use href="#ksf"/></svg>nacravo</div>
+        <p class="foot-tag">The same standard, every visit. Premium home cleaning and maintenance for Downtown, Business Bay and DIFC.</p>
+        <p class="foot-co"><strong style="color:#C9D2BF">Nacravo LLC</strong><br>Dubai, United Arab Emirates<br><a href="mailto:privacy@nacravo.com">privacy@nacravo.com</a> &middot; <a href="tel:+971581082601">+971 58 108 2601</a></p>
+      </div>
+      <div>
+        <h2 class="fh">Services</h2>
+        <a href="/#services">Home cleaning</a><a href="/#services">Deep cleaning</a><a href="/#services">AC &amp; maintenance</a><a href="/#services">Handyman</a>
+      </div>
+      <div>
+        <h2 class="fh">Company</h2>
+        <a href="/#why">Why Nacravo</a><a href="/#packages">Gold Club</a><a href="/#faq">FAQ</a><a href="/#contact">Contact</a>
+      </div>
+      <div>
+        <h2 class="fh">Legal Center</h2>
+        <a href="/privacy-policy">Privacy Policy</a><a href="/terms-of-service">Terms of Service</a><a href="/application">Application Information</a><a href="/legal">All policies</a>
+      </div>
+    </div>
+    <nav class="foot-legal" aria-label="Legal"><a href="/privacy-policy">Privacy Policy</a><a href="/terms-of-service">Terms of Service</a><a href="/cookie-policy">Cookie Policy</a><a href="/refund-policy">Refund &amp; Cancellation</a><a href="/data-deletion">Data Deletion</a><a href="/accessibility">Accessibility</a><a href="/security">Security</a><a href="/acceptable-use">Acceptable Use</a><a href="/application">Application Information</a><a href="/legal">Legal Center</a><a href="/sitemap">Sitemap</a><button type="button" onclick="return nacravoCookieSettings()">Cookie settings</button></nav>
+    <div class="foot-bottom">
+      <span>&copy; 2026 Nacravo LLC &middot; DHH Group. All Rights Reserved.</span>
+      <span>Downtown &middot; Business Bay &middot; DIFC &middot; Dubai, UAE</span>
+    </div>
+  </div>
+</footer>
+<div class="cc-banner" id="ccBanner" role="dialog" aria-modal="false" aria-label="Cookie consent">
+  <h2>We value your privacy</h2>
+  <p>We use essential cookies to run this site and, with your consent, analytics and advertising cookies (Google, Meta, Microsoft) to improve our service and marketing. See our <a href="/cookie-policy">Cookie Policy</a>.</p>
+  <div class="cc-row">
+    <button class="cc-btn primary" id="ccAccept">Accept all</button>
+    <button class="cc-btn" id="ccReject">Reject non-essential</button>
+    <button class="cc-btn" id="ccPrefs">Preferences</button>
+  </div>
+</div>
+<div class="cc-modal" id="ccModal" role="dialog" aria-modal="true" aria-labelledby="ccModalTitle">
+  <div class="cc-card">
+    <h2 id="ccModalTitle">Cookie preferences</h2>
+    <p>Choose which cookies Nacravo may use. Essential cookies are always on because the site cannot work without them.</p>
+    <div class="cc-opt"><div><span class="t">Essential</span><small>Required for security and core functionality. Always active.</small></div><input type="checkbox" checked disabled aria-label="Essential cookies (always on)"></div>
+    <div class="cc-opt"><div><span class="t">Analytics</span><small>Google Analytics (GA4) &mdash; aggregate usage measurement.</small></div><input type="checkbox" id="ccAnalytics" aria-label="Analytics cookies"></div>
+    <div class="cc-opt"><div><span class="t">Advertising</span><small>Google Ads, Meta, Microsoft &mdash; ad measurement and personalisation.</small></div><input type="checkbox" id="ccAds" aria-label="Advertising cookies"></div>
+    <div class="cc-actions">
+      <button class="cc-btn primary" id="ccSave">Save preferences</button>
+      <button class="cc-btn" id="ccClose">Cancel</button>
+    </div>
+  </div>
+</div>
+<script>
+(function(){"use strict";
+ var KEY="nacravo_consent";
+ function get(){try{return JSON.parse(localStorage.getItem(KEY));}catch(e){return null;}}
+ function apply(c){
+   var a=c.analytics?'granted':'denied',d=c.ad?'granted':'denied';
+   if(typeof gtag==='function'){gtag('consent','update',{ad_storage:d,ad_user_data:d,ad_personalization:d,analytics_storage:a});}
+   try{window.dataLayer=window.dataLayer||[];window.dataLayer.push({event:'consent_update',consent_analytics:c.analytics,consent_ad:c.ad});}catch(e){}
+ }
+ function save(c){c.ts=new Date().toISOString();c.v="1.0";try{localStorage.setItem(KEY,JSON.stringify(c));}catch(e){}apply(c);hide();}
+ var banner=document.getElementById('ccBanner'),modal=document.getElementById('ccModal');
+ function show(){if(banner)banner.classList.add('show');}
+ function hide(){if(banner)banner.classList.remove('show');}
+ function openModal(){var c=get()||{};var a=document.getElementById('ccAnalytics'),d=document.getElementById('ccAds');if(a)a.checked=!!c.analytics;if(d)d.checked=!!c.ad;modal.classList.add('show');}
+ function closeModal(){modal.classList.remove('show');}
+ document.getElementById('ccAccept').addEventListener('click',function(){save({analytics:true,ad:true});});
+ document.getElementById('ccReject').addEventListener('click',function(){save({analytics:false,ad:false});});
+ document.getElementById('ccPrefs').addEventListener('click',openModal);
+ document.getElementById('ccSave').addEventListener('click',function(){save({analytics:document.getElementById('ccAnalytics').checked,ad:document.getElementById('ccAds').checked});closeModal();});
+ document.getElementById('ccClose').addEventListener('click',closeModal);
+ modal.addEventListener('click',function(e){if(e.target===modal)closeModal();});
+ document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModal();});
+ window.nacravoCookieSettings=function(){openModal();return false;};
+ if(!get())show();
+})();
+</script>
+</body>
+</html>
