@@ -16,7 +16,7 @@ PAGE = {
     "url": "/ac-service-dubai",
     "breadcrumb": "AC Services",
     "title": "AC Service Dubai | Servicing, Chemical Wash & Repair",
-    "meta_description": "AC servicing, chemical wash, duct cleaning, repair and installation in Downtown Dubai, Business Bay and DIFC. Fixed quote before work, photo report after. Get a quote.",
+    "meta_description": "AC servicing, chemical wash, duct cleaning and repair in Downtown Dubai, Business Bay and DIFC. Fixed quote before work, photo report after. Get a quote.",
     "og_title": "AC Service in Dubai — Nacravo",
     "og_description": "Servicing, chemical wash, duct cleaning, repair and installation by licensed technicians. Fixed quotes, photo reports.",
     "og_image": "svc-maintenance2-lg.jpg",

@@ -63,25 +63,21 @@
 @media(max-width:900px){.steps6{grid-template-columns:1fr 1fr 1fr}}
 @media(max-width:520px){.steps6{grid-template-columns:1fr 1fr}}
 
-/* before / after slider */
+/* before / after comparison (static)
+   The ba-* files are single side-by-side Before | After composites, so they are
+   displayed as-is. The previous drag-to-compare slider faked its "before" state
+   with a CSS filter on a duplicate of the same image; those rules are gone. */
 .ba-wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:44px;align-items:center}
-.baw{position:relative;border-radius:16px;overflow:hidden;border:1px solid var(--line);aspect-ratio:16/10;background:#EAE4D6;user-select:none;touch-action:none}
-.baw img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none}
-.baw .before{clip-path:inset(0 50% 0 0);filter:grayscale(.55) brightness(.72) contrast(.92) saturate(.7)}
-.baw .tag{position:absolute;top:12px;font-size:11.5px;font-weight:500;font-family:'Plus Jakarta Sans';color:var(--pearl);background:rgba(46,55,43,.82);padding:5px 11px;border-radius:8px;letter-spacing:.02em;z-index:3}
-.baw .tag.b{left:12px}
-.baw .tag.a{right:12px}
-.baw .divider{position:absolute;top:0;bottom:0;left:50%;width:2px;background:var(--pearl);z-index:4;transform:translateX(-1px);box-shadow:0 0 0 1px rgba(46,55,43,.15)}
-.baw .handle{position:absolute;top:50%;left:50%;z-index:5;width:42px;height:42px;border-radius:50%;background:var(--pearl);border:1px solid var(--line);transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 18px rgba(46,55,43,.22);cursor:ew-resize}
-.baw .handle svg{width:20px;height:20px;color:var(--sage)}
-.baw input[type=range]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize;z-index:6;margin:0}
+.ba-static{margin:0}
+.ba-static img{width:100%;height:auto;border-radius:16px;border:1px solid var(--line);background:#EAE4D6;display:block}
+.ba-static figcaption{font-size:13px;color:var(--stone);margin-top:10px;text-align:center}
 .ba-side .benefit{display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line)}
 .ba-side .benefit:last-child{border-bottom:none}
 .ba-side .benefit .bi{width:34px;height:34px;border-radius:9px;background:#EDF1E7;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .ba-side .benefit .bi svg{width:18px;height:18px;color:var(--sage)}
 .ba-side .benefit h3{font-size:15.5px;margin-bottom:2px}
 .ba-side .benefit p{font-size:13.5px;color:#54594C}
-@media(max-width:860px){.ba-wrap{grid-template-columns:1fr;gap:26px}}
+@media(max-width:900px){.ba-wrap{grid-template-columns:1fr;gap:24px}}
 
 /* chemical wash */
 .chem-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-bottom:22px}

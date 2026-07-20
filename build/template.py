@@ -286,8 +286,8 @@ def render_header(page):
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
         </button>
         <div class="drop-panel" id="svcDrop">
-          <div class="drop-col"><h4>Cleaning</h4>{links(NAV_CLEANING)}</div>
-          <div class="drop-col"><h4>Maintenance</h4>{links(NAV_MAINTENANCE)}</div>
+          <div class="drop-col"><div class="drop-h">Cleaning</div>{links(NAV_CLEANING)}</div>
+          <div class="drop-col"><div class="drop-h">Maintenance</div>{links(NAV_MAINTENANCE)}</div>
         </div>
       </div>
       <a href="/services">All services</a>
@@ -352,6 +352,22 @@ def render_hero(page):
             </select>
           </div>"""
 
+    # Hero image: sits below the copy in the left column so it appears beside
+    # the form on desktop without displacing it, and after the form on mobile.
+    # loading="lazy" is safe here — browsers fetch in-viewport lazy images
+    # immediately — and the LCP element on these pages is the H1 text, not an image.
+    media = ""
+    if page.get("hero_image"):
+        big, small, alt = page["hero_image"]
+        bw, bh = image_size(big)
+        sw, _ = image_size(small)
+        media = f"""
+      <div class="lp-hero-media">
+        <img src="images/{big}" srcset="images/{small} {sw}w, images/{big} {bw}w"
+             sizes="(max-width:900px) 92vw, 420px" alt="{esc(alt)}"
+             width="{bw}" height="{bh}" loading="lazy" decoding="async">
+      </div>"""
+
     jump = ""
     if page.get("jump_links"):
         items = "".join(f'<a href="#{a}">{esc(t)}</a>' for t, a in page["jump_links"])
@@ -373,7 +389,7 @@ def render_hero(page):
           <a href="{wa}" target="_blank" rel="noopener" class="btn btn-wa" data-track="booking" data-service-name="{esc(page['service_value'])}" data-track-label="Hero: WhatsApp">{WA_ICON.format(s=18)} WhatsApp us</a>
           <a href="tel:{PHONE_TEL}" class="btn btn-ghost">{PHONE_ICON} Call now</a>
         </div>
-      </div>
+      </div>{media}
     </div>
 
     <div class="lp-form-wrap">
@@ -472,13 +488,17 @@ def render_sections(page):
         </div>
       </article>""")
 
+    # Contextual in-body links. Already-escaped HTML by design — the anchors are
+    # authored in build/links.py, not user input.
+    ctx = f'\n      <p class="ctx-note">{page["contextual"]}</p>' if page.get("contextual") else ""
+
     return f"""
 <section id="services">
   <div class="wrap">
     <div class="sec-head">
       <span class="eyebrow">What's included</span>
       <h2>{esc(page['sections_heading'])}</h2>
-      <p>{esc(page['sections_intro'])}</p>
+      <p>{esc(page['sections_intro'])}</p>{ctx}
     </div>
     <div class="anchor-grid">{''.join(cards)}
     </div>
@@ -555,6 +575,19 @@ def render_process(page):
 def render_areas(page):
     cards = "".join(f"""
       <div class="serve-card"><h3>{esc(t)}</h3><p>{esc(b)}</p></div>""" for t, b in page["areas"])
+
+    # Named communities, general-service pages only. The AC page deliberately
+    # omits this — its coverage is scoped to three districts.
+    local = ""
+    if page.get("communities"):
+        chips = "".join(f"<span>{esc(c)}</span>" for c in page["communities"])
+        local = f"""
+    <div class="local-areas">
+      <p class="local-intro">{esc(page['local_intro'])}</p>
+      <div class="area-chips">{chips}</div>
+      <p class="local-note">{esc(page['local_note'])}</p>
+    </div>"""
+
     return f"""
 <section id="areas">
   <div class="wrap">
@@ -564,7 +597,7 @@ def render_areas(page):
       <p>{esc(page['areas_intro'])}</p>
     </div>
     <div class="serve-grid">{cards}
-    </div>
+    </div>{local}
   </div>
 </section>
 """
@@ -628,25 +661,36 @@ def render_faq(page):
 def render_gallery(page):
     """Proof photos, below the fold and lazy-loaded.
 
-    Only rendered for pages where the existing photography genuinely depicts
-    that service — showing a cleaned living room on the pest control page would
-    misrepresent the work, so those pages stay text-first until real photos
-    exist. Every image keeps explicit width/height to avoid layout shift.
+    Only rendered where the photography genuinely depicts the service. A page
+    with no honest asset gets an HTML comment recording the gap rather than an
+    empty box or a borrowed, misleading photo.
+
+    Items are (large file, small file, caption, alt). Explicit width/height come
+    from the real files so there is no layout shift.
     """
-    if not page.get("gallery"):
+    gap = page.get("gallery_gap")
+    if gap:
+        return (f"\n<!-- GALLERY PLACEHOLDER — {page['url']}\n"
+                f"     {gap}\n"
+                f"     See build/media.py GALLERY_GAPS. -->\n")
+
+    items = page.get("gallery_items")
+    if not items:
         return ""
 
     cells = []
-    for base, tag, alt in page["gallery"]:
-        w, h = image_size(f"{base}-1080.jpg")
+    for big, small, tag, alt in items:
+        w, h = image_size(big)
+        sw, _ = image_size(small)
         cells.append(f"""
       <figure class="gal-cell">
-        <img src="images/{base}-1080.jpg" srcset="images/{base}-600.jpg 600w, images/{base}-1080.jpg 1080w"
+        <img src="images/{big}" srcset="images/{small} {sw}w, images/{big} {w}w"
              sizes="(max-width:480px) 92vw,(max-width:760px) 46vw,360px" alt="{esc(alt)}"
              width="{w}" height="{h}" loading="lazy" decoding="async">
         <figcaption class="gal-tag">{esc(tag)}</figcaption>
       </figure>""")
-    cells = "".join(cells)
+
+    single = ' style="grid-template-columns:minmax(0,560px)"' if len(cells) == 1 else ""
 
     return f"""
 <section id="proof" style="background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
@@ -654,9 +698,9 @@ def render_gallery(page):
     <div class="sec-head">
       <span class="eyebrow">Our work</span>
       <h2>{esc(page['gallery_heading'])}</h2>
-      <p>Every visit ends with a before-and-after photo report sent to you, so the result is documented rather than described.</p>
+      <p>{esc(page['gallery_note'])}</p>
     </div>
-    <div class="gallery">{cells}
+    <div class="gallery"{single}>{"".join(cells)}
     </div>
   </div>
 </section>
@@ -704,19 +748,19 @@ def render_footer(page):
         <p class="foot-tag" style="margin-top:12px"><a href="tel:{PHONE_TEL}" style="display:inline">{PHONE_DISPLAY}</a><br><a href="mailto:{EMAIL}" style="display:inline">{EMAIL}</a></p>
       </div>
       <div>
-        <h4>Cleaning</h4>
+        <h2 class="fh">Cleaning</h2>
         {links(NAV_CLEANING)}
       </div>
       <div>
-        <h4>Maintenance</h4>
+        <h2 class="fh">Maintenance</h2>
         {links(NAV_MAINTENANCE)}
       </div>
       <div>
-        <h4>Company</h4>
+        <h2 class="fh">Company</h2>
         <a href="/services">All services</a><a href="/#why">Why Nacravo</a><a href="/#packages">Membership</a><a href="/#contact">Contact</a><a href="/application">Application Information</a>
       </div>
       <div>
-        <h4>Legal</h4>
+        <h2 class="fh">Legal</h2>
         <a href="/legal">Legal Center</a><a href="/privacy-policy">Privacy Policy</a><a href="/terms-of-service">Terms of Service</a><a href="/cookie-policy">Cookie Policy</a><a href="/sitemap">Sitemap</a>
       </div>
     </div>

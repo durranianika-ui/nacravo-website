@@ -155,6 +155,18 @@ def main():
             if s in text:
                 errors.append(f"{name}: stale contact detail present -> {s}")
 
+        # ---------- heading hierarchy ----------
+        # No skipped levels (h2 -> h4), and nothing above h1 in document order.
+        levels = [int(m) for m in re.findall(r"<h([1-6])\b", text)]
+        prev = 0
+        for lv in levels:
+            if prev and lv > prev + 1:
+                errors.append(f"{name}: heading level skips h{prev} -> h{lv}")
+                break
+            prev = lv
+        if levels and levels[0] != 1:
+            errors.append(f"{name}: first heading is h{levels[0]}, expected h1")
+
         # ---------- escaping ----------
         # &amp;amp; means a pre-escaped string was escaped a second time.
         if "&amp;amp;" in text:
@@ -276,6 +288,14 @@ def main():
             errors.append(f"sitemap.xml: /{slug} is missing")
     if "/ac-services" in locs:
         errors.append("sitemap.xml: /ac-services must not be listed (it is a 301 to /ac-service-dubai)")
+
+    # ---------- documented media gaps ----------
+    # Surfaced as warnings so a missing gallery stays visible rather than
+    # quietly looking like a finished page.
+    for name, doc in parsed.items():
+        if "GALLERY PLACEHOLDER" in doc.raw:
+            warnings.append(f"{name}: gallery intentionally absent — no honest photography available "
+                            f"(see build/media.py GALLERY_GAPS)")
 
     # ---------- report ----------
     print(f"QA — {len(pages)} pages checked\n")

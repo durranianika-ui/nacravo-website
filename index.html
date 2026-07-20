@@ -336,7 +336,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--sage)}
 /* footer */
 footer{background:var(--moss-deep);color:#BBC4B0;padding:56px 0 28px}
 .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:32px;margin-bottom:36px}
-footer h4{color:var(--pearl);font-size:14px;margin-bottom:14px;font-weight:500}
+footer h2.fh{color:var(--pearl);font-size:14px;margin-bottom:14px;font-weight:500;font-family:'Plus Jakarta Sans';letter-spacing:0}
 footer a{color:#BBC4B0;font-size:14px;display:block;padding:4px 0;transition:.15s}
 footer a:hover{color:var(--pearl)}
 .foot-brand{display:flex;align-items:center;gap:10px;color:var(--pearl);font-family:'Plus Jakarta Sans';font-weight:500;font-size:22px;margin-bottom:12px}
@@ -524,7 +524,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 .drop-toggle[aria-expanded="true"] svg{transform:rotate(180deg)}
 .drop-panel{position:absolute;top:calc(100% + 14px);left:-20px;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 12px 34px rgba(46,55,43,.14);padding:20px;display:none;grid-template-columns:1fr 1fr;gap:22px;min-width:440px}
 .drop-panel.open{display:grid}
-.drop-col h4{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--sage);margin-bottom:10px;font-family:'Plus Jakarta Sans'}
+.drop-col .drop-h{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--sage);margin-bottom:10px;font-family:'Plus Jakarta Sans'}
 .drop-col a{display:block;font-size:14px;color:#44483D;padding:6px 0;white-space:nowrap}
 .drop-col a:hover{color:var(--sage)}
 
@@ -567,8 +567,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
         </button>
         <div class="drop-panel" id="svcDrop">
-          <div class="drop-col"><h4>Cleaning</h4><a href="/home-cleaning">Home Cleaning</a><a href="/deep-cleaning">Deep Cleaning</a><a href="/move-in-out-cleaning">Move In / Move Out</a><a href="/holiday-home-cleaning">Holiday Home Cleaning</a><a href="/office-commercial-cleaning">Office &amp; Commercial</a><a href="/specialized-cleaning">Specialized Cleaning</a><a href="/pest-control">Pest Control</a></div>
-          <div class="drop-col"><h4>Maintenance</h4><a href="/ac-service-dubai">AC Services</a><a href="/handyman-services">Handyman Services</a><a href="/annual-maintenance">Annual Maintenance</a></div>
+          <div class="drop-col"><div class="drop-h">Cleaning</div><a href="/home-cleaning">Home Cleaning</a><a href="/deep-cleaning">Deep Cleaning</a><a href="/move-in-out-cleaning">Move In / Move Out</a><a href="/holiday-home-cleaning">Holiday Home Cleaning</a><a href="/office-commercial-cleaning">Office &amp; Commercial</a><a href="/specialized-cleaning">Specialized Cleaning</a><a href="/pest-control">Pest Control</a></div>
+          <div class="drop-col"><div class="drop-h">Maintenance</div><a href="/ac-service-dubai">AC Services</a><a href="/handyman-services">Handyman Services</a><a href="/annual-maintenance">Annual Maintenance</a></div>
         </div>
       </div>
       <a href="/services">All services</a>
@@ -1007,19 +1007,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <p class="foot-tag" style="margin-top:12px">Nacravo also operates secure internal business applications for marketing reporting, operational management and analytics. <a href="/application" style="color:#C9D2BF;text-decoration:underline">Learn more about our Application Information</a>.</p>
       </div>
       <div>
-        <h4>Cleaning</h4>
+        <h2 class="fh">Cleaning</h2>
         <a href="/home-cleaning">Home Cleaning</a><a href="/deep-cleaning">Deep Cleaning</a><a href="/move-in-out-cleaning">Move In / Move Out</a><a href="/holiday-home-cleaning">Holiday Home Cleaning</a><a href="/office-commercial-cleaning">Office &amp; Commercial</a><a href="/specialized-cleaning">Specialized Cleaning</a><a href="/pest-control">Pest Control</a>
       </div>
       <div>
-        <h4>Maintenance</h4>
+        <h2 class="fh">Maintenance</h2>
         <a href="/ac-service-dubai">AC Services</a><a href="/handyman-services">Handyman Services</a><a href="/annual-maintenance">Annual Maintenance</a>
       </div>
       <div>
-        <h4>Company</h4>
+        <h2 class="fh">Company</h2>
         <a href="/services">All services</a><a href="#why">Why Nacravo</a><a href="#packages">Gold Club</a><a href="#faq">FAQ</a><a href="#contact">Contact</a><a href="/application">Application Information</a>
       </div>
       <div>
-        <h4>Legal</h4>
+        <h2 class="fh">Legal</h2>
         <a href="/legal">Legal Center</a><a href="/privacy-policy">Privacy Policy</a><a href="/terms-of-service">Terms of Service</a><a href="/cookie-policy">Cookie Policy</a><a href="/sitemap">Sitemap</a>
       </div>
     </div>

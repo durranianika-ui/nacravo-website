@@ -16,6 +16,8 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import content_a
 import content_b
 import content_c
+import links
+import media
 import template as T
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
@@ -25,46 +27,50 @@ for mod in (content_a, content_b, content_c):
     PAGES.update(mod.PAGES)
 
 
-# Proof photography, reusing the site's existing images. Only assigned where the
-# photo genuinely shows the service being sold — pest-control, handyman-services
-# and annual-maintenance have no matching photography in the repo, so they stay
-# text-first rather than illustrated with unrelated cleaning shots.
-GALLERIES = {
-    "home-cleaning": ("Homes we look after", [
-        ("ba-living", "Living room", "Living room in a Dubai apartment after a Nacravo home clean"),
-        ("ba-bedroom", "Bedroom", "Bedroom made up and cleaned by the Nacravo team"),
-        ("ba-bathroom", "Bathroom", "Bathroom cleaned and descaled during a Nacravo visit"),
-    ]),
-    "deep-cleaning": ("What a deep clean changes", [
-        ("ba-bathroom", "Bathroom", "Bathroom tiles and glass after a Nacravo deep clean"),
-        ("ba-living", "Living area", "Living area after a full Nacravo deep clean"),
-        ("ba-bedroom", "Bedroom", "Bedroom deep-cleaned including skirting and vents"),
-    ]),
-    "move-in-out-cleaning": ("Handover-ready properties", [
-        ("ba-living", "Empty property", "Empty Dubai apartment cleaned ready for handover"),
-        ("ba-bathroom", "Bathroom", "Bathroom cleaned to handover standard for a tenancy inspection"),
-        ("ba-bedroom", "Bedroom", "Bedroom cleaned and cleared before a move-out inspection"),
-    ]),
-    "holiday-home-cleaning": ("Guest-ready turnovers", [
-        ("ba-bedroom", "Guest bedroom", "Holiday home bedroom prepared with fresh linen for guest arrival"),
-        ("ba-living", "Living area", "Holiday home living area reset between guest stays"),
-        ("ba-bathroom", "Bathroom", "Holiday home bathroom cleaned and restocked for arrival"),
-    ]),
-    "office-commercial-cleaning": ("Workplaces we clean", [
-        ("ba-office", "Office floor", "Dubai office floor after a Nacravo commercial clean"),
-        ("ba-windows", "Interior glass", "Interior office glass and partitions cleaned by Nacravo"),
-        ("ba-living", "Breakout area", "Office breakout area cleaned during a scheduled contract visit"),
-    ]),
-    "specialized-cleaning": ("Specialist work up close", [
-        ("ba-sofa", "Sofa", "Fabric sofa after Nacravo upholstery cleaning"),
-        ("ba-windows", "Interior windows", "Interior windows and tracks cleaned by the Nacravo team"),
-        ("ba-living", "Carpet and rugs", "Living room carpet after a Nacravo deep extraction clean"),
-    ]),
-}
+# Media comes from build/media.py, where every image is described by what it
+# actually shows (verified by opening it, not guessed from the filename).
+COMPOSITE_NOTE = ("Each image below is a single before-and-after comparison. "
+                  "Every visit ends with a photo report sent to you, so the result is "
+                  "documented rather than described.")
+WORK_NOTE = ("Our own employed technicians, on real Nacravo jobs. Every visit ends with a "
+             "photo report sent to you.")
 
-for slug, (heading, images) in GALLERIES.items():
+for slug, (heading, images) in media.GALLERIES.items():
+    if slug not in PAGES:
+        continue
     PAGES[slug]["gallery_heading"] = heading
-    PAGES[slug]["gallery"] = images
+    PAGES[slug]["gallery_note"] = COMPOSITE_NOTE
+    PAGES[slug]["gallery_items"] = [
+        (f"{stem}-1080.jpg", f"{stem}-600.jpg", tag, alt) for stem, tag, alt in images
+    ]
+
+for slug, (heading, images) in media.WORK_GALLERIES.items():
+    PAGES[slug]["gallery_heading"] = heading
+    PAGES[slug]["gallery_note"] = WORK_NOTE
+    PAGES[slug]["gallery_items"] = [
+        (big, small, tag, alt) for big, small, tag, alt in images
+    ]
+
+for slug, reason in media.GALLERY_GAPS.items():
+    PAGES[slug]["gallery_gap"] = reason
+
+# Hero image beside the form, and the matching social preview image.
+for slug, hero in media.HEROES.items():
+    if slug in PAGES:
+        PAGES[slug]["hero_image"] = hero
+        PAGES[slug]["og_image"] = hero[0]
+
+# Contextual in-body links, and named Dubai communities on general-service pages.
+# The AC page is handled in build_ac.py and gets contextual links but NOT the
+# community list — its coverage is scoped to three districts.
+for slug, sentence in links.CONTEXTUAL.items():
+    if slug in PAGES:
+        PAGES[slug]["contextual"] = sentence
+
+for slug in PAGES:
+    PAGES[slug]["communities"] = links.COMMUNITIES
+    PAGES[slug]["local_intro"] = links.LOCAL_INTRO
+    PAGES[slug]["local_note"] = links.LOCAL_NOTE
 
 
 # ---------------------------------------------------------------- services hub
@@ -166,6 +172,34 @@ def render_services_hub():
       <p>Fixed quotes, parts shown before fitting, and the same technicians you have already met.</p>
     </div>
     <div class="rel-grid">{cards(maintenance)}
+    </div>
+  </div>
+</section>
+
+<section id="choosing" style="border-top:1px solid var(--line)">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Choosing</span>
+      <h2>Which service do you actually need?</h2>
+      <p>The names overlap more than they should across this industry. Here is the plain version.</p>
+    </div>
+    <div class="anchor-grid">
+      <div class="anchor-card">
+        <h3>Cleaning that repeats vs cleaning that resets</h3>
+        <p><a href="/home-cleaning">Home cleaning</a> is the recurring visit that keeps a property in the state it is already in. <a href="/deep-cleaning">Deep cleaning</a> is a one-off reset that goes after built-up grease, limescale and soiling a routine visit does not touch. If a property has been empty, neglected or recently built, start with the deep clean and move to regular visits afterwards.</p>
+      </div>
+      <div class="anchor-card">
+        <h3>Moving out, or handing over to a guest</h3>
+        <p><a href="/move-in-out-cleaning">Move in / move out cleaning</a> is built around a landlord's handover inspection, so it covers the inside of appliances, cupboards and balconies that inspectors check. <a href="/holiday-home-cleaning">Holiday home cleaning</a> is a faster repeating turnover between guests, with linen and consumables handled as part of the visit.</p>
+      </div>
+      <div class="anchor-card">
+        <h3>One job, or a contract</h3>
+        <p>Book <a href="/handyman-services">handyman services</a> when you have a specific repair, and <a href="/annual-maintenance">annual maintenance</a> when you are calling someone every few months anyway. A contract schedules preventive visits and gives contract properties priority ordering, which is usually cheaper than repeated callouts.</p>
+      </div>
+      <div class="anchor-card">
+        <h3>Furniture, or the whole property</h3>
+        <p><a href="/specialized-cleaning">Specialized cleaning</a> covers sofas, carpets, mattresses and curtains on their own, using extraction rather than surface cleaning. If the whole property needs attention, it is usually better value as an add-on to a <a href="/deep-cleaning">deep clean</a> than as a separate visit.</p>
+      </div>
     </div>
   </div>
 </section>

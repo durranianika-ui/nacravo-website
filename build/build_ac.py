@@ -22,8 +22,18 @@ import sys
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
 import ac_blocks
+import links
+import media
 import template as T
 from content_ac import PAGE
+
+PAGE["hero_image"] = media.HEROES["ac-service-dubai"]
+# Contextual links yes; community list NO — AC coverage is three districts only.
+PAGE["contextual"] = links.CONTEXTUAL["ac-service-dubai"]
+PAGE["og_image"] = PAGE["hero_image"][0]
+
+# No separate gallery on this page: the before/after section below already shows
+# the duct comparison, and repeating the same image twice would be padding.
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 
@@ -71,26 +81,46 @@ TRUST_SECTION = """
 </section>
 """
 
-# Before/after slider behaviour, carried over. The reviews-carousel half of the
-# original script is deliberately dropped along with the testimonials.
-SLIDER_JS = """
-<script>
-(function(){"use strict";
-  var baw=document.getElementById('baw');
-  if(!baw)return;
-  var before=document.getElementById('bawBefore'),
-      div=document.getElementById('bawDiv'),
-      handle=document.getElementById('bawHandle'),
-      range=document.getElementById('bawRange');
-  function setPos(p){
-    p=Math.max(0,Math.min(100,p));
-    before.style.clipPath='inset(0 '+(100-p)+'% 0 0)';
-    div.style.left=p+'%';handle.style.left=p+'%';
-  }
-  if(range){range.addEventListener('input',function(){setPos(+range.value);});}
-  setPos(50);
-})();
-</script>
+# The original page carried a drag-to-compare slider. It has been removed, and
+# with it all of this page's remaining JavaScript.
+#
+# Why: the slider loaded ba-ducts-1080.jpg as BOTH its "before" and "after"
+# layer and simulated the "before" state with a CSS grayscale/brightness filter.
+# That file is already a single side-by-side Before | After composite with those
+# labels printed into the image, so the widget stacked its own duplicate labels
+# on top, and dragging it revealed the composite's own "Before" half beneath an
+# "After" tag. Beyond being broken, presenting a colour-filtered copy of a photo
+# as a genuine "before" image misrepresents the evidence.
+#
+# The composite is now shown as-is, which is what it was made for.
+SLIDER_JS = ""
+
+BEFORE_AFTER = """
+<section id="before-after" style="background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Before vs after</span>
+      <h2>The difference a proper service makes</h2>
+      <p>A neglected AC duct against the same duct after a Nacravo clean. Clean coils and ducts mean stronger cooling and cleaner air.</p>
+    </div>
+    <div class="ba-wrap">
+      <figure class="ba-static">
+        <img src="images/ba-ducts-1080.jpg" srcset="images/ba-ducts-600.jpg 600w, images/ba-ducts-1080.jpg 1080w"
+             sizes="(max-width:760px) 92vw, 560px"
+             alt="Before and after comparison of an air conditioning duct interior: heavy dust build-up on the left, clean bare metal on the right"
+             width="1080" height="720" loading="lazy" decoding="async">
+        <figcaption>Duct interior before and after a Nacravo clean.</figcaption>
+      </figure>
+      <div class="ba-side">
+        <div class="benefit"><div class="bi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/></svg></div><div><h3>Better cooling</h3><p>Clean coils exchange heat efficiently, so rooms reach temperature faster.</p></div></div>
+        <div class="benefit"><div class="bi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12c2-2 5 2 7 0s5 2 7 0M5 8c2-2 5 2 7 0s5 2 7 0"/></svg></div><div><h3>Cleaner air</h3><p>Removing mould and bacteria from coils improves the air your family breathes.</p></div></div>
+        <div class="benefit"><div class="bi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h7l-1 8 10-12h-7z"/></svg></div><div><h3>Lower energy consumption</h3><p>A system that isn't fighting dirt draws less power to hold the same temperature.</p></div></div>
+        <div class="benefit"><div class="bi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg></div><div><h3>Longer equipment life</h3><p>Regular servicing prevents strain and premature compressor failure.</p></div></div>
+        <div class="benefit"><div class="bi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h11a3 3 0 1 0-3-3"/><path d="M3 12h15a3 3 0 1 1-3 3"/></svg></div><div><h3>Improved airflow</h3><p>Unblocked filters and vents deliver even, quiet airflow to every room.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
 """
 
 
@@ -122,7 +152,7 @@ def main():
         + T.render_cta_band(PAGE, PAGE["band1_heading"], PAGE["band1_body"], "quote")
         + ac_blocks.COMPARISON
         + ac_blocks.PROBLEMS
-        + ac_blocks.BEFORE_AFTER
+        + BEFORE_AFTER
         + ac_blocks.CHEMICAL
         + ac_blocks.PROCESS
         + T.render_pricing(PAGE)
@@ -148,6 +178,10 @@ def main():
             raise SystemExit(f"FAILED: reviews markup '{banned}' still present")
     if "Dubai-wide coverage" in html:
         raise SystemExit("FAILED: page still claims Dubai-wide AC coverage")
+    # the fake before/after slider must not come back
+    for banned in ("bawRange", "bawBefore", "bawHandle", "Drag the slider"):
+        if banned in html:
+            raise SystemExit(f"FAILED: simulated before/after slider markup '{banned}' is present")
     if html.count("<h1") != 1:
         raise SystemExit(f"FAILED: expected exactly one h1, found {html.count('<h1')}")
 
