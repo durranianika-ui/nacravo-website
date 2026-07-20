@@ -1,4 +1,21 @@
 {
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "redirects": [
+    { "source": "/google-ads-reporting", "destination": "/application", "statusCode": 301 },
+    { "source": "/ac-services", "destination": "/ac-service-dubai", "statusCode": 301 },
+    { "source": "/ac-service", "destination": "/ac-service-dubai", "statusCode": 301 },
+    { "source": "/sofa-cleaning", "destination": "/specialized-cleaning#sofa-cleaning", "statusCode": 301 },
+    { "source": "/carpet-cleaning", "destination": "/specialized-cleaning#carpet-cleaning", "statusCode": 301 },
+    { "source": "/mattress-cleaning", "destination": "/specialized-cleaning#mattress-cleaning", "statusCode": 301 },
+    { "source": "/curtain-cleaning", "destination": "/specialized-cleaning#curtain-cleaning", "statusCode": 301 },
+    { "source": "/plumbing", "destination": "/handyman-services#plumbing", "statusCode": 301 },
+    { "source": "/electrical", "destination": "/handyman-services#electrical", "statusCode": 301 },
+    { "source": "/painting", "destination": "/handyman-services#painting", "statusCode": 301 },
+    { "source": "/move-in-cleaning", "destination": "/move-in-out-cleaning", "statusCode": 301 },
+    { "source": "/move-out-cleaning", "destination": "/move-in-out-cleaning", "statusCode": 301 },
+    { "source": "/airbnb-cleaning", "destination": "/holiday-home-cleaning", "statusCode": 301 },
+    { "source": "/office-cleaning", "destination": "/office-commercial-cleaning", "statusCode": 301 },
+    { "source": "/amc", "destination": "/annual-maintenance", "statusCode": 301 }
+  ]
 }

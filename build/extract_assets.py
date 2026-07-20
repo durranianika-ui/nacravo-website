@@ -1,0 +1,220 @@
+"""Extract the shared design system + behaviour out of index.html.
+
+index.html stays the source of truth for the look and feel: this script lifts
+its <style> block verbatim into assets/nacravo.css, then appends the additional
+classes the landing pages need. Nothing existing is rewritten, so the landing
+pages cannot drift from the homepage.
+
+Re-run after changing the homepage CSS to propagate the change.
+"""
+
+import pathlib
+import re
+import sys
+
+ROOT = pathlib.Path(__file__).resolve().parent.parent
+ASSETS = ROOT / "assets"
+
+# UI shared by BOTH the homepage and the landing pages (nav dropdown, mobile
+# menu, floating WhatsApp, accessibility). index.html keeps its CSS inline for
+# LCP, so this block is written into a managed region there as well as into
+# nacravo.css — one source, two destinations, no hand-copied drift.
+SHARED_UI_CSS = """
+/* ---- FLOATING WHATSAPP ----
+   Desktop only by design: below 900px the existing .mbar sticky bar already
+   carries a WhatsApp CTA, so showing both would overlap and double the CTA.
+   Lifts itself above the cookie banner while that banner is on screen. */
+.wa-float{position:fixed;right:20px;bottom:20px;z-index:55;width:56px;height:56px;border-radius:50%;background:#25D366;color:#fff;display:none;align-items:center;justify-content:center;box-shadow:0 6px 20px rgba(37,211,102,.38);transition:transform .18s,bottom .22s}
+.wa-float:hover{transform:scale(1.06);background:#1EBE5A}
+.wa-float:focus-visible{outline:3px solid var(--moss);outline-offset:3px}
+.wa-float svg{width:30px;height:30px}
+@media(min-width:901px){.wa-float{display:flex}}
+body.cc-open .wa-float{bottom:calc(20px + 172px)}
+@media(prefers-reduced-motion:reduce){.wa-float{transition:none}}
+
+/* ---- ACCESSIBILITY ---- */
+.skip-link{position:absolute;left:-9999px;top:0;z-index:100;background:var(--moss);color:var(--pearl);padding:12px 18px;border-radius:0 0 10px 0;font-size:14px}
+.skip-link:focus{left:0}
+/* visible keyboard focus everywhere (the base site relies on the UA default) */
+a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid var(--sage);outline-offset:2px;border-radius:4px}
+
+/* ---- DESKTOP SERVICES DROPDOWN ---- */
+.has-drop{position:relative}
+.drop-toggle{display:inline-flex;align-items:center;gap:5px;background:none;border:none;font:inherit;color:#5A5F52;cursor:pointer;padding:0}
+.drop-toggle:hover{color:var(--moss)}
+.drop-toggle svg{width:13px;height:13px;transition:transform .18s}
+.drop-toggle[aria-expanded="true"] svg{transform:rotate(180deg)}
+.drop-panel{position:absolute;top:calc(100% + 14px);left:-20px;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 12px 34px rgba(46,55,43,.14);padding:20px;display:none;grid-template-columns:1fr 1fr;gap:22px;min-width:440px}
+.drop-panel.open{display:grid}
+.drop-col h4{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--sage);margin-bottom:10px;font-family:'Plus Jakarta Sans'}
+.drop-col a{display:block;font-size:14px;color:#44483D;padding:6px 0;white-space:nowrap}
+.drop-col a:hover{color:var(--sage)}
+
+/* ---- MOBILE MENU (expandable services) ---- */
+.menu-btn{display:none;background:none;border:none;cursor:pointer;color:var(--moss);padding:8px;margin-right:-8px}
+.menu-btn svg{width:26px;height:26px}
+.mobile-menu{display:none;background:var(--pearl);border-bottom:1px solid var(--line);padding:8px 0 18px}
+.mobile-menu.open{display:block}
+.mobile-menu .wrap>a{display:block;font-size:16px;padding:12px 0;border-bottom:1px solid var(--line);color:var(--moss)}
+.mm-group{border-bottom:1px solid var(--line)}
+.mm-group>summary{padding:12px 0;font-size:16px;font-family:'Plus Jakarta Sans';font-weight:500}
+.mm-group>summary .pl{color:var(--sage);font-size:20px}
+.mm-group[open]>summary .pl{transform:rotate(45deg)}
+.mm-group .mm-links{padding:2px 0 12px 14px}
+.mm-group .mm-links a{display:block;font-size:15px;color:#54594C;padding:9px 0}
+.mm-sub{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--sage);margin:10px 0 2px;font-family:'Plus Jakarta Sans'}
+@media(max-width:900px){.menu-btn{display:block}}
+
+/* ---- FOOTER: five grouped columns ---- */
+@media(min-width:761px){.foot-grid.foot-5{grid-template-columns:1.5fr 1fr 1fr 1fr 1fr}}
+"""
+
+LANDING_CSS = """
+
+/* ============================================================
+   LANDING PAGES — additions only.
+   Everything above is the homepage design system, extracted
+   verbatim. Nothing below overrides it; these are new classes
+   used by the service landing pages so both share one cache.
+   ============================================================ */
+
+/* breadcrumb */
+.crumb{border-bottom:1px solid var(--line);background:var(--pearl)}
+.crumb ol{max-width:1140px;margin:0 auto;padding:10px 24px;display:flex;flex-wrap:wrap;gap:8px;list-style:none;font-size:13px;color:var(--stone)}
+.crumb a{color:var(--sage)}
+.crumb a:hover{text-decoration:underline}
+.crumb .sep{color:var(--line)}
+.crumb [aria-current="page"]{color:#54594C}
+
+/* ---- HERO LEAD FORM (above the fold, form beside the pitch) ---- */
+.lp-hero{padding:26px 0 40px}
+.lp-hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:start}
+.lp-hero h1{font-size:40px;line-height:1.1;margin:10px 0 12px}
+.lp-hero p.lead{font-size:17px;color:#54594C;margin-bottom:16px;max-width:520px}
+.lp-hero .trust{margin-bottom:18px}
+.lp-hero-cta{display:flex;gap:10px;flex-wrap:wrap}
+/* the form card itself — same .form surface as the homepage, tightened */
+.lp-form{background:#fff;border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:0 6px 24px rgba(46,55,43,.06)}
+.lp-form h2{font-size:20px;margin-bottom:4px}
+.lp-form .lp-form-sub{font-size:13.5px;color:#54594C;margin-bottom:16px}
+.lp-form .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.lp-form .field.full{grid-column:1/-1}
+.lp-form .lp-optional{border-top:1px solid var(--line);margin-top:4px;padding-top:14px}
+.lp-form summary.lp-more{font-size:13.5px;color:var(--sage);cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:6px;font-family:'Inter';font-weight:500}
+.lp-form summary.lp-more::-webkit-details-marker{display:none}
+.lp-form details.lp-extra{border-bottom:none;padding:0}
+.lp-form .lp-fineprint{font-size:12px;color:var(--stone);margin-top:10px;line-height:1.5}
+.lp-form .lp-fineprint a{color:var(--sage);text-decoration:underline}
+@media(max-width:900px){
+  .lp-hero{padding:18px 0 32px}
+  .lp-hero-grid{grid-template-columns:1fr;gap:22px}
+  .lp-hero h1{font-size:clamp(1.8rem,7vw,2.2rem)}
+  /* mobile order: heading -> description -> form (CTAs and trust follow) */
+  .lp-hero-copy{display:contents}
+  .lp-hero-head{order:1}
+  .lp-form-wrap{order:2}
+  .lp-hero-rest{order:3}
+}
+@media(max-width:600px){
+  .lp-form{padding:18px 16px;border-radius:20px}
+  .lp-form .form-row{grid-template-columns:1fr}
+  .lp-hero-cta .btn{width:100%;min-height:52px;justify-content:center}
+  /* Pull the form up the first screen: on an Ads landing page the form is the
+     point of the page, so the intro above it is tightened rather than the
+     copy being cut. */
+  .crumb ol{padding:7px 20px;font-size:12px}
+  .lp-hero{padding:10px 0 28px}
+  .lp-hero-grid{gap:14px}
+  .lp-hero .eyebrow{font-size:11px;letter-spacing:.1em}
+  .lp-hero h1{font-size:clamp(1.6rem,6.6vw,1.95rem);margin:6px 0 8px}
+  .lp-hero p.lead{font-size:15px;line-height:1.5;margin-bottom:0}
+}
+
+/* ---- ANCHOR SUB-SERVICE SECTIONS ---- */
+/* scroll-margin keeps the sticky header from covering an anchored heading */
+[id]{scroll-margin-top:84px}
+.anchor-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.anchor-card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:26px}
+.anchor-card h3{font-size:19px;margin-bottom:8px}
+.anchor-card p{font-size:14.5px;color:#54594C;margin-bottom:14px;line-height:1.6}
+.anchor-card ul{list-style:none;margin-bottom:16px}
+.anchor-card li{display:flex;gap:9px;font-size:14px;color:#44483D;padding:4px 0}
+.anchor-card li .ck{color:var(--sage);flex-shrink:0}
+.anchor-card .anchor-cta{display:flex;gap:10px;flex-wrap:wrap}
+.anchor-card .btn{font-size:14px;padding:10px 18px}
+@media(max-width:760px){.anchor-grid{grid-template-columns:1fr}.anchor-card{padding:20px}}
+
+/* ---- MID-PAGE CTA BAND (repeats after key sections) ---- */
+.cta-band{background:var(--moss);color:var(--pearl);border-radius:18px;padding:30px 32px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.cta-band h2{color:var(--pearl);font-size:24px;margin-bottom:6px}
+.cta-band p{color:#C9D2BF;font-size:15px;max-width:520px}
+.cta-band .cta-band-btns{display:flex;gap:10px;flex-wrap:wrap}
+.cta-band .btn-ghost{color:var(--pearl);border-color:#5C6B52}
+.cta-band .btn-ghost:hover{background:#46523F}
+@media(max-width:760px){.cta-band{padding:24px 20px;flex-direction:column;align-items:flex-start}.cta-band .cta-band-btns{width:100%}.cta-band .cta-band-btns .btn{flex:1;justify-content:center;min-height:50px}}
+
+/* ---- RELATED SERVICES ---- */
+.rel-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.rel-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;transition:.18s;display:block}
+.rel-card:hover{border-color:var(--sage);transform:translateY(-2px)}
+.rel-card h3{font-size:16px;margin-bottom:6px}
+.rel-card p{font-size:13.5px;color:#54594C;line-height:1.55}
+.rel-card .rel-go{font-size:13px;color:var(--sage);margin-top:10px;display:inline-block}
+@media(max-width:900px){.rel-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.rel-grid{grid-template-columns:1fr}}
+
+/* ---- IN-PAGE JUMP LINKS (anchor nav under the hero) ---- */
+.jump{display:flex;flex-wrap:wrap;gap:8px}
+.jump a{font-size:13.5px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:8px 15px;color:#44483D;transition:.15s}
+.jump a:hover{border-color:var(--sage);color:var(--moss)}
+
+/* Nav, floating WhatsApp and accessibility rules live in SHARED_UI_CSS —
+   they are injected above, and into index.html's managed block. */
+"""
+
+
+def main():
+    index = (ROOT / "index.html").read_text(encoding="utf-8")
+
+    match = re.search(r"<style>\n(.*?)\n</style>", index, re.S)
+    if not match:
+        print("FAILED: could not locate the <style> block in index.html")
+        return 1
+
+    base_css = match.group(1)
+
+    ASSETS.mkdir(exist_ok=True)
+    header = (
+        "/* Nacravo shared stylesheet.\n"
+        " * Lines below up to the SHARED UI banner are extracted verbatim from\n"
+        " * index.html by build/extract_assets.py — edit index.html, then re-run it.\n"
+        " */\n"
+    )
+    (ASSETS / "nacravo.css").write_text(
+        header + base_css + "\n" + SHARED_UI_CSS + LANDING_CSS,
+        encoding="utf-8", newline="\n",
+    )
+
+    lines = base_css.count("\n") + 1
+    print(f"assets/nacravo.css written — {lines} lines extracted verbatim + shared UI + landing additions")
+
+    # Mirror the shared UI block into index.html's managed region so the
+    # homepage nav/floating button stay in step without hand-copying.
+    start_marker = "/* == NACRAVO SHARED UI (generated by build/extract_assets.py — do not edit by hand) == */"
+    end_marker = "/* == END NACRAVO SHARED UI == */"
+    if start_marker in index and end_marker in index:
+        pre, rest = index.split(start_marker, 1)
+        _, post = rest.split(end_marker, 1)
+        updated = pre + start_marker + "\n" + SHARED_UI_CSS.strip() + "\n" + end_marker + post
+        if updated != index:
+            (ROOT / "index.html").write_text(updated, encoding="utf-8", newline="\n")
+            print("index.html managed CSS block updated")
+        else:
+            print("index.html managed CSS block already current")
+    else:
+        print("NOTE: index.html has no managed CSS block yet — add the markers to enable syncing")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
