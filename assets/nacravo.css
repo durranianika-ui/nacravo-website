@@ -4,7 +4,7 @@
  */
 :root{
   --pearl:#F5F2EC; --sage:#7E8F70; --moss:#3B4636; --euca:#C9D2BF;
-  --sand:#E8E0D0; --stone:#8C8880; --clay:#B9876B; --line:#E2DCCF;
+  --sand:#E8E0D0; --stone:#6F6B63;--sage-text:#5E6C4F; --clay:#B9876B; --line:#E2DCCF;
   --moss-deep:#2E372B;
 }
 *{margin:0;padding:0;box-sizing:border-box}
@@ -14,7 +14,7 @@ h1,h2,h3,h4,.dsp{font-family:'Plus Jakarta Sans',sans-serif;font-weight:500;lett
 a{color:inherit;text-decoration:none}
 img{display:block;max-width:100%}
 .wrap{max-width:1140px;margin:0 auto;padding:0 24px}
-.eyebrow{font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:var(--sage);font-weight:500;font-family:'Plus Jakarta Sans'}
+.eyebrow{font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:var(--sage-text);font-weight:500;font-family:'Plus Jakarta Sans'}
 .btn{display:inline-flex;align-items:center;gap:8px;font-family:'Inter';font-weight:500;font-size:15px;padding:13px 24px;border-radius:10px;border:1px solid transparent;cursor:pointer;transition:.18s;white-space:nowrap}
 .btn-primary{background:var(--sage);color:var(--pearl)}
 .btn-primary:hover{background:#6E7E61}
@@ -107,7 +107,7 @@ section{padding:72px 0}
 /* steps */
 .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;counter-reset:s}
 .step{position:relative}
-.step .num{font-family:'Plus Jakarta Sans';font-weight:600;font-size:15px;color:var(--sage);border:1px solid var(--sage);width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+.step .num{font-family:'Plus Jakarta Sans';font-weight:600;font-size:15px;color:var(--sage-text);border:1px solid var(--sage);width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:14px}
 .step h3{font-size:17px;margin-bottom:6px}
 .step p{font-size:14px;color:#54594C}
 @media(max-width:760px){.steps{grid-template-columns:1fr 1fr}}
@@ -166,8 +166,8 @@ label .req{color:var(--clay)}
 input,select,textarea{font-family:'Inter';font-size:15px;padding:11px 13px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--moss)}
 input:focus,select:focus,textarea:focus{outline:none;border-color:var(--sage)}
 /* validation states */
-.field.invalid input,.field.invalid select,.field.invalid textarea{border-color:#C0574B;background:#FDF4F2}
-.err-msg{font-size:12px;color:#C0574B;display:none}
+.field.invalid input,.field.invalid select,.field.invalid textarea{border-color:#B04A3E;background:#FDF4F2}
+.err-msg{font-size:12px;color:#B04A3E;display:none}
 .field.invalid .err-msg{display:block}
 .form-status{font-size:14px;padding:12px 14px;border-radius:10px;margin-top:8px;display:none}
 .form-status.ok{display:block;background:#E7EFE0;color:#3B4636;border:1px solid var(--euca)}
@@ -184,7 +184,7 @@ footer a:hover{color:var(--pearl)}
 .foot-legal{border-top:1px solid #46523F;padding-top:18px;margin-bottom:16px;display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px}
 .foot-legal a{display:inline;color:#9AA391;padding:0}
 .foot-legal a:hover{color:var(--pearl)}
-.foot-bottom{border-top:1px solid #46523F;padding-top:20px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:13px;color:#8A9380}
+.foot-bottom{border-top:1px solid #46523F;padding-top:20px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:13px;color:#9AA391}
 @media(max-width:760px){.foot-grid{grid-template-columns:1fr 1fr}}
 
 /* sticky mobile bar */
@@ -316,7 +316,7 @@ footer{content-visibility:auto;contain-intrinsic-size:auto 500px}
 .cc-banner.show{display:block}
 .cc-banner h2{font-size:16px;margin-bottom:6px}
 .cc-banner p{font-size:13.5px;color:#44483D;margin-bottom:12px}
-.cc-banner a{color:var(--sage);text-decoration:underline}
+.cc-banner a{color:var(--sage-text);text-decoration:underline}
 .cc-row{display:flex;gap:10px;flex-wrap:wrap}
 .cc-btn{font-family:'Inter';font-weight:500;font-size:14px;padding:10px 18px;border-radius:10px;border:1px solid var(--line);cursor:pointer;background:#fff;color:var(--moss)}
 .cc-btn:hover{background:#ECE6D8}
@@ -363,9 +363,9 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 .drop-toggle[aria-expanded="true"] svg{transform:rotate(180deg)}
 .drop-panel{position:absolute;top:calc(100% + 14px);left:-20px;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 12px 34px rgba(46,55,43,.14);padding:20px;display:none;grid-template-columns:1fr 1fr;gap:22px;min-width:440px}
 .drop-panel.open{display:grid}
-.drop-col .drop-h{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--sage);margin-bottom:10px;font-family:'Plus Jakarta Sans'}
+.drop-col .drop-h{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--sage-text);margin-bottom:10px;font-family:'Plus Jakarta Sans'}
 .drop-col a{display:block;font-size:14px;color:#44483D;padding:6px 0;white-space:nowrap}
-.drop-col a:hover{color:var(--sage)}
+.drop-col a:hover{color:var(--sage-text)}
 
 /* ---- MOBILE MENU (expandable services) ---- */
 .menu-btn{display:none;background:none;border:none;cursor:pointer;color:var(--moss);padding:8px;margin-right:-8px}
@@ -379,7 +379,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 .mm-group[open]>summary .pl{transform:rotate(45deg)}
 .mm-group .mm-links{padding:2px 0 12px 14px}
 .mm-group .mm-links a{display:block;font-size:15px;color:#54594C;padding:9px 0}
-.mm-sub{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--sage);margin:10px 0 2px;font-family:'Plus Jakarta Sans'}
+.mm-sub{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--sage-text);margin:10px 0 2px;font-family:'Plus Jakarta Sans'}
 @media(max-width:900px){.menu-btn{display:block}}
 
 /* ---- FOOTER: five grouped columns ---- */
@@ -396,7 +396,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 /* breadcrumb */
 .crumb{border-bottom:1px solid var(--line);background:var(--pearl)}
 .crumb ol{max-width:1140px;margin:0 auto;padding:10px 24px;display:flex;flex-wrap:wrap;gap:8px;list-style:none;font-size:13px;color:var(--stone)}
-.crumb a{color:var(--sage)}
+.crumb a{color:var(--sage-text)}
 .crumb a:hover{text-decoration:underline}
 .crumb .sep{color:var(--line)}
 .crumb [aria-current="page"]{color:#54594C}
@@ -429,11 +429,11 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 .lp-form .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
 .lp-form .field.full{grid-column:1/-1}
 .lp-form .lp-optional{border-top:1px solid var(--line);margin-top:4px;padding-top:14px}
-.lp-form summary.lp-more{font-size:13.5px;color:var(--sage);cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:6px;font-family:'Inter';font-weight:500}
+.lp-form summary.lp-more{font-size:13.5px;color:var(--sage-text);cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:6px;font-family:'Inter';font-weight:500}
 .lp-form summary.lp-more::-webkit-details-marker{display:none}
 .lp-form details.lp-extra{border-bottom:none;padding:0}
 .lp-form .lp-fineprint{font-size:12px;color:var(--stone);margin-top:10px;line-height:1.5}
-.lp-form .lp-fineprint a{color:var(--sage);text-decoration:underline}
+.lp-form .lp-fineprint a{color:var(--sage-text);text-decoration:underline}
 @media(max-width:900px){
   .lp-hero{padding:18px 0 32px}
   .lp-hero-grid{grid-template-columns:1fr;gap:22px}
@@ -488,13 +488,13 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 .rel-card:hover{border-color:var(--sage);transform:translateY(-2px)}
 .rel-card h3{font-size:16px;margin-bottom:6px}
 .rel-card p{font-size:13.5px;color:#54594C;line-height:1.55}
-.rel-card .rel-go{font-size:13px;color:var(--sage);margin-top:10px;display:inline-block}
+.rel-card .rel-go{font-size:13px;color:var(--sage-text);margin-top:10px;display:inline-block}
 @media(max-width:900px){.rel-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:480px){.rel-grid{grid-template-columns:1fr}}
 
 /* ---- CONTEXTUAL IN-BODY LINKS ---- */
 .ctx-note{font-size:15.5px;color:#54594C;line-height:1.65;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
-.ctx-note a{color:var(--sage);text-decoration:underline;text-underline-offset:2px}
+.ctx-note a{color:var(--sage-text);text-decoration:underline;text-underline-offset:2px}
 .ctx-note a:hover{color:var(--moss)}
 
 /* ---- LOCAL AREA CHIPS ---- */

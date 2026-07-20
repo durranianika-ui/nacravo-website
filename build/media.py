@@ -73,9 +73,10 @@ HEROES = {
     "pest-control": (
         "team-quality-1280.jpg", "team-quality-760.jpg",
         "Nacravo service technicians, the trained team who carry out treatments"),
-    "ac-service-dubai": (
-        "ba-ducts-1080.jpg", "ba-ducts-600.jpg",
-        "Before and after comparison of an air conditioning duct interior cleaned by Nacravo"),
+    # NOTE: no hero entry for ac-service-dubai. ba-ducts is the only genuinely
+    # AC-specific image and it carries the before/after section further down the
+    # page; using it twice would be repetition, not evidence. An AC-specific
+    # hero (technician servicing an indoor unit) is a documented gap below.
 }
 
 # ---------------------------------------------------------------- galleries
@@ -91,10 +92,12 @@ GALLERIES = {
         ("ba-living", "Living area", "Before and after comparison of a living area cleared and deep cleaned by Nacravo"),
         ("ba-bedroom", "Bedroom", "Before and after comparison of a bedroom deep cleaned by Nacravo"),
     ]),
+    # hero is ba-living, so the gallery deliberately omits it — no page shows
+    # the same photograph twice.
     "move-in-out-cleaning": ("Handover-ready results", [
-        ("ba-living", "Living room", "Before and after comparison of a living room cleared for a tenancy handover"),
-        ("ba-bathroom", "Bathroom", "Before and after comparison of a bathroom cleaned to handover standard"),
         ("ba-bedroom", "Bedroom", "Before and after comparison of a bedroom cleared and cleaned before a move-out inspection"),
+        ("ba-bathroom", "Bathroom", "Before and after comparison of a bathroom cleaned to handover standard"),
+        ("ba-windows", "Windows and tracks", "Before and after comparison of interior window glass and tracks cleaned for handover"),
     ]),
     "holiday-home-cleaning": ("Turnovers, documented", [
         ("ba-bedroom", "Guest bedroom", "Before and after comparison of a holiday home bedroom reset for the next guest"),
@@ -106,40 +109,46 @@ GALLERIES = {
         ("ba-windows", "Interior glass", "Before and after comparison of interior office glass cleaned by Nacravo"),
         ("ba-living", "Breakout area", "Before and after comparison of a breakout area cleaned during a contract visit"),
     ]),
+    # hero is ba-sofa, so the gallery deliberately omits it.
     "specialized-cleaning": ("Specialist work, up close", [
-        ("ba-sofa", "Upholstery", "Before and after comparison of a fabric sofa cleaned by Nacravo"),
         ("ba-windows", "Interior windows", "Before and after comparison of interior window glass and tracks cleaned by Nacravo"),
         ("ba-living", "Carpets and rugs", "Before and after comparison of a living room carpet cleaned by Nacravo"),
-    ]),
-    "ac-service-dubai": ("What a proper AC service changes", [
-        ("ba-ducts", "Ductwork", "Before and after comparison of an air conditioning duct interior cleaned by Nacravo"),
+        ("ba-bathroom", "Bathrooms", "Before and after comparison of a bathroom surface cleaned by Nacravo"),
     ]),
 }
 
 # Galleries built from photographs of the actual trade rather than before/after
 # composites. Kept separate so the section copy can describe them honestly.
 WORK_GALLERIES = {
+    # hero is svc-maintenance2 — omitted here so the page never repeats an image
     "handyman-services": ("Our technicians at work", [
-        ("svc-maintenance2-lg.jpg", "svc-maintenance2-sm.jpg", "Electrical",
-         "A Nacravo handyman testing a wall socket with a multimeter"),
         ("svc-maintenance-1200.jpg", "svc-maintenance-760.jpg", "Diagnostics",
          "A Nacravo technician testing an electrical distribution panel with a multimeter"),
-        ("hero-team-1280.jpg", "hero-team-760.jpg", "The team",
+        ("hero-team-1280.jpg", "hero-team-760.jpg", "Carpentry and fitting",
          "Nacravo staff with timber, a tape measure and a toolbox before a handyman job"),
+        ("team-quality-1280.jpg", "team-quality-760.jpg", "One accountable team",
+         "Nacravo technicians who carry out handyman and repair visits"),
     ]),
+    # hero is svc-maintenance — omitted here so the page never repeats an image
     "annual-maintenance": ("Scheduled maintenance in practice", [
-        ("svc-maintenance-1200.jpg", "svc-maintenance-760.jpg", "MEP inspection",
-         "A Nacravo technician in a hard hat inspecting an electrical distribution panel"),
         ("svc-maintenance2-lg.jpg", "svc-maintenance2-sm.jpg", "Preventive checks",
          "A Nacravo technician testing a wall socket during a preventive maintenance visit"),
-        ("team-quality-1280.jpg", "team-quality-760.jpg", "One accountable team",
-         "Nacravo maintenance technicians who carry out scheduled contract visits"),
+        ("hero-team-1280.jpg", "hero-team-760.jpg", "Trades under one contract",
+         "Nacravo staff with timber, a tape measure and a toolbox on a maintenance visit"),
+        ("team-caddy-lg.jpg", "team-caddy-sm.jpg", "Equipped for the visit",
+         "A Nacravo technician carrying a fully stocked service caddy"),
     ]),
 }
 
 # Services with no honest photography in the repository. Rendered as an HTML
 # comment on the page (never an empty box shown to visitors) and reported by QA.
 GALLERY_GAPS = {
+    "ac-service-dubai":
+        "No photograph of a technician servicing an indoor AC unit exists in the "
+        "repository. ba-ducts is the only AC-specific asset and it is used for the "
+        "before/after comparison section. Needs: technician servicing a wall-mounted "
+        "split unit, a chemical wash in progress, and coil cleaning detail. The page "
+        "therefore runs without a hero image rather than borrowing an unrelated one.",
     "pest-control":
         "No pest control photography exists in the repository. A gallery here would "
         "require unrelated cleaning or maintenance photos, which would misrepresent "

@@ -49,9 +49,9 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 .drop-toggle[aria-expanded="true"] svg{transform:rotate(180deg)}
 .drop-panel{position:absolute;top:calc(100% + 14px);left:-20px;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 12px 34px rgba(46,55,43,.14);padding:20px;display:none;grid-template-columns:1fr 1fr;gap:22px;min-width:440px}
 .drop-panel.open{display:grid}
-.drop-col .drop-h{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--sage);margin-bottom:10px;font-family:'Plus Jakarta Sans'}
+.drop-col .drop-h{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--sage-text);margin-bottom:10px;font-family:'Plus Jakarta Sans'}
 .drop-col a{display:block;font-size:14px;color:#44483D;padding:6px 0;white-space:nowrap}
-.drop-col a:hover{color:var(--sage)}
+.drop-col a:hover{color:var(--sage-text)}
 
 /* ---- MOBILE MENU (expandable services) ---- */
 .menu-btn{display:none;background:none;border:none;cursor:pointer;color:var(--moss);padding:8px;margin-right:-8px}
@@ -65,7 +65,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 .mm-group[open]>summary .pl{transform:rotate(45deg)}
 .mm-group .mm-links{padding:2px 0 12px 14px}
 .mm-group .mm-links a{display:block;font-size:15px;color:#54594C;padding:9px 0}
-.mm-sub{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--sage);margin:10px 0 2px;font-family:'Plus Jakarta Sans'}
+.mm-sub{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--sage-text);margin:10px 0 2px;font-family:'Plus Jakarta Sans'}
 @media(max-width:900px){.menu-btn{display:block}}
 
 /* ---- FOOTER: five grouped columns ---- */
@@ -84,7 +84,7 @@ LANDING_CSS = """
 /* breadcrumb */
 .crumb{border-bottom:1px solid var(--line);background:var(--pearl)}
 .crumb ol{max-width:1140px;margin:0 auto;padding:10px 24px;display:flex;flex-wrap:wrap;gap:8px;list-style:none;font-size:13px;color:var(--stone)}
-.crumb a{color:var(--sage)}
+.crumb a{color:var(--sage-text)}
 .crumb a:hover{text-decoration:underline}
 .crumb .sep{color:var(--line)}
 .crumb [aria-current="page"]{color:#54594C}
@@ -117,11 +117,11 @@ LANDING_CSS = """
 .lp-form .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
 .lp-form .field.full{grid-column:1/-1}
 .lp-form .lp-optional{border-top:1px solid var(--line);margin-top:4px;padding-top:14px}
-.lp-form summary.lp-more{font-size:13.5px;color:var(--sage);cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:6px;font-family:'Inter';font-weight:500}
+.lp-form summary.lp-more{font-size:13.5px;color:var(--sage-text);cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:6px;font-family:'Inter';font-weight:500}
 .lp-form summary.lp-more::-webkit-details-marker{display:none}
 .lp-form details.lp-extra{border-bottom:none;padding:0}
 .lp-form .lp-fineprint{font-size:12px;color:var(--stone);margin-top:10px;line-height:1.5}
-.lp-form .lp-fineprint a{color:var(--sage);text-decoration:underline}
+.lp-form .lp-fineprint a{color:var(--sage-text);text-decoration:underline}
 @media(max-width:900px){
   .lp-hero{padding:18px 0 32px}
   .lp-hero-grid{grid-template-columns:1fr;gap:22px}
@@ -176,13 +176,13 @@ LANDING_CSS = """
 .rel-card:hover{border-color:var(--sage);transform:translateY(-2px)}
 .rel-card h3{font-size:16px;margin-bottom:6px}
 .rel-card p{font-size:13.5px;color:#54594C;line-height:1.55}
-.rel-card .rel-go{font-size:13px;color:var(--sage);margin-top:10px;display:inline-block}
+.rel-card .rel-go{font-size:13px;color:var(--sage-text);margin-top:10px;display:inline-block}
 @media(max-width:900px){.rel-grid{grid-template-columns:1fr 1fr}}
 @media(max-width:480px){.rel-grid{grid-template-columns:1fr}}
 
 /* ---- CONTEXTUAL IN-BODY LINKS ---- */
 .ctx-note{font-size:15.5px;color:#54594C;line-height:1.65;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
-.ctx-note a{color:var(--sage);text-decoration:underline;text-underline-offset:2px}
+.ctx-note a{color:var(--sage-text);text-decoration:underline;text-underline-offset:2px}
 .ctx-note a:hover{color:var(--moss)}
 
 /* ---- LOCAL AREA CHIPS ---- */

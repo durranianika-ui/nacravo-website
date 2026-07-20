@@ -3,61 +3,62 @@
 **Site:** https://www.nacravo.com
 **Prepared:** 20 July 2026
 **Status:** Complete and committed locally. **Nothing has been deployed.**
+**Companion files:** `SEO_IMPLEMENTATION_REPORT.xlsx` (data workbook) · `DEPLOYMENT_CHECKLIST.md`
 
-All figures in this report were measured from the built files by `build/audit.py`,
-`build/qa.py` and `build/verify_content.py`. Nothing is estimated.
+Every figure below is extracted from the built HTML by `build/audit.py`,
+`build/audit_final.py`, `build/qa.py` and `build/verify_content.py` at generation time.
+Nothing is estimated. Where a number in an earlier version of this report was wrong, the
+correction is called out.
 
 ---
 
 ## 1. Executive Summary
 
-### What was done
+### What exists now
 
-Nacravo previously had a single-page marketing site plus one AC landing page. It now
-has **eleven indexable commercial pages** — ten service landing pages and a services
-hub — built on the existing design system, sharing one cached stylesheet and one
-tracking layer.
+Nacravo went from a one-page marketing site plus a single AC landing page to **eleven
+indexable commercial pages** — ten service landing pages and a services hub — built on the
+existing design system, sharing one cached stylesheet and one tracking layer.
 
-The work covered two distinct objectives: making the site rank for the service terms
-Dubai customers actually search, and making each page convert paid traffic well enough
-to earn a strong Google Ads Quality Score.
+| Metric | Value |
+|---|---|
+| Landing pages | 10 (9 new + AC upgraded in place) |
+| Sub-service anchor sections | 77 |
+| FAQ pairs on landing pages | 77 (86 sitewide) |
+| Words of original service copy | 23,452 |
+| Structured data blocks | 33 across landing pages + hub |
+| Redirects | 15, all 301, no chains or loops |
+| Broken links / anchors / images | 0 |
+| Orphan pages | 0 |
+| Contact details corrected | 227 occurrences |
 
 ### Organic strategy
 
-Each landing page owns one head term and its long-tail cluster (`home cleaning Dubai`,
-`deep cleaning Dubai`, `move out cleaning Dubai`, and so on). Depth is real, not padded:
-**2,016–3,608 words per page**, each with 5–11 sub-service sections that target the
-specific queries people type (`AC chemical wash`, `end of tenancy cleaning`,
-`bed bug treatment`), and 6–23 FAQs answering genuine pre-purchase questions.
-
-Every page carries Service, BreadcrumbList and FAQPage structured data. Internal
-linking is deliberately layered — navigation, footer, related-services grid, and a
-contextual in-body paragraph that links to two or three genuinely related siblings.
+Each landing page owns one head term and its long-tail cluster. Depth is real rather than
+padded — **2,016 to 3,608 words per page**, 5–11 sub-service sections targeting the specific
+queries people actually type, and 6–23 FAQs answering genuine pre-purchase questions.
 
 ### Google Ads strategy
 
-Every landing page is built for message match. The visitor lands on a page whose H1
-names the exact service they searched, sees a lead form above the fold, and finds the
-service already preselected in that form. Anchor traffic goes further: a click on
-`/ac-service-dubai#chemical-wash` arrives with **both** the service and the sub-service
-preselected.
+Every page is built for message match: the H1 names the exact service and city, the lead form
+sits above the fold, and the searched service arrives already preselected. Anchor traffic goes
+further — `/ac-service-dubai#chemical-wash` preselects **both** the service and the sub-service.
 
-### Expected impact
+### Expected impact — stated honestly
 
-Honest framing: this is foundational work, and outcomes depend on budget, competition
-and business follow-through.
+- **Landing Page Experience** should move from a homepage-based baseline to "Above average":
+  dedicated relevant pages, text-first rendering, clear CTAs, low-friction mobile forms.
+- **Conversion rate** should benefit soonest. The form moved from page bottom to above the
+  fold and required fields dropped from 9 to 4.
+- **Organic** results will take 3–6 months and depend materially on the off-site work in
+  Section 17 — Google Business Profile, reviews, backlinks — **none of which has been started**.
 
-- **Landing Page Experience** should move from a homepage-based baseline (where all ad
-  traffic hit one generic page) to "Above average" — relevant dedicated pages, fast
-  text-first rendering, clear CTAs, mobile-optimised forms.
-- **Organic** gains will be gradual. Eleven new pages need crawling, indexing and
-  maturing; meaningful movement typically takes 3–6 months, and depends heavily on the
-  backlink and Google Business Profile work listed in Section 12, which is **not** done.
-- **Conversion rate** should benefit most immediately: the form moved from the page
-  bottom to above the fold, with friction cut from 9 fields to 4 required.
+No traffic or ranking figures are projected, because any such number would be invented.
 
-No traffic or ranking numbers are projected here, because any such figure would be
-invented.
+### Two blocking issues remain, neither in site code
+
+1. **Duplicate GA4 tag in the live GTM container** — every lead is counted twice in GA4.
+2. **Two button colour combinations fail WCAG AA** — requires a branding decision.
 
 ---
 
@@ -66,26 +67,32 @@ invented.
 | Item | Status | Detail |
 |---|---|---|
 | Indexable pages | 23 | 11 commercial + homepage + 11 legal/utility |
-| Canonical | Complete | Unique self-referencing canonical on every page |
+| Canonical | Complete | Unique, absolute, self-referencing, no trailing slash, no `.html` |
 | Robots | Complete | `Allow: /`, `Disallow: /thank-you`, sitemap declared |
 | XML sitemap | Complete | 23 URLs, each verified to exist on disk at build time |
-| HTML sitemap | Complete | `/sitemap` grouped by Cleaning / Maintenance / Legal |
+| HTML sitemap | Complete | Grouped Cleaning / Maintenance / Legal |
 | Schema | Complete | Service + BreadcrumbList + FAQPage per landing page |
 | Open Graph | Complete | Unique title, description and image per page |
 | Twitter Cards | Complete | `summary_large_image` on all pages |
 | Breadcrumbs | Complete | Visible trail + BreadcrumbList schema |
-| Redirects | 15 | All verified returning 301 |
-| Heading hierarchy | Fixed | No skipped levels on any page (was h2→h4 on all 12) |
-| Duplicate metadata | None | Enforced across all 23 pages by `build/qa.py` |
-| Broken links | None | Every internal link and `#anchor` resolved at build time |
+| Redirect chains | **None** | Verified programmatically |
+| Redirect loops | **None** | Verified programmatically |
+| Shadowed redirects | **None** | No redirect source also exists as a real page |
+| Trailing slash | Consistent | No internal link ends in `/` |
+| Clean URLs | Consistent | No internal link contains `.html` |
+| Broken links / anchors | **0** | Every internal link and `#fragment` resolves |
+| Broken images | **0** | 34 of 34 referenced files exist |
+| Orphan assets | **0** | Every image in `/images` is referenced |
+| hreflang | Not applicable | Single locale (en-AE), no alternate language versions |
+| Image indexing | Complete | All images have alt, dimensions, srcset, lazy loading |
 
 ### Canonical decision — AC page
 
-`/ac-services` was **not** created. The existing `/ac-service-dubai` was upgraded in
-place to preserve its indexing history, and `/ac-services` 301-redirects to it. Canonical
-is `https://www.nacravo.com/ac-service-dubai`.
+`/ac-services` was **not** created. `/ac-service-dubai` was upgraded in place to preserve its
+indexing history; `/ac-services` 301-redirects to it. Canonical is
+`https://www.nacravo.com/ac-service-dubai`.
 
-### Redirect map
+### Redirect map (15)
 
 | From | To |
 |---|---|
@@ -102,7 +109,7 @@ is `https://www.nacravo.com/ac-service-dubai`.
 
 ## 3. On-Page SEO
 
-Measured per page:
+Full per-page detail is in the **On-Page SEO** sheet of the companion workbook. Summary:
 
 | Page | Words | H2 | H3 | FAQ | Sub-services | Images | Internal links |
 |---|---:|---:|---:|---:|---:|---:|---:|
@@ -113,141 +120,134 @@ Measured per page:
 | `/office-commercial-cleaning` | 2,305 | 17 | 26 | 6 | 9 | 4 | 22 |
 | `/specialized-cleaning` | 2,016 | 17 | 22 | 6 | 5 | 4 | 22 |
 | `/pest-control` | 2,019 | 16 | 23 | 6 | 6 | 1 | 22 |
-| `/ac-service-dubai` | 3,608 | 22 | 54 | 23 | 10 | 2 | 22 |
+| `/ac-service-dubai` | 3,608 | 22 | 54 | 23 | 10 | 1 | 22 |
 | `/handyman-services` | 2,409 | 17 | 28 | 6 | 11 | 4 | 22 |
 | `/annual-maintenance` | 2,087 | 17 | 23 | 6 | 6 | 4 | 22 |
 | `/services` (hub) | 939 | 11 | 14 | 3 | — | 0 | 12 |
 
-All pages: single H1, no heading skips, 100% image ALT coverage, Service + Breadcrumb +
-FAQ schema, self-referencing canonical, unique title and meta description.
+All landing pages: single H1, no heading-level skips, 100% image ALT coverage, three schema
+types, self-referencing canonical, unique title and meta description.
 
-### Keyword clusters and search intent
+### Correction to the previous report
 
-| Page | Primary keyword | Secondary cluster | Intent |
-|---|---|---|---|
-| `/home-cleaning` | home cleaning Dubai | regular/weekly/monthly/hourly cleaning, apartment, villa, townhouse, maid service | Commercial, recurring |
-| `/deep-cleaning` | deep cleaning Dubai | apartment/villa/kitchen/bathroom deep clean, post-construction | Commercial, one-off |
-| `/move-in-out-cleaning` | move out cleaning Dubai | move in cleaning, end of tenancy, empty property, oven/fridge/balcony | Transactional, deadline-driven |
-| `/holiday-home-cleaning` | holiday home cleaning Dubai | Airbnb cleaning, turnover, linen, restocking, mid-stay | Commercial, B2B recurring |
-| `/office-commercial-cleaning` | office cleaning Dubai | commercial cleaning, daily contracts, carpet shampoo, fit-out, post-event | B2B contract |
-| `/specialized-cleaning` | sofa cleaning Dubai | carpet, mattress, curtain, interior window cleaning | Commercial, item-level |
-| `/pest-control` | pest control Dubai | cockroach, bed bugs, ants, rodents, residential, commercial | Urgent problem-solving |
-| `/ac-service-dubai` | AC service Dubai | chemical wash, duct cleaning, repair, installation, gas top up, split/window | Commercial + urgent |
-| `/handyman-services` | handyman Dubai | plumbing, electrical, painting, TV mounting, furniture assembly, locks | Task-specific |
-| `/annual-maintenance` | annual maintenance contract Dubai | AMC apartment/villa, preventive maintenance, MEP inspection | B2B / landlord |
-
-**Cannibalization review:** overlap analysis found shared terms only in generic CTA
-words (`book`, `quote`) and the category noun `cleaning`, which legitimately appears in
-every cleaning service's name. Each page owns a distinct head term with distinct intent
-— `home cleaning` (recurring) vs `deep cleaning` (one-off reset) vs `holiday home
-cleaning` (B2B turnover) are separate markets, not competing pages. **No action needed.**
-The `/services` hub is positioned as a navigational parent and does not compete for any
-head term.
+The previous version stated **89 FAQ pairs**. The verified figure is **77 across the ten
+landing pages** (80 including the services hub, 86 including the homepage). The earlier number
+was wrong.
 
 ---
 
 ## 4. Local SEO
 
-### Coverage policy
+### Coverage policy — two different areas, deliberately
 
-Two different service areas are stated, because they are genuinely different:
+- **General cleaning and maintenance** — available across Dubai, subject to availability. Nine
+  pages name ten communities: Downtown Dubai, Business Bay, DIFC, Dubai Marina, JLT, Palm
+  Jumeirah, JVC, Dubai Hills, Arabian Ranches, Mirdif.
+- **AC servicing** — **Downtown Dubai, Business Bay and DIFC only**, matching Ads targeting.
 
-- **General cleaning and maintenance** — available across Dubai, subject to
-  availability. Nine pages name communities: Downtown Dubai, Business Bay, DIFC, Dubai
-  Marina, JLT, Palm Jumeirah, JVC, Dubai Hills, Arabian Ranches, Mirdif.
-- **AC servicing** — currently focused on **Downtown Dubai, Business Bay and DIFC
-  only**, matching Ads targeting.
-
-This distinction is enforced in the build: the AC page carries **zero** community chips
-and zero mentions of Marina, JVC, JLT, Palm Jumeirah, Arabian Ranches or Mirdif. Three
-of its FAQ answers and its property-type cards were rewritten during this work because
-they previously advertised communities outside that coverage.
+Enforced and verified: the AC page contains **zero** community chips and zero mentions of
+Marina, JVC, JLT, Palm Jumeirah, Arabian Ranches or Mirdif. Three of its FAQ answers and its
+property-type cards were rewritten because they previously advertised communities outside that
+coverage.
 
 ### Location signals
 
-- `geo.region` = `AE-DU`, `geo.placename` = `Dubai` on every page
-- `areaServed` in Service schema — `["Dubai"]` generally, `["Downtown Dubai","Business Bay","DIFC"]` on AC
-- `og:locale` = `en_AE`
-- Dubai-specific content woven into copy where genuinely relevant: sand dust in window
-  tracks, humidity and mattress drying, limescale from local water, DEWA/chiller
-  disconnection on empty properties, month-end tenancy clustering, service-lift booking
-  in towers
+`geo.region = AE-DU`, `geo.placename = Dubai`, `og:locale = en_AE` on every page.
+`areaServed` is `["Dubai"]` generally and `["Downtown Dubai","Business Bay","DIFC"]` on AC.
 
-### NAP consistency
+Dubai-specific detail is woven into copy where genuinely relevant: sand dust in window tracks,
+humidity and mattress drying times, limescale from local water, DEWA/chiller disconnection on
+empty properties, month-end tenancy clustering, service-lift booking in towers.
+
+### NAP consistency — verified
 
 | Field | Value | Occurrences |
 |---|---|---|
 | Name | Nacravo LLC | Consistent sitewide |
-| Phone | +971 58 108 2601 / `tel:+971581082601` / `wa.me/971581082601` | 24 files |
-| Email | info@nacravo.com | 23 files |
+| Phone | `+971 58 108 2601` / `tel:+971581082601` / `wa.me/971581082601` | Single value, 24 files |
+| Email | `info@nacravo.com` | Single value, 23 files |
 | Address | Dubai, United Arab Emirates | Consistent |
 
-The previous number (`+971556365807`) and the invalid `privacy@nacravo.com` address
-were replaced in **227 places**; QA fails the build if either reappears.
+Exactly one `tel:` value, one `mailto:` address and one WhatsApp number exist across the entire
+site. The old number and the invalid `privacy@nacravo.com` address were replaced in 227 places.
 
 ---
 
-## 5. Google Ads Landing Page Optimisation
+## 5. Google Ads Optimisation
 
 ### Quality Score factors
 
 **Landing Page Experience**
-- Dedicated page per ad group instead of one homepage for all traffic
-- Lead form above the fold on desktop *and* mobile — measured: form bottom at 610px on a
-  720px desktop viewport; on mobile the heading, description, form heading and first two
-  fields all sit above an 812px fold
-- Text-first hero — the LCP element is the H1, not an image
-- No interstitials, no autoplay, no sliders
-- Transparent about what is and isn't offered (no invented prices or guarantees)
+- Dedicated page per ad group rather than one homepage for all traffic
+- Form measured above the fold: bottom at **610px** on a 720px desktop viewport; on mobile
+  (375×812) the H1, description, form heading and first two fields are all above the fold
+- LCP element is text, not an image
+- No interstitials, autoplay or sliders
+- Honest about what is and is not offered — no invented prices or guarantees
 
-**Ad Relevance / message match**
+**Ad Relevance**
 - H1 states the exact service and city
-- The searched service is preselected in the form; anchor traffic also preselects the
-  sub-service
-- Sub-service sections mirror ad-group structure, so a "chemical wash" ad can deep-link
-  to `#chemical-wash`
+- Searched service preselected in the form; anchor traffic also preselects the sub-service
+- Sub-service sections mirror ad-group structure, so a "chemical wash" ad can deep-link to
+  `#chemical-wash` and land on matching copy with the form pre-filled
 
-**Expected CTR** is driven by ad copy rather than landing pages, but unique,
-benefit-led title tags and meta descriptions were written for each page to support
-organic CTR.
+**Conversion tracking** — one `generate_lead` event, single-fire, verified against a
+double-click. See Section 14 for the live-container defect.
 
-### Conversion flow and lead capture
+### Remaining PPC friction
 
-- Required fields cut to four: Name, Phone, Service, Location. Email removed entirely.
-- Property type, preferred date and message are optional behind a disclosure
-- Three CTA routes on every page: form (primary), WhatsApp, phone
-- CTAs repeat after key sections via mid-page bands, plus a closing band
-- Sticky mobile call/WhatsApp bar; desktop floating WhatsApp button
-- Submission hands over to WhatsApp with a structured, pre-filled enquiry
-
-### Objection handling
-
-Each page addresses the objections that actually block booking: what's included, how
-pricing works, who enters your home, what happens if the work is wrong, and — on AC and
-pest control — honest statements about what is *not* offered (no round-the-clock cover,
-no guaranteed response time, no licence claims).
+| Issue | Impact | Fix |
+|---|---|---|
+| Conversion value is 0 | Value-based bidding cannot optimise | Push an estimated lead value per service |
+| No prices anywhere | Price-sensitive searchers bounce to competitors who show ranges | Supply verified price ranges |
+| No reviews or ratings | Weakest trust signal on the page | Collect Google reviews, then mark up |
+| Pest control has no imagery | Lowest visual trust of the ten pages | Commission photography |
 
 ---
 
-## 6. Internal Linking Report
+## 6. Landing Page Optimisation
 
-### Link architecture
+Every landing page follows the same conversion structure:
+
+1. **Above the fold** — H1, short description, four trust badges, WhatsApp + Call buttons, and
+   the lead form. Verified at desktop, tablet and mobile.
+2. **Hero image** beside the form on desktop, after the form on mobile — added without
+   displacing any conversion element (measured).
+3. **Jump links** to the most-searched sub-services.
+4. **Sub-service sections**, each with its own quote and WhatsApp CTA that preselects that
+   sub-service.
+5. **Mid-page CTA band** after the sections.
+6. **Why Nacravo** — four substantiated differentiators, no invented claims.
+7. **Process** — four steps.
+8. **Proof gallery** — before/after comparisons, described accurately.
+9. **Pricing explainer** — how quoting works, with no invented numbers.
+10. **Coverage** — property types plus named communities.
+11. **FAQ** — objection handling.
+12. **Related services** — four contextual onward paths.
+13. **Closing CTA band**, plus sticky mobile bar and desktop floating WhatsApp.
+
+### Form usability
+
+Four required fields (Name, Phone, Service, Location). Email removed entirely. Property type,
+date and message are optional behind a disclosure. Inline validation focuses the first invalid
+field. Submission hands over to WhatsApp with a structured, pre-filled enquiry.
+
+---
+
+## 7. Internal Linking Analysis
 
 | Layer | Coverage |
 |---|---|
-| Header dropdown | All 10 services, grouped Cleaning / Maintenance |
-| Mobile menu | Same 10, expandable |
-| Footer | All 10 in grouped columns on every page |
-| Homepage service cards | All 10, direct links (no generic text) |
-| Services hub | All 10 + selection guidance with 8 more contextual links |
+| Header dropdown | All 10 services, grouped |
+| Mobile menu | All 10, expandable |
+| Footer | All 10 in grouped columns, every page |
+| Homepage service cards | All 10, direct links |
+| Services hub | All 10 + 8 further contextual links in selection guidance |
 | Related services | 4 per landing page |
-| **Contextual in-body** | **2–3 per landing page, inside prose** |
+| Contextual in-body | 2–3 per landing page, inside prose |
 
-### In-degree (measured)
-
-Every landing page and the hub receive inbound links from **11 other pages**.
-**Zero orphan pages.** Every page is within two clicks of the homepage — one via the
-header dropdown.
+**In-degree: 11 inbound pages for every landing page and the hub. Zero orphans.** Every page is
+within two clicks of the homepage — one via the header dropdown.
 
 ### Contextual link map
 
@@ -266,223 +266,314 @@ header dropdown.
 
 ---
 
-## 7. Structured Data Report
+## 8. Structured Data Analysis
 
-| Schema type | Where | Status |
+| Type | Where | Status |
 |---|---|---|
-| `Service` + `hasOfferCatalog` | 10 landing pages + hub | Valid, parses |
+| `Service` + `hasOfferCatalog` | 10 landing pages + hub | Valid |
 | `BreadcrumbList` | 10 landing pages + hub | Valid, 3 levels |
-| `FAQPage` | 10 landing pages + hub | Valid, 89 Q&A pairs total |
+| `FAQPage` | 10 landing pages + hub + homepage | Valid, 86 entries sitewide |
 | `HomeAndConstructionBusiness` | Homepage | Valid |
 | `Organization` + `ContactPoint` | Homepage | Valid |
 | `WebSite` | Homepage | Valid |
 
-**Validation:** every `application/ld+json` block is parsed by `build/qa.py` on each
-build; the build fails on a parse error, a missing `@context`/`@type`, or an empty FAQ
-answer. All blocks currently pass.
+**Validation:** every `application/ld+json` block is parsed on each build. The build fails on a
+parse error, a missing `@context`/`@type`, or an empty FAQ answer.
 
-**Deliberately not implemented:** `AggregateRating`, `Review` and `Offer`/`priceRange`
-at service level. Nacravo has no verified review corpus and no published prices —
-emitting these would be fabricated structured data and a Google policy violation.
+**Deliberately absent:** `AggregateRating`, `Review`, `Offer`/`priceRange`. No verified review
+corpus and no published prices exist — emitting these would be fabricated structured data and a
+Google policy violation.
 
 ---
 
-## 8. Performance Report
+## 9. Metadata Summary
 
-### Architecture changes
+All titles 51–59 chars; all descriptions 152–157 chars. Uniqueness enforced across all 23 pages.
+Full table in the **Metadata** sheet of the workbook.
+
+---
+
+## 10. Keyword Targeting
+
+| Page | Primary keyword | Intent |
+|---|---|---|
+| `/home-cleaning` | home cleaning Dubai | Commercial, recurring |
+| `/deep-cleaning` | deep cleaning Dubai | Commercial, one-off |
+| `/move-in-out-cleaning` | move out cleaning Dubai | Transactional, deadline-driven |
+| `/holiday-home-cleaning` | holiday home cleaning Dubai | Commercial, B2B recurring |
+| `/office-commercial-cleaning` | office cleaning Dubai | B2B contract |
+| `/specialized-cleaning` | sofa cleaning Dubai | Commercial, item-level |
+| `/pest-control` | pest control Dubai | Urgent problem-solving |
+| `/ac-service-dubai` | AC service Dubai | Commercial + urgent |
+| `/handyman-services` | handyman Dubai | Task-specific |
+| `/annual-maintenance` | annual maintenance contract Dubai | B2B / landlord |
+
+**Cannibalization review:** overlap analysis found shared terms only in generic CTA words
+(`book`, `quote`) and the category noun `cleaning`, which legitimately appears in every cleaning
+service's name. `home cleaning` (recurring), `deep cleaning` (one-off reset) and `holiday home
+cleaning` (B2B turnover) are separate markets with separate intent. **No action needed.** The
+hub is positioned as a navigational parent and competes for no head term.
+
+---
+
+## 11. Search Intent Coverage
+
+| Intent type | Covered by | Gap |
+|---|---|---|
+| Transactional / urgent | pest-control, ac-service-dubai, move-in-out-cleaning | — |
+| Commercial recurring | home-cleaning, holiday-home-cleaning, annual-maintenance | — |
+| Commercial one-off | deep-cleaning, specialized-cleaning | — |
+| B2B contract | office-commercial-cleaning, annual-maintenance | — |
+| Comparison / decision | services hub "Which service do you need?", AC maintenance-vs-chemical-wash | — |
+| **Informational / upper funnel** | Partially, via FAQs | **Yes — no blog** |
+
+The landing pages deliberately own commercial intent. Informational queries ("how often should
+AC be serviced", "how to prepare for bed bug treatment") are only partially served by FAQ
+answers. A small blog cluster is the recommended fix (Section 17).
+
+---
+
+## 12. Accessibility
+
+Contrast was **computed, not assumed** — the previous report explicitly declined to claim AA
+compliance, and that caution was justified: **nine combinations failed.**
+
+### Fixed (7)
+
+| Element | Before | After | Change |
+|---|---|---|---|
+| Eyebrow / kicker text | 3.11:1 | **5.03:1** | `--sage-text #5E6C4F` introduced for text |
+| Sage links on white | 3.47:1 | **5.62:1** | same token |
+| Fine print on pearl | 3.16:1 | **4.75:1** | `--stone` darkened to `#6F6B63` |
+| Fine print on white | 3.53:1 | **5.30:1** | same |
+| Form error text | 4.12:1 | **4.98:1** | `#C0574B` → `#B04A3E` |
+| Footer strapline | 3.87:1 | **4.73:1** | `#8A9380` → `#9AA391` |
+| TOC / step numbers | 3.11:1 | **5.03:1** | `--sage-text` |
+
+Brand surfaces were not touched. Sage remains unchanged where it is decorative (icons,
+checkmarks, borders, focus rings) — those are non-text UI components and pass the 3:1 threshold
+of WCAG 1.4.11 at 3.11:1.
+
+### Not fixed — requires a branding decision (2)
+
+| Element | Ratio | Required | Why not auto-fixed |
+|---|---|---|---|
+| Primary button label (pearl on sage) | **3.11:1** | 4.5:1 | Sage is a mid-tone: it fails with light labels **and** with dark ones until the label is nearly black (`#1F2419`, 4.57:1). The only clean fix is darkening the button itself to `#5F6E53` (4.89:1), which changes the brand's main CTA colour. The brief forbids changing branding. |
+| WhatsApp button label (white on `#25D366`) | **1.98:1** | 4.5:1 | `#25D366` is WhatsApp's official brand green with white text — the universally recognised pairing. Reaching 4.5:1 needs `#0B7A3B` (5.44:1), which no longer reads as WhatsApp. |
+
+**This is a decision for the brand owner, not an engineering choice.** Both options and exact
+ratios are supplied so the trade-off can be made deliberately.
+
+### Other accessibility work
+
+Keyboard reachable throughout, Escape closes the dropdown, 3px `:focus-visible` outline added
+sitewide, every form control labelled, `aria-expanded` / `aria-label` / `aria-live` /
+`aria-hidden` used correctly, `<main>` / `<header>` / `<footer>` / `<nav aria-label>` landmarks,
+skip link on every page, no heading-level skips, no touch target under 44px, 100% ALT coverage,
+`prefers-reduced-motion` respected.
+
+---
+
+## 13. Performance
 
 | Change | Effect |
 |---|---|
-| CSS extracted to one shared file | 27.9 KB cached once, reused across 11 pages, replacing 11 inline copies |
-| JS consolidated to one shared file | 19.3 KB cached once; AC page's duplicate inline tracker removed |
-| AC page JavaScript | **Reduced to zero** — slider removed, no remaining page JS |
-| No hero images | LCP element is text on all 10 landing pages |
+| Shared CSS (29.4 KB) | Cached once, reused across 11 pages, replacing 11 inline copies |
+| Shared JS (19.3 KB) | Cached once; AC page's duplicate inline tracker removed |
+| AC page JavaScript | **Zero** — slider removed entirely |
+| No hero image above the fold | LCP element is text on all 10 landing pages |
 | All images lazy-loaded | Below-fold galleries deferred |
-| Explicit width/height on every image | Dimensions read from real JPEG headers at build time |
+| Real intrinsic dimensions | Read from JPEG headers at build time |
+| CSS de-duplication bug | Fixed — extractor was re-appending a block it had already read back |
+
+**DOM size:** 618–1,030 elements per landing page, well within budget.
+**Render-blocking:** 2 stylesheets per landing page (shared + fonts); 3 on the AC page (plus its
+page-scoped CSS).
 
 ### Core Web Vitals
 
-- **LCP** — text-first heroes. No render-blocking image above the fold. Fonts preconnected
-  with `display=swap`.
-- **CLS** — every `<img>` carries real intrinsic width/height, and the hero media box is
-  ratio-locked. A latent bug was caught here: `ba-bathroom` is 1080×864 (5:4) while the
-  rest of the set is 3:2, so dimensions are now read per file rather than hardcoded.
-- **INP** — minimal JavaScript. No frameworks, no libraries, no polling. Interactions are
-  a nav toggle, `<details>` disclosures, and one form handler.
+- **LCP** — text-first heroes, fonts preconnected with `display=swap`
+- **CLS** — every `<img>` carries real width/height; hero media box is ratio-locked. A latent
+  bug was caught here: `ba-bathroom` is 1080×864 (5:4) while the rest of the set is 3:2, so
+  dimensions are read per file rather than hardcoded
+- **INP** — minimal JS, no frameworks, no polling
 
-Field data is not available (no CrUX history for these URLs yet). These are architectural
-improvements, not measured Lighthouse scores — run Lighthouse post-deploy for real numbers.
+**No field data exists** (no CrUX history for these URLs). These are architectural improvements,
+not measured Lighthouse scores. Run Lighthouse post-deploy for real numbers.
 
 ---
 
-## 9. Accessibility Report
+## 14. Analytics
 
-| WCAG area | Implementation |
+### Site-side — correct
+
+One `generate_lead` push with `eventCallback` and a timeout backstop, a `leadSent` one-shot
+guard, and a `DEDUP_MS` guard on delegated clicks. **Verified in-browser: a double-clicked
+submit produces exactly one `generate_lead`**, with correct `service_name`, `subservice_name`,
+`property_type` and `location`. An invalid submit pushes nothing.
+
+Events: `page_view`, `generate_lead`, `form_submit`, `quote_click`, `booking_click`,
+`cta_click`, `service_view`, `whatsapp_click`, `phone_click`, `outbound_click`.
+
+### Live GTM container audit — GTM-KD4PH4XP
+
+The repository's `gtm-nacravo-container.json` shows 3 tags. **The live container has 18.** It
+was fetched and parsed directly.
+
+| Finding | Severity | Detail |
+|---|---|---|
+| **Built-in trigger double-counting** | **Resolved — not an issue** | All 12 trigger predicates are custom-event equality checks. **No** `gtm.formSubmit`, `gtm.linkClick` or `gtm.historyChange` trigger fires any tag. The built-in listeners push to dataLayer but nothing consumes them. This closes the open question raised in the previous report. |
+| **Duplicate GA4 `generate_lead` tag** | **P1 — Blocking** | Tag 25 **and** tag 48 are both GA4 Event tags named `generate_lead`, both sending to `G-N2VGBEBELF`, both firing on the same trigger. **Every lead is counted twice in GA4.** |
+| Google Ads conversion | Correct | Exactly one `__awct` tag (id 49), conversion ID `18246691744`, label `J2SlCMja0M0cEKDX2fxD`, firing on `generate_lead` only. **Ads conversions are not duplicated.** |
+| Conversion value is zero | P2 | The tag reads `{{value}}`; the site pushes `value: 0`. Value-based bidding cannot optimise. |
+| Six paused tags | Informational | Left over from earlier iterations; harmless but clutter the container. |
+
+### Correction to the previous report
+
+The previous version recommended filling in `GOOGLE_ADS_ID` in `NACRAVO_TRACKING`. **That
+recommendation was wrong.** `LOAD_PIXELS_DIRECTLY` is `false`, so the site never loads Google
+Ads directly — the conversion is wired in GTM and works. Filling that field in while GTM also
+fires the conversion **would create duplicate Ads conversions**. Leave it empty.
+
+---
+
+## 15. Conversion Optimisation
+
+| Element | Implementation |
 |---|---|
-| Keyboard | All interactive elements reachable; Escape closes the dropdown |
-| Focus | Visible 3px `:focus-visible` outline added sitewide (base site relied on UA default) |
-| Labels | Every form control has a `<label for>`; enforced by QA |
-| ARIA | `aria-expanded` on nav toggles, `aria-label` on icon buttons, `role="status"` + `aria-live` on form feedback, `aria-hidden` on decorative SVG |
-| Landmarks | `<main id="main">`, `<header>`, `<footer>`, `<nav aria-label>` |
-| Skip link | "Skip to main content" on every page |
-| Heading hierarchy | **Fixed** — no skipped levels on any page |
-| Touch targets | No target under 44px measured at 375px |
-| Images | 100% ALT coverage; decorative SVG hidden from AT |
-| Reduced motion | `prefers-reduced-motion` respected |
-| Contrast | Uses the existing brand palette — see caveat in Section 12 |
+| Form position | Above the fold, desktop and mobile — measured |
+| Form friction | 4 required fields; email removed |
+| Service preselection | Per page, plus sub-service from anchor |
+| CTA routes | Form, WhatsApp, phone — all three on every page |
+| CTA frequency | Hero, per sub-service section, mid-page band, closing band, sticky bar, floating button |
+| Trust signals | 4 badges above the fold; employed/vetted team, fixed price, photo report, materials included |
+| Objection handling | Pricing explainer, process steps, 6–23 FAQs per page |
+| Mobile | Sticky call/WhatsApp bar; floating button suppressed to avoid overlap |
+| Guarantees | **Only verified ones.** Honest negative statements retained ("we do not offer a guaranteed response time") |
 
 ---
 
-## 10. Content Report
+## 16. Content Quality
 
-- **10 landing pages** created or upgraded, 22,445 words of original service copy
-- **77 sub-service sections**, each a real anchor target
-- **89 FAQ pairs** (23 preserved from the existing AC page, 66 new)
-- **10 keyword clusters**, one per page
+- 23,452 words of original service copy across 10 landing pages
+- 77 sub-service sections; 77 FAQ pairs on landing pages
+- Dubai-specific and concrete rather than generic
 
-### Content integrity
+### Integrity enforcement
 
-`build/verify_content.py` fails the build on any invented price, percentage,
-years-in-business claim, customer count, star rating, review count, certification,
-award, guarantee, warranty, "24/7" or superlative market claim. It is negation-aware, so
-honest disclaimers ("we do **not** offer a guaranteed response time") pass while the
-claims themselves cannot.
+`build/verify_content.py` fails the build on any invented price, percentage, years-in-business
+claim, customer count, star rating, review count, certification, award, guarantee, warranty,
+"24/7" claim or superlative. It is negation-aware, so honest disclaimers pass while the claims
+themselves cannot.
 
-**Removed during this work:** five unverified named testimonials from the AC page,
-replaced with a trust section making no customer-quote claims.
+**Removed:** five unverified named testimonials from the AC page, replaced with a trust section
+making no customer-quote claims.
 
----
+### Imagery integrity
 
-## 11. SEO Checklist
+All seven `ba-*` files are **before/after composites** with labels baked in — verified by
+opening each one. Consequences handled:
 
-| Item | Status |
-|---|---|
-| Unique title tags | ✅ Completed |
-| Unique meta descriptions | ✅ Completed — all 140–160 chars |
-| Self-referencing canonicals | ✅ Completed |
-| Single H1 per page | ✅ Completed |
-| Heading hierarchy, no skips | ✅ Completed — was broken, now fixed |
-| Keyword placement in title/H1/lead | ✅ Completed |
-| Image ALT text | ✅ Completed — 100% coverage |
-| Image ALT accuracy | ✅ Improved — rewritten to describe before/after composites correctly |
-| Responsive images (`srcset`/`sizes`) | ✅ Completed |
-| Lazy loading | ✅ Completed |
-| Explicit image dimensions | ✅ Completed — read from real files |
-| Open Graph | ✅ Completed — unique image per page |
-| Twitter Cards | ✅ Completed |
-| Service schema | ✅ Completed |
-| Breadcrumb schema | ✅ Completed |
-| FAQ schema | ✅ Completed |
-| Robots.txt | ✅ Completed |
-| XML sitemap | ✅ Completed |
-| HTML sitemap | ✅ Completed |
-| Internal linking — navigation | ✅ Completed |
-| Internal linking — contextual | ✅ Completed |
-| Orphan pages | ✅ Completed — zero |
-| Broken links | ✅ Completed — zero |
-| Anchor links | ✅ Completed — all resolve |
-| Duplicate metadata | ✅ Completed — none |
-| Keyword cannibalization | ✅ Reviewed — none material |
-| Thin content | ✅ Completed — min 2,016 words on landing pages |
-| Semantic HTML | ✅ Completed |
-| Accessibility | ✅ Improved |
-| Page speed architecture | ✅ Improved |
-| Analytics / conversion tracking | ✅ Completed — verified single-fire |
-| Hero imagery | ✅ Completed — 10 of 10 pages |
-| Service galleries | ⚠️ Improved — 9 of 10; pest control pending photography |
-| Local SEO — communities | ✅ Completed |
-| Pricing on page | ⚠️ Pending — no verified prices supplied |
-| Review / rating schema | ⚠️ Pending — no verified review source |
-| Google Business Profile | ⚠️ Pending — outside repository |
-| Backlink acquisition | ⚠️ Pending — outside repository |
-| Blog / informational content | ⚠️ Pending — recommended below |
-| Contrast audit vs WCAG AA | ⚠️ Pending — brand palette not formally measured |
+- Alt text rewritten to describe them as comparisons, not single after-photos
+- The AC page's simulated "drag to compare" slider was **removed**: it loaded the same file as
+  both layers and faked the "before" with a CSS grayscale filter, which misrepresents evidence
+- No page shows the same image twice
+- Pest control and the AC hero have **no honest asset** — documented placeholders, never
+  borrowed imagery
+
+**Known limitation:** `ba-living` and `ba-bathroom` each appear on 6 pages. Only 7 composites
+exist for 6 gallery pages, so cross-page reuse is unavoidable until more photography exists.
 
 ---
 
-## 12. Recommendations
+## 17. Remaining Recommendations
 
-### Content expansion
-1. **Pest control photography** is the one genuine gap. The page ships with a documented
-   placeholder rather than borrowed cleaning photos. Commission: technician inspecting
-   for cockroach/ant activity, bed bug mattress inspection, commercial kitchen treatment.
-2. **Per-community landing pages** once the core ten mature — `/home-cleaning/dubai-marina`
-   style — but only for communities with genuine booking volume. Do not spin up ten thin
-   location pages; that invites a thin-content problem rather than solving one.
-3. **Blog for informational intent.** The landing pages own commercial intent; they should
-   not chase "how to remove limescale". A small cluster of genuinely useful Dubai-specific
-   guides (AC servicing frequency in summer, tenancy handover checklists, bed bug
-   preparation) would capture upper-funnel traffic and give the service pages internal
-   links from relevant context.
+Ranked. Full detail in the **Recommendations** sheet of the workbook.
 
-### Local SEO and authority
-4. **Google Business Profile** is the highest-leverage item not in this repository.
-   Complete the profile, add service categories matching these ten pages, post photos,
-   and link each service to its landing page.
-5. **Review strategy.** No review schema is implemented because no verified review corpus
-   exists. Collect reviews on Google, then surface them — real reviews with real
-   `AggregateRating` markup are one of the strongest local ranking and CTR levers.
-6. **Local citations** — consistent NAP on UAE directories. The phone number is now
-   consistent sitewide, which is the prerequisite.
+### P1 — Blocking
 
-### Backlinks
-7. Target property managers, holiday-home operators and real-estate agencies in the
-   covered communities — partners who would link naturally, rather than bought links.
+1. **Fix the duplicate GA4 `generate_lead` tag.** Pause or delete one of tags 25/48 in GTM.
+   *Owner: GTM admin · 15 minutes · No code change.*
+2. **Decide on button contrast.** Darken the primary button to `#5F6E53` (4.89:1) and accept a
+   deeper green, or accept the risk and document it. *Owner: brand owner · 1 hour.*
 
-### Technical
-8. **Set a Google Ads conversion ID.** `GOOGLE_ADS_ID` and the conversion labels are
-   currently empty in `NACRAVO_TRACKING`. The `generate_lead` event fires correctly, but
-   nothing is recording it as an Ads conversion until those are filled in.
-9. **Audit the live GTM container.** The repository's export shows conversions firing only
-   on the custom `generate_lead` event, but the live container also has built-in Form
-   Submit and Link Click triggers active. Confirm no live tag fires a conversion on those,
-   or WhatsApp clicks and form submits could double-count.
-10. **Run Lighthouse after deploy** for real CWV numbers.
-11. **Formal contrast audit.** The brand palette (`--sage #7E8F70` on `--pearl #F5F2EC`)
-    has not been measured against WCAG AA. Some sage-on-pearl body text may fall short of
-    4.5:1 and should be checked before claiming AA compliance.
+### P2 — High
 
-### Schema enhancements
-12. Add `AggregateRating` once reviews exist, `Offer`/`priceRange` once prices are agreed,
-    and `LocalBusiness` sub-types per district if per-community pages are built. All three
-    are blocked on business inputs, not engineering.
+3. Commission pest control photography.
+4. Commission AC service photography (technician servicing an indoor unit, chemical wash).
+5. Set a conversion value so value-based bidding can work.
+6. Google Business Profile alignment — highest-leverage local item not in this repo.
+
+### P3 — Medium
+
+7. Review collection programme, then add genuine `AggregateRating`.
+8. 6–8 more before/after pairs so each page carries a distinct set.
+9. Run Lighthouse post-deploy for real Core Web Vitals.
+10. Publish trade licence and VAT TRN (currently placeholder comments).
+
+### P4 — Later
+
+11. Blog for informational intent.
+12. Per-community landing pages — only where booking volume justifies it.
+13. Backlink acquisition via property managers and holiday-home operators.
 
 ---
 
-## 13. Final Summary
+## 18. Technical Debt
 
-### Pages created
-`/home-cleaning`, `/deep-cleaning`, `/move-in-out-cleaning`, `/holiday-home-cleaning`,
-`/office-commercial-cleaning`, `/specialized-cleaning`, `/pest-control`,
-`/handyman-services`, `/annual-maintenance`, `/services`
+| Item | Risk | Note |
+|---|---|---|
+| Generated pages are build artefacts | Medium | Hand edits to the 11 generated `.html` files are destroyed on the next build. Documented in every file's generator docstring and in `MEMORY.md`. |
+| `gtm-nacravo-container.json` is stale | Medium | Repo copy shows 3 tags; live container has 18. Re-export or delete it to avoid misleading future audits. |
+| Legal pages hand-maintained | Low | Not generated; their inline CSS is a separate copy of the design tokens. |
+| `index.html` dual-maintained | Low | Keeps inline CSS for LCP; the shared block is kept in sync via a managed marker region. |
+| Six paused GTM tags | Low | Clutter; review and delete if obsolete. |
+| Cross-page image reuse | Low | Cosmetic and SEO-dilutive, not incorrect. Blocked on photography. |
+| No automated CI | Medium | `qa.py`, `verify_content.py` and `audit_final.py` must be run manually before deploy. |
 
-### Pages updated
-`/ac-service-dubai` (upgraded in place, URL and canonical preserved), homepage,
-`/sitemap`, and nine legal pages (contact details and markup validity).
+---
 
-### SEO work completed
-Eleven commercial pages with unique metadata, complete structured data, layered internal
-linking with zero orphans, corrected heading hierarchy across the whole site, accurate
-image ALT text, service-specific hero imagery, local coverage signals, and a consolidated
-performance architecture. Contact details corrected in 227 places.
+## 19. Future Roadmap
 
-Three defects from the previous implementation round were found and fixed during this
-audit: a misleading simulated before/after slider, factually wrong gallery ALT text, and
-a sitewide heading-level skip.
+**0–1 month** — Clear the two P1 blockers. Deploy. Submit sitemap in Search Console. Set up
+Google Business Profile. Start review collection. Run Lighthouse.
 
-### Remaining recommendations
-Pest control photography, Google Ads conversion ID, live GTM trigger audit, Google
-Business Profile, review collection, contrast audit, and the blog/backlink programme.
-All are listed with rationale in Section 12.
+**1–3 months** — Commission pest control and AC photography. Add conversion values. Monitor
+Search Console for query/page mismatches and refine metadata. Begin backlink outreach.
 
-### Expected SEO impact
-Foundations are complete and technically sound. Organic results will follow indexing and
-maturation over 3–6 months and depend materially on the off-site work in Section 12,
-which has not been started. Paid performance should improve sooner, because relevance,
-message match and form friction — the levers this work actually moved — are the ones
-Quality Score responds to.
+**3–6 months** — Add review schema once a genuine corpus exists. Publish the first blog
+cluster. Evaluate per-community pages using real booking data.
+
+**6–12 months** — Expand community pages where justified. Consider Arabic localisation
+(would introduce a real `hreflang` requirement). Revisit pricing transparency.
+
+---
+
+## 20. Final Production Readiness
+
+| Dimension | Weight | Score | Basis |
+|---|---:|---:|---|
+| Technical SEO | 20% | 10/10 | Zero broken links, anchors, chains, loops; metadata unique |
+| On-page SEO | 15% | 10/10 | 10 distinct clusters, 2,000+ words each, no cannibalization |
+| Structured data | 10% | 9/10 | 3 types per page, all valid; rating/price blocked on business inputs |
+| Internal linking | 10% | 10/10 | Zero orphans, contextual + navigational layers |
+| Conversion / Ads | 15% | 8/10 | Form above fold verified; conversion value still 0 |
+| Analytics | 10% | 6/10 | Site-side correct; live GTM has a duplicate GA4 tag |
+| Accessibility | 10% | 8/10 | 7 of 9 contrast failures fixed; 2 need a brand decision |
+| Performance | 5% | 9/10 | Text LCP, shared cached assets, zero JS on AC page; no field data |
+| Content quality | 5% | 9/10 | Original, specific, no fabricated claims; photography gaps |
+
+### **Overall: 89 / 100**
+
+**Recommendation: safe to deploy, with the two blockers tracked.**
+
+Neither blocker lives in site code. The duplicate GA4 tag is a GTM console change that can be
+made before or immediately after deploy; it inflates GA4 reporting but does **not** affect
+Google Ads conversions or user experience. The button contrast is a genuine WCAG AA failure that
+should be decided deliberately rather than silently — until it is, the site should not be
+described as WCAG AA compliant.
 
 ### Deployment status
 
-**Nothing has been deployed.** No push, no DNS change, no production configuration
-altered, no analytics IDs changed. All work is committed locally on `main`.
+**Nothing has been deployed.** No push, no DNS change, no production configuration altered, no
+analytics IDs changed. All work is committed locally on `main`.

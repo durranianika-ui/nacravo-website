@@ -52,7 +52,9 @@ for slug, (heading, images) in media.WORK_GALLERIES.items():
     ]
 
 for slug, reason in media.GALLERY_GAPS.items():
-    PAGES[slug]["gallery_gap"] = reason
+    # ac-service-dubai is rendered by build_ac.py, not here
+    if slug in PAGES:
+        PAGES[slug]["gallery_gap"] = reason
 
 # Hero image beside the form, and the matching social preview image.
 for slug, hero in media.HEROES.items():

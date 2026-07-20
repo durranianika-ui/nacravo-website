@@ -27,10 +27,12 @@ import media
 import template as T
 from content_ac import PAGE
 
-PAGE["hero_image"] = media.HEROES["ac-service-dubai"]
+# No hero image: ba-ducts is the only AC-specific asset and it carries the
+# before/after section below. See media.GALLERY_GAPS["ac-service-dubai"].
+# og:image still uses the duct comparison — it is the most representative frame.
+PAGE["og_image"] = "ba-ducts-1080.jpg"
 # Contextual links yes; community list NO — AC coverage is three districts only.
 PAGE["contextual"] = links.CONTEXTUAL["ac-service-dubai"]
-PAGE["og_image"] = PAGE["hero_image"][0]
 
 # No separate gallery on this page: the before/after section below already shows
 # the duct comparison, and repeating the same image twice would be padding.

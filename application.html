@@ -47,7 +47,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{--pearl:#F5F2EC;--sage:#7E8F70;--moss:#3B4636;--euca:#C9D2BF;--sand:#E8E0D0;
---stone:#8C8880;--clay:#B9876B;--line:#E2DCCF;--moss-deep:#2E372B}
+--stone:#6F6B63;--sage-text:#5E6C4F;--clay:#B9876B;--line:#E2DCCF;--moss-deep:#2E372B}
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{font-family:'Inter',sans-serif;color:var(--moss);background:var(--pearl);line-height:1.65;-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column}
@@ -55,7 +55,7 @@ h1,h2,h3,h4,.dsp{font-family:'Plus Jakarta Sans',sans-serif;font-weight:500;lett
 a{color:inherit;text-decoration:none}
 img{display:block;max-width:100%}
 .wrap{max-width:1000px;margin:0 auto;padding:0 24px;width:100%}
-.eyebrow{font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:var(--sage);font-weight:500;font-family:'Plus Jakarta Sans'}
+.eyebrow{font-size:13px;letter-spacing:0.14em;text-transform:uppercase;color:var(--sage-text);font-weight:500;font-family:'Plus Jakarta Sans'}
 .btn{display:inline-flex;align-items:center;gap:8px;font-family:'Inter';font-weight:500;font-size:15px;padding:13px 24px;border-radius:10px;border:1px solid transparent;cursor:pointer;transition:.18s;white-space:nowrap}
 .btn-primary{background:var(--sage);color:var(--pearl)}.btn-primary:hover{background:#6E7E61}
 .btn-ghost{background:transparent;color:var(--moss);border-color:var(--line)}.btn-ghost:hover{background:#ECE6D8}
@@ -73,7 +73,7 @@ header.nav{position:sticky;top:0;z-index:50;background:rgba(245,242,236,.92);bac
 @media(max-width:820px){.nav-links{display:none}}
 /* breadcrumb */
 .crumb{font-size:13px;color:var(--stone);padding:20px 0 0}
-.crumb a{color:var(--sage)}.crumb a:hover{color:var(--moss)}
+.crumb a{color:var(--sage-text)}.crumb a:hover{color:var(--moss)}
 .crumb span{margin:0 7px;color:var(--line)}
 /* legal hero */
 .lhero{padding:26px 0 34px;border-bottom:1px solid var(--line)}
@@ -86,7 +86,7 @@ main{flex:1}
 .doc{padding:40px 0 64px}
 .doc-grid{display:grid;grid-template-columns:230px 1fr;gap:44px;align-items:start}
 .toc{position:sticky;top:88px;font-size:13.5px;border:1px solid var(--line);border-radius:14px;padding:18px 18px;background:#fff}
-.toc h2{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--sage);margin:0 0 10px}
+.toc h2{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--sage-text);margin:0 0 10px}
 .toc a{display:block;color:#54594C;padding:5px 0;line-height:1.35;border-bottom:1px solid #F0EBDF}
 .toc a:last-child{border-bottom:none}.toc a:hover{color:var(--moss)}
 .prose{max-width:720px}
@@ -97,7 +97,7 @@ main{flex:1}
 .prose ul,.prose ol{margin:0 0 16px 20px}
 .prose li{margin:0 0 7px;color:#3F463A}
 .prose strong{color:var(--moss)}
-.prose a{color:var(--sage);text-decoration:underline;text-underline-offset:2px}
+.prose a{color:var(--sage-text);text-decoration:underline;text-underline-offset:2px}
 .prose a:hover{color:var(--moss)}
 .callout{background:#fff;border:1px solid var(--line);border-left:3px solid var(--sage);border-radius:12px;padding:18px 20px;margin:18px 0}
 .callout.key{border-left-color:var(--clay);background:#FBF7F1}
@@ -106,7 +106,7 @@ main{flex:1}
 .company-card dl{display:grid;grid-template-columns:130px 1fr;gap:8px 16px;margin:0}
 .company-card dt{color:var(--stone);font-family:'Plus Jakarta Sans';font-weight:500}
 .company-card dd{margin:0;color:var(--moss)}
-.company-card a{color:var(--sage);text-decoration:underline}
+.company-card a{color:var(--sage-text);text-decoration:underline}
 .dl-table{width:100%;border-collapse:collapse;margin:8px 0 20px;font-size:14px}
 .dl-table th,.dl-table td{text-align:left;padding:10px 12px;border:1px solid var(--line);vertical-align:top}
 .dl-table th{background:#EEE9DC;font-family:'Plus Jakarta Sans';font-weight:500;color:var(--moss)}
@@ -124,20 +124,20 @@ footer a{color:#BBC4B0;font-size:14px;display:block;padding:4px 0;transition:.15
 footer a:hover{color:var(--pearl)}
 .foot-brand{display:flex;align-items:center;gap:10px;color:var(--pearl);font-family:'Plus Jakarta Sans';font-weight:500;font-size:22px;margin-bottom:12px}
 .foot-tag{font-size:13px;color:#9AA391;max-width:280px;line-height:1.6}
-.foot-co{font-size:12.5px;color:#8A9380;margin-top:12px;line-height:1.7}
+.foot-co{font-size:12.5px;color:#9AA391;margin-top:12px;line-height:1.7}
 .foot-co a{display:inline;color:#9AA391;padding:0;text-decoration:underline}
 .foot-legal{border-top:1px solid #46523F;padding-top:18px;margin-bottom:16px;display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px}
 .foot-legal a{display:inline;color:#9AA391;padding:0}
 .foot-legal a:hover{color:var(--pearl)}
 .foot-legal button{display:inline;color:#9AA391;background:none;border:none;font:inherit;font-size:13px;cursor:pointer;padding:0}
 .foot-legal button:hover{color:var(--pearl)}
-.foot-bottom{border-top:1px solid #46523F;padding-top:20px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:13px;color:#8A9380}
+.foot-bottom{border-top:1px solid #46523F;padding-top:20px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;font-size:13px;color:#9AA391}
 /* cookie consent */
 .cc-banner{position:fixed;left:16px;right:16px;bottom:16px;z-index:9999;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 10px 34px rgba(46,55,43,.20);padding:18px 20px;max-width:780px;margin:0 auto;display:none}
 .cc-banner.show{display:block}
 .cc-banner h2{font-size:16px;margin-bottom:6px}
 .cc-banner p{font-size:13.5px;color:#44483D;margin-bottom:12px}
-.cc-banner a{color:var(--sage);text-decoration:underline}
+.cc-banner a{color:var(--sage-text);text-decoration:underline}
 .cc-row{display:flex;gap:10px;flex-wrap:wrap}
 .cc-btn{font-family:'Inter';font-weight:500;font-size:14px;padding:10px 18px;border-radius:10px;border:1px solid var(--line);cursor:pointer;background:#fff;color:var(--moss)}
 .cc-btn:hover{background:#ECE6D8}
