@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
 Disallow: /thank-you
+Disallow: /Nacravo_SEO_Implementation_Report.docx
 
 Sitemap: https://www.nacravo.com/sitemap.xml
