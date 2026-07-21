@@ -522,8 +522,15 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 .drop-toggle:hover{color:var(--moss)}
 .drop-toggle svg{width:13px;height:13px;transition:transform .18s}
 .drop-toggle[aria-expanded="true"] svg{transform:rotate(180deg)}
-.drop-panel{position:absolute;top:calc(100% + 14px);left:-20px;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 12px 34px rgba(46,55,43,.14);padding:20px;display:none;grid-template-columns:1fr 1fr;gap:22px;min-width:440px}
+.drop-panel{position:absolute;top:calc(100% + 14px);left:-20px;z-index:70;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 12px 34px rgba(46,55,43,.14);padding:20px;display:none;grid-template-columns:1fr 1fr;gap:22px;min-width:440px}
+/* invisible bridge across the 14px gap: keeps the pointer inside the hover
+   region while it travels from the trigger to the panel (no disappearing menu) */
+.drop-panel::before{content:"";position:absolute;left:0;right:0;top:-14px;height:14px}
+/* Open on hover (mouse, pure CSS) or when JS adds .open (focus / click / touch).
+   Keyboard focus + Escape are driven in JS so Escape can't be re-opened by focus. */
+.has-drop:hover .drop-panel,
 .drop-panel.open{display:grid}
+.has-drop:hover .drop-toggle svg{transform:rotate(180deg)}
 .drop-col .drop-h{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--sage-text);margin-bottom:10px;font-family:'Plus Jakarta Sans'}
 .drop-col a{display:block;font-size:14px;color:#44483D;padding:6px 0;white-space:nowrap}
 .drop-col a:hover{color:var(--sage-text)}
@@ -1055,24 +1062,44 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <script>
 (function () {
   "use strict";
-  var toggle = document.querySelector(".drop-toggle");
-  var panel = document.querySelector(".drop-panel");
-  if (toggle && panel) {
+  // Hover opening is pure CSS (:hover). JS owns focus/click/touch state + ARIA,
+  // so Escape can close reliably without :focus-within re-opening the panel.
+  var wrap = document.querySelector(".has-drop");
+  var toggle = wrap && wrap.querySelector(".drop-toggle");
+  var panel = wrap && wrap.querySelector(".drop-panel");
+  if (wrap && toggle && panel) {
+    var openDrop  = function () { panel.classList.add("open"); toggle.setAttribute("aria-expanded", "true"); };
     var closeDrop = function () { panel.classList.remove("open"); toggle.setAttribute("aria-expanded", "false"); };
+    var pointerFocus = false, suppressReopen = false;
+    // Mouse/touch focus is handled by :hover / click — only keyboard focus auto-opens
+    toggle.addEventListener("pointerdown", function () {
+      pointerFocus = true;
+      setTimeout(function () { pointerFocus = false; }, 300);
+    });
     toggle.addEventListener("click", function (e) {
       e.stopPropagation();
-      var open = panel.classList.toggle("open");
-      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      if (panel.classList.contains("open")) closeDrop(); else openDrop();
     });
+    // Opens on keyboard focus; stays open while focus is anywhere inside the component
+    wrap.addEventListener("focusin", function () {
+      if (suppressReopen) { suppressReopen = false; return; }
+      if (!pointerFocus) openDrop();
+    });
+    wrap.addEventListener("focusout", function (e) {
+      if (!wrap.contains(e.relatedTarget)) closeDrop();
+    });
+    // Escape closes and returns focus to the trigger (suppress the focus-triggered reopen)
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && (panel.classList.contains("open") || wrap.contains(document.activeElement))) {
+        suppressReopen = true;
+        closeDrop();
+        toggle.focus();
+      }
+    });
+    // Click outside closes
     document.addEventListener("click", function (e) {
-      if (!panel.contains(e.target) && e.target !== toggle) closeDrop();
+      if (!wrap.contains(e.target)) closeDrop();
     });
-    document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeDrop(); });
-    var wrap = toggle.closest(".has-drop");
-    if (wrap && window.matchMedia("(hover:hover)").matches) {
-      wrap.addEventListener("mouseenter", function () { panel.classList.add("open"); toggle.setAttribute("aria-expanded", "true"); });
-      wrap.addEventListener("mouseleave", closeDrop);
-    }
   }
   var menuBtn = document.querySelector(".menu-btn");
   var mobileMenu = document.getElementById("mobileMenu");
