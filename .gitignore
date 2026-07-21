@@ -9,3 +9,4 @@ Thumbs.db
 .claude/
 __pycache__/
 *.pyc
+build/gtm/gtm-live.js
