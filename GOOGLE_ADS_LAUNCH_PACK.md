@@ -288,7 +288,7 @@ Not a marketplace
 | All Services | `/services` |
 
 ### Other extensions
-- **Call extension:** +971 58 108 2601
+- **Call extension:** +971 55 540 3038
 - **Location extension:** link the Google Business Profile once live (see `GBP_OPTIMIZATION_PLAN.md`)
 - **Lead form extension:** optional; the on-page form + WhatsApp already convert well, so test
   before relying on it

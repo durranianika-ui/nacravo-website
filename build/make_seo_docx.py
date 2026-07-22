@@ -492,7 +492,7 @@ add_table(["Area", "Status", "Detail"],
     [
      ["Dubai location targeting", "Complete", "Dubai in titles/H1s/body across pages"],
      ["Service-area content", "Complete", "AC page scoped to Downtown/Business Bay/DIFC; others Dubai-wide"],
-     ["NAP consistency", "Complete", "Nacravo LLC, Dubai UAE, +971 58 108 2601, info@nacravo.com sitewide + schema"],
+     ["NAP consistency", "Complete", "Nacravo LLC, Dubai UAE, +971 55 540 3038, info@nacravo.com sitewide + schema"],
      ["LocalBusiness schema", "Complete", "HomeAndConstructionBusiness + PostalAddress + ContactPoint + OpeningHours"],
      ["Service schema", "Complete", "Service + OfferCatalog on each landing page"],
      ["Local landing pages", "Complete", "11 service pages live"],

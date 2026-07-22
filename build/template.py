@@ -61,9 +61,9 @@ def image_size(filename):
     return size
 
 SITE = "https://www.nacravo.com"
-PHONE_DISPLAY = "+971 58 108 2601"
-PHONE_TEL = "+971581082601"
-WA_NUMBER = "971581082601"
+PHONE_DISPLAY = "+971 55 540 3038"
+PHONE_TEL = "+971555403038"
+WA_NUMBER = "971555403038"
 EMAIL = "info@nacravo.com"
 GTM_ID = "GTM-KD4PH4XP"
 

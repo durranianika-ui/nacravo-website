@@ -92,8 +92,8 @@ Regenerate + verify first if anything in `build/` changed:
 ## Forms / WhatsApp / Phone
 - [x] Form validation blocks bad input; one `generate_lead` per valid submit
 - [x] Phone input `type=tel` (numeric keyboard); date `type=date`; inputs 16px (no zoom)
-- [x] WhatsApp opens with structured prefilled message, number 971581082601
-- [x] `tel:+971581082601` single value sitewide
+- [x] WhatsApp opens with structured prefilled message, number 971555403038
+- [x] `tel:+971555403038` single value sitewide
 
 ## Legal
 - [x] Privacy, Terms, Cookie, Refund, Data Deletion, Accessibility, Security, Acceptable Use live

@@ -12,9 +12,9 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 
 # (old, new) applied in order — longest / most specific first.
 REPLACEMENTS = [
-    (b"+971 55 636 5807", b"+971 58 108 2601"),   # display format
-    (b"+971556365807",    b"+971581082601"),      # tel: links, JSON-LD
-    (b"971556365807",     b"971581082601"),       # wa.me links (bare)
+    (b"+971 55 636 5807", b"+971 55 540 3038"),   # display format
+    (b"+971556365807",    b"+971555403038"),      # tel: links, JSON-LD
+    (b"971556365807",     b"971555403038"),       # wa.me links (bare)
     (b"privacy@nacravo.com", b"info@nacravo.com"),
 ]
 

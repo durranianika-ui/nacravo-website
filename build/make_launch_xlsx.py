@@ -162,7 +162,7 @@ def build_ads():
         ("Structured snippet - Services", "Home Cleaning; Deep Cleaning; Move In/Out; Office Cleaning; AC Service; Handyman; Pest Control; Annual Maintenance"),
         ("Structured snippet - Types", "Apartments; Villas; Townhouses; Offices; Holiday Homes"),
         ("Sitelinks", "Deep Cleaning /deep-cleaning; AC Chemical Wash /ac-service-dubai#chemical-wash; Sofa & Carpet /specialized-cleaning; Move Out Cleaning /move-in-out-cleaning; Handyman /handyman-services; All Services /services"),
-        ("Call extension", "+971 58 108 2601"),
+        ("Call extension", "+971 55 540 3038"),
         ("Location extension", "Link the Google Business Profile once live"),
         ("Image extensions", "Use real service photos. SKIP for Pest Control and AC until that photography exists."),
         ("Negative keywords (starter)", "jobs; careers; salary; vacancy; free; DIY; how to; course; training; wholesale"),

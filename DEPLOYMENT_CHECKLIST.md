@@ -60,8 +60,8 @@ cd "C:/Users/NASEER KHAN/myproject"
 - [x] **Forms tested** — validation blocks empty submit, focuses first invalid field
 - [x] **Lead flow tested** — one `generate_lead` on double-click, correct payload
 - [x] **Service preselection tested** — service and sub-service preselect from anchor URLs
-- [x] **WhatsApp tested** — opens `wa.me/971581082601` with structured pre-filled message
-- [x] **Phone tested** — `tel:+971581082601`, single value sitewide
+- [x] **WhatsApp tested** — opens `wa.me/971555403038` with structured pre-filled message
+- [x] **Phone tested** — `tel:+971555403038`, single value sitewide
 - [x] **Email verified** — `info@nacravo.com`, single value sitewide
 - [x] **No stale contacts** — old number and `privacy@nacravo.com` fully removed (227 replaced)
 

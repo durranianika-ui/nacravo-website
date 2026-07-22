@@ -124,7 +124,7 @@ CHEMICAL = """<section id="chemical" style="background:var(--sand)">
       </div>
     </div>
     <div class="center" style="margin-top:26px">
-      <a href="https://wa.me/971581082601?text=Hello%20Nacravo%2C%20I%27d%20like%20advice%20on%20whether%20my%20AC%20needs%20maintenance%20or%20a%20chemical%20wash." target="_blank" rel="noopener" class="btn btn-wa">Not sure? Ask us on WhatsApp</a>
+      <a href="https://wa.me/971555403038?text=Hello%20Nacravo%2C%20I%27d%20like%20advice%20on%20whether%20my%20AC%20needs%20maintenance%20or%20a%20chemical%20wash." target="_blank" rel="noopener" class="btn btn-wa">Not sure? Ask us on WhatsApp</a>
     </div>
   </div>
 </section>"""

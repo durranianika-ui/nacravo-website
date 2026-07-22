@@ -84,9 +84,9 @@ than on the site. Until prices are set, prefer the Services list above.
 
 | Field | Value (must match the site exactly) |
 |---|---|
-| Phone | +971 58 108 2601 |
+| Phone | +971 55 540 3038 |
 | Website | https://www.nacravo.com |
-| WhatsApp | +971 58 108 2601 (add as a chat/social link where supported) |
+| WhatsApp | +971 55 540 3038 (add as a chat/social link where supported) |
 | Hours | Monday–Sunday, 07:00–22:00 |
 | Attributes | "Online appointments", "On-site services", identity attributes only if genuinely applicable |
 
@@ -175,7 +175,7 @@ Every GBP surface points back to the site:
 | Each Service | Its landing page (table §4) |
 | Weekly posts | The themed landing page |
 | Products (if used) | The relevant service page |
-| Booking / message | WhatsApp +971 58 108 2601 |
+| Booking / message | WhatsApp +971 55 540 3038 |
 
 ---
 
