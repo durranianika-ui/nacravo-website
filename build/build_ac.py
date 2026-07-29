@@ -1,19 +1,28 @@
-"""Rebuild /ac-service-dubai as the consolidated AC landing page.
+"""Rebuild /ac-service-dubai as the AC Services HUB.
 
-The URL and canonical are unchanged. The page is re-composed from the shared
-template so it uses ONE tracking layer (assets/nacravo.js) instead of its own
-inline copy — keeping its inline tracker while adding the shared one would have
-fired every event twice.
+The URL and canonical are unchanged, and it still captures broad "AC services
+Dubai" intent — but it no longer tries to be the Google Ads landing page for
+every individual AC service. That job now belongs to the six dedicated pages
+(build_ac_pages.py). This page's job is to explain Nacravo's overall AC
+capability, help a visitor identify the right service, and route them to it.
 
-Preserved verbatim from the old page: the comparison table, problems grid,
-before/after slider, chemical-wash comparison, six-step process, property types
-and brands, plus all of its FAQ content.
+Structure (deliberately much shorter than the previous page):
+  hero + lead form
+  -> service selection cards (link to the six dedicated pages)
+  -> "Which AC service do I need?" decision guide
+  -> side-by-side comparison of servicing / chemical cleaning / duct cleaning / repair
+  -> why-Nacravo trust table + standards
+  -> brief six-step process
+  -> pricing explanation + coverage
+  -> condensed GENERAL AC FAQs (service-specific FAQs live on the dedicated pages)
+  -> brands + related services
 
-Removed: the five unverified testimonials and the carousel that carried them,
-replaced by a trust section that makes no customer-quote claims.
-
-Corrected: service-area statements, which previously advertised communities
-outside the AC team's current coverage.
+Removed vs the old page: the ten deep sub-service anchor sections, the problems
+grid, the standalone before/after (now owned by the duct-cleaning page), the deep
+chemical-wash block (owned by the chemical-cleaning page) and the property-types
+block. Preserved: the honest trust section, the comparison table, the process and
+the brand list. The unverified testimonials and the fake before/after slider stay
+gone, guarded below.
 """
 
 import pathlib
@@ -23,36 +32,209 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
 import ac_blocks
 import links
-import media
 import template as T
 from content_ac import PAGE
 
-# No hero image: ba-ducts is the only AC-specific asset and it carries the
-# before/after section below. See media.GALLERY_GAPS["ac-service-dubai"].
-# og:image still uses the duct comparison — it is the most representative frame.
-PAGE["og_image"] = "ba-ducts-1080.jpg"
-# Contextual links yes; community list NO — AC coverage is three districts only.
-PAGE["contextual"] = links.CONTEXTUAL["ac-service-dubai"]
-
-# No separate gallery on this page: the before/after section below already shows
-# the duct comparison, and repeating the same image twice would be padding.
-
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 
-# --- service-area corrections applied to the preserved blocks -----------------
-# The old copy promoted Marina, JLT, Dubai Hills, JVC and Motor City. AC
-# servicing is currently focused on Downtown Dubai, Business Bay and DIFC, so
-# these claims are corrected rather than left to contradict the rest of the site.
-AREA_FIXES = [
-    ("Split and FCU units in high-rises across Business Bay, Marina, JLT and Downtown.",
-     "Split and fan-coil units in high-rise towers across Downtown Dubai, Business Bay and DIFC."),
-    ("Efficient servicing for community townhouses in Dubai Hills, JVC and Motor City.",
-     "Efficient servicing for townhouses and low-rise homes inside our current coverage area."),
-    ("Low-disruption servicing scheduled around your working hours in DIFC and beyond.",
-     "Low-disruption servicing scheduled around your working hours in DIFC and Business Bay."),
+PAGE["og_image"] = "ba-ducts-1080.jpg"
+PAGE["contextual"] = links.CONTEXTUAL["ac-service-dubai"]
+
+# The hub routes rather than anchors down its own body, so the hero jump-nav and
+# the sub-service form options point at the hub's own sections and stay short.
+PAGE["jump_links"] = [
+    ("Choose a service", "choose"),
+    ("Which do I need?", "which"),
+    ("Compare", "compare"),
+    ("Coverage", "areas"),
+]
+# A hub-level enquiry: the form's specific-service select offers the six services,
+# so a broad visitor can still pick one without leaving the page.
+PAGE["subservices"] = {
+    "servicing": "AC Servicing",
+    "chemical-cleaning": "AC Chemical Cleaning",
+    "duct-cleaning": "AC Duct Cleaning",
+    "repair": "AC Repair",
+    "installation": "AC Installation",
+    "maintenance-contract": "AC Maintenance Contract",
+}
+
+# Condensed, GENERAL FAQs only. Service-specific questions now live on the six
+# dedicated pages, so the hub does not compete with them for those long-tail
+# queries. Schema FAQ is generated from this same list, so it matches what is
+# visible on the page.
+_faq = dict(PAGE["faq"])
+GENERAL_FAQ_QUESTIONS = [
+    "How often should AC be serviced in Dubai?",
+    "What is the difference between AC maintenance and a chemical wash?",
+    "How long does an AC service take?",
+    "Which areas do you cover for AC service?",
+    "Do you service apartments and villas?",
+    "What AC brands do you service?",
+    "Do you offer same-day AC service?",
+    "Is your AC pricing transparent?",
+    "Are your AC technicians licensed and insured?",
+    "How do I book an AC service?",
+]
+PAGE["faq"] = [(q, _faq[q]) for q in GENERAL_FAQ_QUESTIONS if q in _faq]
+PAGE["faq_heading"] = "General AC questions, answered"
+
+# For schema hasOfferCatalog, list the six real services rather than the old ten
+# overlapping anchors.
+PAGE["sections"] = [
+    {"title": "AC Servicing"}, {"title": "AC Chemical Cleaning"},
+    {"title": "AC Duct Cleaning"}, {"title": "AC Repair"},
+    {"title": "AC Installation"}, {"title": "AC Maintenance Contract"},
 ]
 
-# Replaces the removed reviews carousel. States only what we can substantiate.
+# The related grid points at the specialist AC pages first.
+PAGE["related"] = [
+    ("AC Servicing", "/ac-servicing-dubai",
+     "Routine maintenance that restores cooling, airflow and drainage."),
+    ("AC Chemical Cleaning", "/ac-chemical-cleaning-dubai",
+     "Deep coil restoration for smells and weak cooling a service won't fix."),
+    ("AC Repair", "/ac-repair-dubai",
+     "Leaks, no cooling, noise and faults diagnosed and priced before work."),
+    ("AC Maintenance Contracts", "/ac-maintenance-contract-dubai",
+     "Scheduled preventive cover for homes, landlords and businesses."),
+]
+
+
+def _icon(path):
+    return ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" '
+            'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + path + "</svg>")
+
+
+# ------------------------------------------------------------- service selection
+_SERVICES = [
+    ("/ac-servicing-dubai", "AC Servicing",
+     "Routine maintenance for weak cooling, poor airflow, dirty filters and blocked drainage.",
+     '<path d="M12 20h9M3 20l1.5-4.5L15 5l4 4L8.5 19.5z"/>'),
+    ("/ac-chemical-cleaning-dubai", "AC Chemical Cleaning",
+     "Deep coil restoration for persistent smells, mould and cooling a service can't fix.",
+     '<path d="M7 21c-2 0-3-1.5-3-3.5 0-2 3-6.5 3-6.5s3 4.5 3 6.5S9 21 7 21z"/><path d="M14 4l6 6M9.5 8.5 15 3l6 6-5.5 5.5z"/>'),
+    ("/ac-duct-cleaning-dubai", "AC Duct Cleaning",
+     "Accessible duct and grille cleaning for dust blowing from the vents and weak airflow.",
+     '<circle cx="6" cy="8" r="1"/><circle cx="12" cy="6" r="1"/><circle cx="18" cy="9" r="1"/><circle cx="9" cy="13" r="1"/><circle cx="16" cy="15" r="1"/><circle cx="7" cy="18" r="1"/>'),
+    ("/ac-repair-dubai", "AC Repair",
+     "Leaks, no cooling, tripping breakers, noise and faults — diagnosed and priced first.",
+     '<path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.3 2.3-2-2z"/>'),
+    ("/ac-installation-dubai", "AC Installation",
+     "Split and window units sized, fitted, pressure-tested and commissioned properly.",
+     '<path d="M3 21h18M6 21V7l7-4v18M13 21V9l5 3v9"/>'),
+    ("/ac-maintenance-contract-dubai", "AC Maintenance Contracts",
+     "Scheduled preventive cover with per-unit records and photo reports across the year.",
+     '<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4M8 14l2 2 4-4"/>'),
+]
+
+
+def service_selection():
+    cards = "".join(
+        f"""
+      <a class="ac-card" href="{url}">
+        <div class="ac-ic">{_icon(icon)}</div>
+        <h3>{T.esc(title)}</h3>
+        <p>{T.esc(desc)}</p>
+        <span class="ac-go">View service →</span>
+      </a>""" for url, title, desc, icon in _SERVICES)
+    return f"""
+<section id="choose">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Choose your AC service</span>
+      <h2>Six specialist AC services, one accountable team</h2>
+      <p>Pick the service that matches your problem — each has its own page with the full detail, pricing approach and FAQs.</p>
+    </div>
+    <div class="ac-grid">{cards}
+    </div>
+  </div>
+</section>
+"""
+
+
+# --------------------------------------------------------------- decision guide
+_DECISION = [
+    ("Cooling has slowly weakened",
+     'Usually dust on the filters, coils or the outdoor condenser. Start with <a href="/ac-servicing-dubai">AC servicing</a> — it restores most units.'),
+    ("Bad smell, or weak straight after a service",
+     'The coils are contaminated. That is an <a href="/ac-chemical-cleaning-dubai">AC chemical cleaning</a>, where the coils are removed and deep-treated.'),
+    ("Dust blowing from the vents",
+     'Debris in the accessible ductwork. Book an <a href="/ac-duct-cleaning-dubai">AC duct cleaning</a> assessment — we inspect before recommending work.'),
+    ("Leaking, tripping the breaker or not cooling",
+     'An active fault, not routine wear. That is an <a href="/ac-repair-dubai">AC repair</a> — diagnosed and priced before any work starts.'),
+    ("Fitting a new unit or replacing an old one",
+     'An <a href="/ac-installation-dubai">AC installation</a>: correctly sized, drainage set to a proper fall, pipework pressure-tested and commissioned.'),
+    ("Tired of surprise breakdowns",
+     'Put cooling on a schedule with an <a href="/ac-maintenance-contract-dubai">AC maintenance contract</a> — planned visits and per-unit records.'),
+]
+
+
+def decision_guide():
+    cards = "".join(
+        f"""
+      <div class="anchor-card">
+        <h3>{T.esc(symptom)}</h3>
+        <p>{answer}</p>
+      </div>""" for symptom, answer in _DECISION)
+    return f"""
+<section id="which" style="background:var(--sand)">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Not sure which you need?</span>
+      <h2>Which AC service do I need?</h2>
+      <p>Match the symptom to the service. If you are still unsure, send a photo on WhatsApp and we will tell you honestly.</p>
+    </div>
+    <div class="anchor-grid">{cards}
+    </div>
+  </div>
+</section>
+"""
+
+
+# ------------------------------------------------------------------- comparison
+def comparison_table():
+    rows = [
+        ("AC Servicing", "/ac-servicing-dubai", "Routine care; weak cooling from dust",
+         "Cleans filters, coils and drain; checks gas, thermostat and airflow", "Every 3-4 months"),
+        ("AC Chemical Cleaning", "/ac-chemical-cleaning-dubai", "Smells, mould, weak cooling after a service",
+         "Removes and deep-treats the coils; flushes blower and drain pan", "Every 8-12 months"),
+        ("AC Duct Cleaning", "/ac-duct-cleaning-dubai", "Dust from the vents; restricted airflow",
+         "Cleans accessible ducts and grilles after inspection", "As needed / on inspection"),
+        ("AC Repair", "/ac-repair-dubai", "An active fault — leak, no cooling, noise",
+         "Diagnoses the cause and repairs it, parts approved first", "When a fault occurs"),
+    ]
+    body = "".join(
+        f"""
+        <tr>
+          <th scope="row"><a href="{url}">{T.esc(name)}</a></th>
+          <td>{T.esc(best)}</td>
+          <td>{T.esc(does)}</td>
+          <td>{T.esc(freq)}</td>
+        </tr>""" for name, url, best, does, freq in rows)
+    return f"""
+<section id="compare" style="border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:#fff">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Compare</span>
+      <h2>Servicing, chemical cleaning, duct cleaning or repair?</h2>
+      <p>The names overlap across this industry. Here is the plain version so you book the right one.</p>
+    </div>
+    <div class="svc-compare-wrap">
+      <table class="svc-compare">
+        <thead>
+          <tr><th scope="col">Service</th><th scope="col">Best for</th><th scope="col">What it does</th><th scope="col">Typical frequency</th></tr>
+        </thead>
+        <tbody>{body}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+"""
+
+
+# Reused from the previous page. States only what can be substantiated — no
+# customer quotes, ratings or review counts.
 TRUST_SECTION = """
 <section id="standards" style="background:var(--sand)">
   <div class="wrap">
@@ -83,62 +265,9 @@ TRUST_SECTION = """
 </section>
 """
 
-# The original page carried a drag-to-compare slider. It has been removed, and
-# with it all of this page's remaining JavaScript.
-#
-# Why: the slider loaded ba-ducts-1080.jpg as BOTH its "before" and "after"
-# layer and simulated the "before" state with a CSS grayscale/brightness filter.
-# That file is already a single side-by-side Before | After composite with those
-# labels printed into the image, so the widget stacked its own duplicate labels
-# on top, and dragging it revealed the composite's own "Before" half beneath an
-# "After" tag. Beyond being broken, presenting a colour-filtered copy of a photo
-# as a genuine "before" image misrepresents the evidence.
-#
-# The composite is now shown as-is, which is what it was made for.
-SLIDER_JS = ""
-
-BEFORE_AFTER = """
-<section id="before-after" style="background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="eyebrow">Before vs after</span>
-      <h2>The difference a proper service makes</h2>
-      <p>A neglected AC duct against the same duct after a Nacravo clean. Clean coils and ducts mean stronger cooling and cleaner air.</p>
-    </div>
-    <div class="ba-wrap">
-      <figure class="ba-static">
-        <img src="images/ba-ducts-1080.jpg" srcset="images/ba-ducts-600.jpg 600w, images/ba-ducts-1080.jpg 1080w"
-             sizes="(max-width:760px) 92vw, 560px"
-             alt="Before and after comparison of an air conditioning duct interior: heavy dust build-up on the left, clean bare metal on the right"
-             width="1080" height="720" loading="lazy" decoding="async">
-        <figcaption>Duct interior before and after a Nacravo clean.</figcaption>
-      </figure>
-      <div class="ba-side">
-        <div class="benefit"><div class="bi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2s6 6.5 6 11a6 6 0 0 1-12 0c0-4.5 6-11 6-11z"/></svg></div><div><h3>Better cooling</h3><p>Clean coils exchange heat efficiently, so rooms reach temperature faster.</p></div></div>
-        <div class="benefit"><div class="bi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12c2-2 5 2 7 0s5 2 7 0M5 8c2-2 5 2 7 0s5 2 7 0"/></svg></div><div><h3>Cleaner air</h3><p>Removing mould and bacteria from coils improves the air your family breathes.</p></div></div>
-        <div class="benefit"><div class="bi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h7l-1 8 10-12h-7z"/></svg></div><div><h3>Lower energy consumption</h3><p>A system that isn't fighting dirt draws less power to hold the same temperature.</p></div></div>
-        <div class="benefit"><div class="bi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 2"/></svg></div><div><h3>Longer equipment life</h3><p>Regular servicing prevents strain and premature compressor failure.</p></div></div>
-        <div class="benefit"><div class="bi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h11a3 3 0 1 0-3-3"/><path d="M3 12h15a3 3 0 1 1-3 3"/></svg></div><div><h3>Improved airflow</h3><p>Unblocked filters and vents deliver even, quiet airflow to every room.</p></div></div>
-      </div>
-    </div>
-  </div>
-</section>
-"""
-
-
-def apply_area_fixes(html):
-    for old, new in AREA_FIXES:
-        if old not in html:
-            raise SystemExit(f"FAILED: expected phrase not found for correction:\n  {old}")
-        html = html.replace(old, new)
-    return html
-
 
 def main():
-    property_types = apply_area_fixes(ac_blocks.PROPERTY_TYPES)
-
     head = T.render_head(PAGE)
-    # page-scoped stylesheet for the preserved AC-only components
     head = head.replace(
         '<link rel="stylesheet" href="/assets/nacravo.css">',
         '<link rel="stylesheet" href="/assets/nacravo.css">\n'
@@ -148,27 +277,21 @@ def main():
     body = (
         T.render_header(PAGE)
         + T.render_hero(PAGE)
-        + T.render_sections(PAGE)
-        # alias anchor so /ac-service-dubai#maintenance resolves as well
-        + '<span id="maintenance" aria-hidden="true"></span>\n'
-        + T.render_cta_band(PAGE, PAGE["band1_heading"], PAGE["band1_body"], "quote")
+        + service_selection()
+        + decision_guide()
+        + comparison_table()
         + ac_blocks.COMPARISON
-        + ac_blocks.PROBLEMS
-        + BEFORE_AFTER
-        + ac_blocks.CHEMICAL
+        + TRUST_SECTION
         + ac_blocks.PROCESS
         + T.render_pricing(PAGE)
         + T.render_areas(PAGE)
-        + property_types
         + ac_blocks.BRANDS
-        + TRUST_SECTION
         + T.render_faq(PAGE)
         + T.render_related(PAGE)
         + T.render_cta_band(PAGE, PAGE["band2_heading"], PAGE["band2_body"], "book")
     )
 
-    footer = T.render_footer(PAGE).replace("</body>", SLIDER_JS + "</body>")
-
+    footer = T.render_footer(PAGE)
     html = head + body + footer
 
     # --- guards -------------------------------------------------------------
@@ -180,18 +303,22 @@ def main():
             raise SystemExit(f"FAILED: reviews markup '{banned}' still present")
     if "Dubai-wide coverage" in html:
         raise SystemExit("FAILED: page still claims Dubai-wide AC coverage")
-    # the fake before/after slider must not come back
     for banned in ("bawRange", "bawBefore", "bawHandle", "Drag the slider"):
         if banned in html:
             raise SystemExit(f"FAILED: simulated before/after slider markup '{banned}' is present")
     if html.count("<h1") != 1:
         raise SystemExit(f"FAILED: expected exactly one h1, found {html.count('<h1')}")
+    # the hub must link to every dedicated AC page
+    for slug in ("ac-servicing-dubai", "ac-chemical-cleaning-dubai", "ac-duct-cleaning-dubai",
+                 "ac-repair-dubai", "ac-installation-dubai", "ac-maintenance-contract-dubai"):
+        if f"/{slug}" not in html:
+            raise SystemExit(f"FAILED: hub does not link to /{slug}")
 
     out = ROOT / "ac-service-dubai.html"
     out.write_text(html, encoding="utf-8", newline="\n")
-    print(f"ac-service-dubai.html rebuilt — {len(html)/1024:.1f} KB")
-    print(f"  {len(PAGE['sections'])} sub-service anchor sections")
-    print(f"  {len(PAGE['faq'])} FAQ entries preserved")
+    print(f"ac-service-dubai.html rebuilt as hub — {len(html)/1024:.1f} KB")
+    print(f"  links to all 6 dedicated AC pages")
+    print(f"  {len(PAGE['faq'])} general FAQ entries")
     print("  testimonials removed, service-area claims corrected")
     return 0
 

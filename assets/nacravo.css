@@ -192,6 +192,9 @@ footer a:hover{color:var(--pearl)}
 .mbar a{flex:1;text-align:center;padding:12px;border-radius:10px;font-weight:500;font-size:14px;font-family:'Plus Jakarta Sans';display:flex;align-items:center;justify-content:center;gap:7px}
 .mbar .call{background:#ECE6D8;color:var(--moss)}
 .mbar .wa{background:#25D366;color:#fff}
+.mbar .book{background:var(--moss);color:var(--pearl)}
+/* three actions stay comfortable down to 320px */
+@media(max-width:360px){.mbar{gap:7px;padding-left:10px;padding-right:10px}.mbar a{font-size:13.5px;gap:5px}}
 @media(max-width:900px){.mbar{display:flex}body{padding-bottom:72px}}
 
 /* ============ PERFORMANCE ============ */
@@ -355,32 +358,51 @@ body.cc-open .wa-float{bottom:calc(20px + 172px)}
 /* visible keyboard focus everywhere (the base site relies on the UA default) */
 a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid var(--sage);outline-offset:2px;border-radius:4px}
 
-/* ---- DESKTOP SERVICES DROPDOWN ---- */
+/* ---- DESKTOP SERVICES DROPDOWN (mega-menu) ---- */
 .has-drop{position:relative}
 .drop-toggle{display:inline-flex;align-items:center;gap:5px;background:none;border:none;font:inherit;color:#5A5F52;cursor:pointer;padding:0}
 .drop-toggle:hover{color:var(--moss)}
 .drop-toggle svg{width:13px;height:13px;transition:transform .18s}
 .drop-toggle[aria-expanded="true"] svg{transform:rotate(180deg)}
-.drop-panel{position:absolute;top:calc(100% + 14px);left:-20px;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 12px 34px rgba(46,55,43,.14);padding:20px;display:none;grid-template-columns:1fr 1fr;gap:22px;min-width:440px}
+/* z-index sits above hero, banners, forms and page content. The panel is a
+   child of the sticky header (z-index:50); 100 keeps it above other header
+   content and, via the header's stacking context, above the page. */
+.drop-panel{position:absolute;top:calc(100% + 14px);left:-20px;z-index:100;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 12px 34px rgba(46,55,43,.14);padding:20px;display:none;grid-template-columns:repeat(3,minmax(150px,1fr));gap:26px;min-width:600px;max-width:calc(100vw - 32px)}
+/* Invisible bridge across the 14px gap between trigger and panel. It is a child
+   of .has-drop, so the pointer travelling from the trigger to a menu item never
+   leaves the hover region — this is the structural fix for the menu that used to
+   vanish before an item could be clicked. */
+.drop-panel::before{content:"";position:absolute;left:0;right:0;top:-14px;height:14px}
+/* Open on hover (pure CSS, works even if JS fails) or when JS adds .open for
+   click / touch / keyboard. Keyboard + Escape are JS-driven so Escape cannot be
+   immediately re-opened by the :hover state. */
+.has-drop:hover .drop-panel,
 .drop-panel.open{display:grid}
+.has-drop:hover .drop-toggle svg{transform:rotate(180deg)}
 .drop-col .drop-h{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--sage-text);margin-bottom:10px;font-family:'Plus Jakarta Sans'}
 .drop-col a{display:block;font-size:14px;color:#44483D;padding:6px 0;white-space:nowrap}
 .drop-col a:hover{color:var(--sage-text)}
+@media(max-width:960px){.drop-panel{min-width:520px;gap:20px}}
 
 /* ---- MOBILE MENU (expandable services) ---- */
-.menu-btn{display:none;background:none;border:none;cursor:pointer;color:var(--moss);padding:8px;margin-right:-8px}
+.menu-btn{display:none;background:none;border:none;cursor:pointer;color:var(--moss);padding:9px;margin-right:-9px;min-width:44px;min-height:44px;align-items:center;justify-content:center}
 .menu-btn svg{width:26px;height:26px}
 .mobile-menu{display:none;background:var(--pearl);border-bottom:1px solid var(--line);padding:8px 0 18px}
 .mobile-menu.open{display:block}
-.mobile-menu .wrap>a{display:block;font-size:16px;padding:12px 0;border-bottom:1px solid var(--line);color:var(--moss)}
+/* Every mobile tap target is at least 44px tall for comfortable touch use. */
+.mobile-menu .wrap>a{display:flex;align-items:center;min-height:48px;font-size:16px;padding:12px 0;border-bottom:1px solid var(--line);color:var(--moss)}
 .mm-group{border-bottom:1px solid var(--line)}
-.mm-group>summary{padding:12px 0;font-size:16px;font-family:'Plus Jakarta Sans';font-weight:500}
-.mm-group>summary .pl{color:var(--sage);font-size:20px}
+.mm-group>summary{display:flex;align-items:center;justify-content:space-between;min-height:48px;padding:12px 0;font-size:16px;font-family:'Plus Jakarta Sans';font-weight:500;cursor:pointer;list-style:none}
+.mm-group>summary::-webkit-details-marker{display:none}
+.mm-group>summary .pl{color:var(--sage);font-size:22px;transition:transform .18s;line-height:1}
 .mm-group[open]>summary .pl{transform:rotate(45deg)}
 .mm-group .mm-links{padding:2px 0 12px 14px}
-.mm-group .mm-links a{display:block;font-size:15px;color:#54594C;padding:9px 0}
-.mm-sub{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--sage-text);margin:10px 0 2px;font-family:'Plus Jakarta Sans'}
-@media(max-width:900px){.menu-btn{display:block}}
+.mm-group .mm-links a{display:flex;align-items:center;min-height:44px;font-size:15px;color:#54594C;padding:9px 0}
+.mm-sub{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--sage-text);margin:12px 0 2px;font-family:'Plus Jakarta Sans'}
+/* Lock body scroll while the mobile menu is open so the page behind cannot
+   scroll under the overlay. */
+body.nav-open{overflow:hidden}
+@media(max-width:900px){.menu-btn{display:flex}}
 
 /* ---- FOOTER: five grouped columns ---- */
 @media(min-width:761px){.foot-grid.foot-5{grid-template-columns:1.5fr 1fr 1fr 1fr 1fr}}

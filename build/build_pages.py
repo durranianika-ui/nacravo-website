@@ -116,7 +116,13 @@ def render_services_hub():
         ("Pest Control", "/pest-control", "Cockroach, bed bug, ant and rodent treatments for homes and commercial premises."),
     ]
     maintenance = [
-        ("AC Services", "/ac-service-dubai", "Servicing, chemical wash, duct cleaning, repair and installation for split and window units."),
+        ("AC Services", "/ac-service-dubai", "The AC hub — servicing, chemical cleaning, duct cleaning, repair, installation and contracts."),
+        ("AC Servicing", "/ac-servicing-dubai", "Routine maintenance that restores cooling, airflow and drainage for split, ducted and fan-coil units."),
+        ("AC Chemical Cleaning", "/ac-chemical-cleaning-dubai", "Deep coil restoration for persistent smells, mould and cooling a regular service won't fix."),
+        ("AC Duct Cleaning", "/ac-duct-cleaning-dubai", "Accessible duct and grille cleaning for dust from the vents and restricted airflow."),
+        ("AC Repair", "/ac-repair-dubai", "Leaks, no cooling, tripping breakers, noise and faults diagnosed and priced before work."),
+        ("AC Installation", "/ac-installation-dubai", "Split and window units sized, fitted, pressure-tested and commissioned properly."),
+        ("AC Maintenance Contracts", "/ac-maintenance-contract-dubai", "Scheduled preventive AC cover with per-unit records and photo reports across the year."),
         ("Handyman Services", "/handyman-services", "Plumbing, electrical, painting, mounting, carpentry and fixture work in one visit."),
         ("Annual Maintenance", "/annual-maintenance", "Apartment and villa AMC with scheduled preventive visits and priority callout."),
     ]

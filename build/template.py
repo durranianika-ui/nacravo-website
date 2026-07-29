@@ -67,8 +67,8 @@ WA_NUMBER = "971555403038"
 EMAIL = "info@nacravo.com"
 GTM_ID = "GTM-KD4PH4XP"
 
-# Navigation is defined once and rendered into every page's desktop dropdown,
-# mobile menu and footer, so the three can never disagree.
+# Navigation is defined once and rendered into every page's desktop mega-menu,
+# mobile accordion and footer, so the three can never disagree.
 NAV_CLEANING = [
     ("Home Cleaning", "/home-cleaning"),
     ("Deep Cleaning", "/deep-cleaning"),
@@ -78,8 +78,18 @@ NAV_CLEANING = [
     ("Specialized Cleaning", "/specialized-cleaning"),
     ("Pest Control", "/pest-control"),
 ]
-NAV_MAINTENANCE = [
+# Air conditioning: the hub first, then the six dedicated service pages. Grouped
+# in its own mega-menu column so the Maintenance section is not overloaded.
+NAV_AC = [
     ("AC Services", "/ac-service-dubai"),
+    ("AC Servicing", "/ac-servicing-dubai"),
+    ("AC Chemical Cleaning", "/ac-chemical-cleaning-dubai"),
+    ("AC Duct Cleaning", "/ac-duct-cleaning-dubai"),
+    ("AC Repair", "/ac-repair-dubai"),
+    ("AC Installation", "/ac-installation-dubai"),
+    ("AC Maintenance Contracts", "/ac-maintenance-contract-dubai"),
+]
+NAV_MAINTENANCE = [
     ("Handyman Services", "/handyman-services"),
     ("Annual Maintenance", "/annual-maintenance"),
 ]
@@ -285,8 +295,9 @@ def render_header(page):
         <button type="button" class="drop-toggle" aria-expanded="false" aria-controls="svcDrop">Services
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
         </button>
-        <div class="drop-panel" id="svcDrop">
+        <div class="drop-panel" id="svcDrop" role="menu" aria-label="Services">
           <div class="drop-col"><div class="drop-h">Cleaning</div>{links(NAV_CLEANING)}</div>
+          <div class="drop-col"><div class="drop-h">Air Conditioning</div>{links(NAV_AC)}</div>
           <div class="drop-col"><div class="drop-h">Maintenance</div>{links(NAV_MAINTENANCE)}</div>
         </div>
       </div>
@@ -309,6 +320,7 @@ def render_header(page):
         <summary>Services <span class="pl">+</span></summary>
         <div class="mm-links">
           <div class="mm-sub">Cleaning</div>{links(NAV_CLEANING)}
+          <div class="mm-sub">Air Conditioning</div>{links(NAV_AC)}
           <div class="mm-sub">Maintenance</div>{links(NAV_MAINTENANCE)}
         </div>
       </details>
@@ -351,6 +363,42 @@ def render_hero(page):
               {opts}
             </select>
           </div>"""
+
+    # Maintenance-contract pages collect a little more so the quote is meaningful.
+    # These fields are read by assets/nacravo.js and added to the WhatsApp handover.
+    contract_fields = ""
+    if page.get("contract_fields"):
+        contract_fields = """
+        <div class="form-row">
+          <div class="field">
+            <label for="propertyuse">Residential or commercial?</label>
+            <select id="propertyuse" name="propertyuse">
+              <option value="">Select…</option>
+              <option>Residential</option>
+              <option>Commercial</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="frequency">Preferred visit frequency</label>
+            <select id="frequency" name="frequency">
+              <option value="">Not sure yet</option>
+              <option>Quarterly (every 3 months)</option>
+              <option>Every 4 months</option>
+              <option>Twice a year</option>
+              <option>Monthly</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label for="properties">Number of properties</label>
+            <input type="number" id="properties" name="properties" min="1" inputmode="numeric" placeholder="e.g. 1">
+          </div>
+          <div class="field">
+            <label for="units">Approx. number of AC units</label>
+            <input type="number" id="units" name="units" min="1" inputmode="numeric" placeholder="e.g. 4">
+          </div>
+        </div>"""
 
     # Hero image: sits below the copy in the left column so it appears beside
     # the form on desktop without displacing it, and after the form on mobile.
@@ -426,7 +474,7 @@ def render_hero(page):
         </div>
 
         <div class="form-row">{sub_options}
-        </div>
+        </div>{contract_fields}
 
         <details class="lp-extra">
           <summary class="lp-more">Add property type, date or a note (optional)</summary>
@@ -753,7 +801,7 @@ def render_footer(page):
       </div>
       <div>
         <h2 class="fh">Maintenance</h2>
-        {links(NAV_MAINTENANCE)}
+        {links(NAV_AC + NAV_MAINTENANCE)}
       </div>
       <div>
         <h2 class="fh">Company</h2>
@@ -779,6 +827,8 @@ def render_footer(page):
 <div class="mbar">
   <a href="tel:{PHONE_TEL}" class="call">{PHONE_ICON} Call</a>
   <a href="{wa}" target="_blank" rel="noopener" class="wa">{WA_ICON.format(s=16)} WhatsApp</a>
+  <a href="{page.get('quote_href', '#leadFormTitle')}" class="book" data-track="quote" data-track-label="Sticky: Book service">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg> Book</a>
 </div>
 
 <a class="wa-float" href="{wa}" target="_blank" rel="noopener" aria-label="Chat with Nacravo on WhatsApp" data-track="booking" data-service-name="{esc(page['service_value'])}" data-track-label="Floating WhatsApp">{WA_ICON.format(s=30)}</a>
@@ -809,6 +859,7 @@ def render_footer(page):
 <script>
   window.NACRAVO_PAGE = {json.dumps({'service': page['service_value'], 'subservices': page.get('subservices', {})}, ensure_ascii=False)};
 </script>
+<script src="/assets/nacravo-nav.js" defer></script>
 <script src="/assets/nacravo.js" defer></script>
 </body>
 </html>

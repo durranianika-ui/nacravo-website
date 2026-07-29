@@ -117,6 +117,20 @@
 @media(max-width:760px){.brand-grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:420px){.brand-grid{grid-template-columns:1fr 1fr}}
 
+/* hub: service selection cards link out to the dedicated pages */
+a.ac-card{display:block;text-decoration:none;color:inherit}
+a.ac-card .ac-go{display:inline-block;margin-top:12px;font-size:13.5px;font-weight:600;color:var(--sage-text)}
+a.ac-card:hover .ac-go{text-decoration:underline}
+
+/* hub: side-by-side service comparison (scrolls on narrow screens) */
+.svc-compare-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:14px}
+.svc-compare{width:100%;border-collapse:collapse;min-width:660px;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.svc-compare th,.svc-compare td{padding:14px 16px;text-align:left;font-size:14px;line-height:1.5;border-bottom:1px solid var(--line);vertical-align:top}
+.svc-compare thead th{background:var(--moss);color:var(--pearl);font-family:'Plus Jakarta Sans';font-weight:500}
+.svc-compare tbody th{font-weight:600;color:var(--moss);white-space:nowrap}
+.svc-compare tbody tr:last-child th,.svc-compare tbody tr:last-child td{border-bottom:none}
+.svc-compare a{color:var(--sage-text);font-weight:600}
+
 /* final cta */
 .final{background:var(--moss);color:var(--pearl);text-align:center}
 .final .eyebrow{color:var(--euca)}

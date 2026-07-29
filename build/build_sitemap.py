@@ -24,6 +24,9 @@ def routes(today):
         "holiday-home-cleaning", "office-commercial-cleaning",
         "specialized-cleaning", "pest-control",
         "ac-service-dubai", "handyman-services", "annual-maintenance",
+        # Dedicated AC service pages
+        "ac-servicing-dubai", "ac-chemical-cleaning-dubai", "ac-duct-cleaning-dubai",
+        "ac-repair-dubai", "ac-installation-dubai", "ac-maintenance-contract-dubai",
     ]
 
     items = [("/", "index.html", "weekly", "1.0", today),

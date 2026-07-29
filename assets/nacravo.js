@@ -197,7 +197,10 @@
       var f = {
         name: val("name"), phone: val("phone"), service: val("service"),
         subservice: val("subservice"), location: val("location"),
-        property: val("property"), date: val("date"), notes: val("notes")
+        property: val("property"), date: val("date"), notes: val("notes"),
+        // Maintenance-contract fields (present only on that page's form).
+        propertyuse: val("propertyuse"), properties: val("properties"),
+        units: val("units"), frequency: val("frequency")
       };
 
       var ok = true;
@@ -219,6 +222,10 @@
       if (f.subservice) lines.push("Specific Service: " + f.subservice);
       lines.push("Location: " + f.location);
       if (f.property) lines.push("Property Type: " + f.property);
+      if (f.propertyuse) lines.push("Residential/Commercial: " + f.propertyuse);
+      if (f.properties) lines.push("Number of Properties: " + f.properties);
+      if (f.units) lines.push("Number of AC Units: " + f.units);
+      if (f.frequency) lines.push("Preferred Frequency: " + f.frequency);
       if (f.date) lines.push("Preferred Date: " + f.date);
       if (f.notes) lines.push("Additional Notes: " + f.notes);
       lines.push("", "Please contact me.");
@@ -305,41 +312,12 @@
   })();
 
   /* ============================================================
-     5. NAVIGATION + FLOATING WHATSAPP
+     5. NAVIGATION
+     Moved to assets/nacravo-nav.js so the self-contained homepage can load the
+     identical navigation logic without also pulling in this file's tracking,
+     form and consent code. There is now ONE navigation implementation for the
+     whole site. Do not re-add dropdown/mobile-menu handlers here.
      ============================================================ */
-  (function () {
-    // Desktop services dropdown
-    var toggle = document.querySelector(".drop-toggle");
-    var panel = document.querySelector(".drop-panel");
-    if (toggle && panel) {
-      function closeDrop() { panel.classList.remove("open"); toggle.setAttribute("aria-expanded", "false"); }
-      toggle.addEventListener("click", function (e) {
-        e.stopPropagation();
-        var open = panel.classList.toggle("open");
-        toggle.setAttribute("aria-expanded", open ? "true" : "false");
-      });
-      document.addEventListener("click", function (e) {
-        if (!panel.contains(e.target) && e.target !== toggle) closeDrop();
-      });
-      document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeDrop(); });
-      // open on hover for pointer users, without breaking keyboard/touch
-      var wrap = toggle.closest(".has-drop");
-      if (wrap && window.matchMedia("(hover:hover)").matches) {
-        wrap.addEventListener("mouseenter", function () { panel.classList.add("open"); toggle.setAttribute("aria-expanded", "true"); });
-        wrap.addEventListener("mouseleave", closeDrop);
-      }
-    }
-
-    // Mobile menu
-    var menuBtn = document.querySelector(".menu-btn");
-    var mobileMenu = document.getElementById("mobileMenu");
-    if (menuBtn && mobileMenu) {
-      menuBtn.addEventListener("click", function () {
-        var open = mobileMenu.classList.toggle("open");
-        menuBtn.setAttribute("aria-expanded", open ? "true" : "false");
-      });
-    }
-  })();
 
   /* Reveal-on-scroll — mobile only, progressive enhancement.
      If any check fails the content simply stays visible. */

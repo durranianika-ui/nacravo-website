@@ -95,9 +95,49 @@ CONTEXTUAL = {
         '<a href="/holiday-home-cleaning">holiday home turnovers</a>.',
 
     "ac-service-dubai":
-        'AC work often overlaps with the rest of a property. Recurring servicing is usually '
-        'better handled on an <a href="/annual-maintenance">annual maintenance contract</a>, '
-        'electrical and fixture jobs sit with '
-        '<a href="/handyman-services">handyman services</a>, and offices in our coverage area '
-        'combine it with <a href="/office-commercial-cleaning">commercial cleaning</a>.',
+        'Not sure which AC service you need? <a href="/ac-servicing-dubai">Routine servicing</a> '
+        'handles most weak-cooling cases, an <a href="/ac-chemical-cleaning-dubai">AC chemical '
+        'cleaning</a> deals with smells and coils a service cannot restore, and an active fault is '
+        'an <a href="/ac-repair-dubai">AC repair</a>. Recurring care is usually cheaper on an '
+        '<a href="/annual-maintenance">annual maintenance contract</a>.',
+
+    "ac-servicing-dubai":
+        'If cooling stays weak straight after a service, the coils may need an '
+        '<a href="/ac-chemical-cleaning-dubai">AC chemical cleaning</a>; if a part has actually '
+        'failed, that is an <a href="/ac-repair-dubai">AC repair</a>. To stop calling ahead of '
+        'every summer, put servicing on an '
+        '<a href="/ac-maintenance-contract-dubai">AC maintenance contract</a>.',
+
+    "ac-chemical-cleaning-dubai":
+        'If the coils are only dusty rather than contaminated, a routine '
+        '<a href="/ac-servicing-dubai">AC service</a> is the cheaper job. Where dust is also '
+        'blowing from the vents, the <a href="/ac-duct-cleaning-dubai">ducts and grilles</a> may '
+        'need cleaning too, and a persistent fault belongs with '
+        '<a href="/ac-repair-dubai">AC repair</a>.',
+
+    "ac-duct-cleaning-dubai":
+        'Duct cleaning clears the accessible runs and grilles; if the smell or weak cooling is '
+        'coming from the coil, that is an <a href="/ac-chemical-cleaning-dubai">AC chemical '
+        'cleaning</a> instead. Routine care for filters and drainage is a standard '
+        '<a href="/ac-servicing-dubai">AC service</a>.',
+
+    "ac-repair-dubai":
+        'If cooling has faded rather than failed, a routine <a href="/ac-servicing-dubai">AC '
+        'service</a> may be all it needs. When a unit is beyond economic repair we can quote a '
+        'correctly sized <a href="/ac-installation-dubai">AC installation</a>, and an '
+        '<a href="/ac-maintenance-contract-dubai">AC maintenance contract</a> catches faults '
+        'before they strand you in July.',
+
+    "ac-installation-dubai":
+        'A new unit stays reliable on scheduled care — put it on an '
+        '<a href="/ac-maintenance-contract-dubai">AC maintenance contract</a> or book its first '
+        '<a href="/ac-servicing-dubai">AC service</a> once it beds in. If your current unit has '
+        'failed, we can first diagnose whether an <a href="/ac-repair-dubai">AC repair</a> is the '
+        'better value.',
+
+    "ac-maintenance-contract-dubai":
+        'Each scheduled visit is a full <a href="/ac-servicing-dubai">AC service</a>, and any '
+        'fault found is handled as an <a href="/ac-repair-dubai">AC repair</a>, quoted separately. '
+        'For whole-property cover beyond air conditioning, see our '
+        '<a href="/annual-maintenance">annual maintenance</a> contract.',
 }
