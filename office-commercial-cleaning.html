@@ -376,21 +376,55 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </select>
           </div>
         </div>
+        <div class="form-row">
+          <div class="field">
+            <label for="size">Approx. size of premises</label>
+            <select id="size" name="size">
+              <option value="">Not sure</option>
+              <option>Under 1,000 sq ft</option>
+              <option>1,000 - 3,000 sq ft</option>
+              <option>3,000 - 7,000 sq ft</option>
+              <option>7,000 - 15,000 sq ft</option>
+              <option>Over 15,000 sq ft</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="frequency">Cleaning frequency</label>
+            <select id="frequency" name="frequency">
+              <option value="">Not sure yet</option>
+              <option>Daily (6-7 days a week)</option>
+              <option>5 days a week</option>
+              <option>3 days a week</option>
+              <option>Weekly</option>
+              <option>Fortnightly</option>
+              <option>Monthly</option>
+              <option>One-off deep clean</option>
+            </select>
+          </div>
+        </div>
 
         <details class="lp-extra">
-          <summary class="lp-more">Add property type, date or a note (optional)</summary>
+          <summary class="lp-more">Add company name, premises type, date or a note (optional)</summary>
           <div class="lp-optional">
             <div class="form-row">
+              <div class="field full">
+                <label for="company">Company name</label>
+                <input type="text" id="company" name="company" autocomplete="organization">
+              </div>
+            </div>
+            <div class="form-row">
               <div class="field">
-                <label for="property">Property type</label>
+                <label for="property">Type of premises</label>
                 <select id="property" name="property">
                   <option value="">Select…</option>
-                  <option>Apartment</option>
-                  <option>Villa</option>
-                  <option>Townhouse</option>
                   <option>Office</option>
-                  <option>Retail</option>
-                  <option>Other</option>
+                  <option>Clinic or medical</option>
+                  <option>Retail or showroom</option>
+                  <option>Salon or gym</option>
+                  <option>Restaurant or cafe</option>
+                  <option>Warehouse</option>
+                  <option>Coworking space</option>
+                  <option>Other commercial</option>
                 </select>
               </div>
               <div class="field">

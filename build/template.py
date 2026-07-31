@@ -364,6 +364,61 @@ def render_hero(page):
             </select>
           </div>"""
 
+    # Property-type choices default to the residential-led list. Commercial pages
+    # override them so a B2B visitor is never offered "Villa"/"Apartment", which
+    # both muddies the enquiry and signals the wrong audience.
+    DEFAULT_PROPERTY_TYPES = ["Apartment", "Villa", "Townhouse", "Office", "Retail", "Other"]
+    property_options = "\n                  ".join(
+        f"<option>{esc(o)}</option>"
+        for o in page.get("property_types", DEFAULT_PROPERTY_TYPES)
+    )
+
+    company_field = ""
+    if page.get("commercial_fields"):
+        company_field = """
+            <div class="form-row">
+              <div class="field full">
+                <label for="company">Company name</label>
+                <input type="text" id="company" name="company" autocomplete="organization">
+              </div>
+            </div>"""
+
+    # Commercial pages qualify the enquiry so a quote can be priced and so
+    # recurring-contract demand is separable from one-off work. All optional —
+    # they inform the quote, they do not gate the enquiry. Only size and frequency
+    # sit in the main flow; company name goes in the optional block above so the
+    # visible form stays short on mobile. Read by assets/nacravo.js and added to
+    # the WhatsApp handover.
+    commercial_fields = ""
+    if page.get("commercial_fields"):
+        commercial_fields = """
+        <div class="form-row">
+          <div class="field">
+            <label for="size">Approx. size of premises</label>
+            <select id="size" name="size">
+              <option value="">Not sure</option>
+              <option>Under 1,000 sq ft</option>
+              <option>1,000 - 3,000 sq ft</option>
+              <option>3,000 - 7,000 sq ft</option>
+              <option>7,000 - 15,000 sq ft</option>
+              <option>Over 15,000 sq ft</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="frequency">Cleaning frequency</label>
+            <select id="frequency" name="frequency">
+              <option value="">Not sure yet</option>
+              <option>Daily (6-7 days a week)</option>
+              <option>5 days a week</option>
+              <option>3 days a week</option>
+              <option>Weekly</option>
+              <option>Fortnightly</option>
+              <option>Monthly</option>
+              <option>One-off deep clean</option>
+            </select>
+          </div>
+        </div>"""
+
     # Maintenance-contract pages collect a little more so the quote is meaningful.
     # These fields are read by assets/nacravo.js and added to the WhatsApp handover.
     contract_fields = ""
@@ -474,22 +529,17 @@ def render_hero(page):
         </div>
 
         <div class="form-row">{sub_options}
-        </div>{contract_fields}
+        </div>{commercial_fields}{contract_fields}
 
         <details class="lp-extra">
-          <summary class="lp-more">Add property type, date or a note (optional)</summary>
-          <div class="lp-optional">
+          <summary class="lp-more">{esc(page.get('optional_summary', 'Add property type, date or a note (optional)'))}</summary>
+          <div class="lp-optional">{company_field}
             <div class="form-row">
               <div class="field">
-                <label for="property">Property type</label>
+                <label for="property">{esc(page.get('property_label', 'Property type'))}</label>
                 <select id="property" name="property">
                   <option value="">Select…</option>
-                  <option>Apartment</option>
-                  <option>Villa</option>
-                  <option>Townhouse</option>
-                  <option>Office</option>
-                  <option>Retail</option>
-                  <option>Other</option>
+                  {property_options}
                 </select>
               </div>
               <div class="field">

@@ -194,6 +194,15 @@ PAGES = {
             "retail-cleaning": "Retail Cleaning",
             "fit-out-cleaning": "Fit Out Cleaning",
         },
+        # Qualifies the B2B enquiry: size and frequency are what make an office
+        # quote priceable, and they separate recurring contracts from one-offs.
+        "commercial_fields": True,
+        "property_label": "Type of premises",
+        "optional_summary": "Add company name, premises type, date or a note (optional)",
+        "property_types": [
+            "Office", "Clinic or medical", "Retail or showroom", "Salon or gym",
+            "Restaurant or cafe", "Warehouse", "Coworking space", "Other commercial",
+        ],
         "jump_links": [
             ("Office Cleaning", "office-cleaning"),
             ("Deep Cleaning", "office-deep-cleaning"),

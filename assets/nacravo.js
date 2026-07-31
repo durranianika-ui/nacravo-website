@@ -198,6 +198,8 @@
         name: val("name"), phone: val("phone"), service: val("service"),
         subservice: val("subservice"), location: val("location"),
         property: val("property"), date: val("date"), notes: val("notes"),
+        // Commercial qualification fields (present only on commercial pages).
+        company: val("company"), size: val("size"),
         // Maintenance-contract fields (present only on that page's form).
         propertyuse: val("propertyuse"), properties: val("properties"),
         units: val("units"), frequency: val("frequency")
@@ -219,7 +221,9 @@
 
       var lines = ["Hello Nacravo,", "", "I'd like to request a quotation.", "",
         "Name: " + f.name, "Phone: " + f.phone, "Service Required: " + f.service];
+      if (f.company) lines.push("Company: " + f.company);
       if (f.subservice) lines.push("Specific Service: " + f.subservice);
+      if (f.size) lines.push("Approx. Size: " + f.size);
       lines.push("Location: " + f.location);
       if (f.property) lines.push("Property Type: " + f.property);
       if (f.propertyuse) lines.push("Residential/Commercial: " + f.propertyuse);
@@ -267,6 +271,10 @@
         subservice_name: f.subservice || undefined,
         property_type: f.property || undefined,
         location: f.location,
+        // Lead-quality dimensions. Bucketed and non-identifying on purpose:
+        // company name is deliberately NOT sent to analytics.
+        premises_size: f.size || undefined,
+        cleaning_frequency: f.frequency || undefined,
         value: 0,
         currency: "AED",
         eventTimeout: 1200,
