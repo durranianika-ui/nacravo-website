@@ -46,8 +46,39 @@
     p = p || {}; p.form_name = name; if (!p.lead_type) p.lead_type = "form";
     push("form_submit", p); push("generate_lead", p);
   }
-  function whatsapp(p) { p = p || {}; if (dup("wa:" + (p.link_url || p.button_text || "x"))) return; p.lead_type = "whatsapp"; push("whatsapp_click", p); }
-  function phone(p)    { p = p || {}; if (dup("tel:" + (p.link_url || p.button_text || "x"))) return; p.lead_type = "phone"; push("phone_click", p); }
+  function safeWhatsAppTarget(url) {
+    try {
+      var u = new URL(url, location.href);
+      // Keep only the link type/domain. The path can contain a phone number and
+      // the query string can contain a prefilled (or user-authored) message.
+      return u.protocol === "whatsapp:" ? "whatsapp://" : u.protocol + "//" + u.host + "/";
+    } catch (err) { return "whatsapp"; }
+  }
+  function safePhoneLabel(label) {
+    // A visible phone number is common anchor text; do not copy it to analytics.
+    return (String(label || "").replace(/\D/g, "").length >= 7) ? "Phone link" : label;
+  }
+  function safeEmailLabel(label) {
+    // A visible email address is common anchor text; do not copy it to analytics.
+    return /\S+@\S+\.\S+/.test(String(label || "")) ? "Email link" : label;
+  }
+  function whatsapp(p) {
+    p = p || {};
+    var raw = p.link_url || p.button_text || "x";
+    if (dup("wa:" + raw)) return;
+    if (p.link_url) p.link_url = safeWhatsAppTarget(p.link_url);
+    p.lead_type = "whatsapp";
+    push("whatsapp_click", p);
+  }
+  function phone(p) {
+    p = p || {};
+    var raw = p.link_url || p.button_text || "x";
+    if (dup("tel:" + raw)) return;
+    p.link_url = "tel:";
+    p.button_text = safePhoneLabel(p.button_text);
+    p.lead_type = "phone";
+    push("phone_click", p);
+  }
   function quote(p)    { p = p || {}; if (dup("quote:" + (p.button_text || "x"))) return; p.lead_type = "quote"; push("quote_click", p); }
   function booking(p)  { p = p || {}; if (dup("book:" + (p.button_text || "x"))) return; p.lead_type = "booking"; push("booking_click", p); }
   function service(name, p) { p = p || {}; if (dup("svc:" + name)) return; p.service_name = name; push("service_view", p); }
@@ -77,9 +108,9 @@
 
     if (anchor && !anchor.hasAttribute("data-no-track")) {
       var href = anchor.getAttribute("href") || "", text = labelOf(anchor);
-      if (/wa\.me|api\.whatsapp\.com|whatsapp:\/\//i.test(href)) { whatsapp({ link_url: href, button_text: text }); return; }
+      if (/wa\.me|api\.whatsapp\.com|web\.whatsapp\.com|whatsapp:\/\//i.test(href)) { whatsapp({ link_url: href, button_text: text }); return; }
       if (/^tel:/i.test(href)) { phone({ link_url: href, button_text: text }); return; }
-      if (/^mailto:/i.test(href)) { push("generate_lead", { lead_type: "email", link_url: href, button_text: text }); return; }
+      if (/^mailto:/i.test(href)) { push("generate_lead", { lead_type: "email", link_url: "mailto:", button_text: safeEmailLabel(text) }); return; }
       if (/^https?:\/\//i.test(href)) {
         try { var u = new URL(href, location.href); if (u.host !== location.host) outbound(u.href, { button_text: text }); } catch (err) {}
       }
