@@ -28,6 +28,16 @@ REQUIRED = [
     "band2_heading", "band2_body",
 ]
 
+# Keys a page MAY carry. Absent from REQUIRED so they are not mandatory, but
+# listed here so the unexpected-key guard stays meaningful instead of failing on
+# every legitimate optional field. Keep in sync with page.get(...) in build/.
+OPTIONAL = [
+    "commercial_fields", "communities", "contextual", "contract_fields",
+    "extra_service_options", "gallery_gap", "gallery_items", "hero_eager",
+    "hero_image", "optional_summary", "property_label", "property_types",
+    "quote_href", "tracker_pin",
+]
+
 VALID_ICONS = {"shield", "check", "camera", "team", "tag", "pin", "clock", "leaf"}
 
 # Claims we cannot substantiate and must never ship.
@@ -89,8 +99,8 @@ def main():
         for key in REQUIRED:
             if key not in p:
                 errors.append(f"{slug}: missing key '{key}'")
-        if any(k not in REQUIRED for k in p):
-            extra = [k for k in p if k not in REQUIRED]
+        if any(k not in REQUIRED and k not in OPTIONAL for k in p):
+            extra = [k for k in p if k not in REQUIRED and k not in OPTIONAL]
             errors.append(f"{slug}: unexpected keys {extra}")
 
         # --- cross-page uniqueness ---

@@ -464,17 +464,32 @@ def render_hero(page):
         big, small, alt = page["hero_image"]
         bw, bh = image_size(big)
         sw, _ = image_size(small)
+        # Pages whose hero image IS the LCP element opt in with hero_eager, which
+        # swaps the lazy default for an eager, high-priority fetch.
+        load_attrs = (
+            'loading="eager" fetchpriority="high"'
+            if page.get("hero_eager")
+            else 'loading="lazy"'
+        )
         media = f"""
       <div class="lp-hero-media">
         <img src="images/{big}" srcset="images/{small} {sw}w, images/{big} {bw}w"
              sizes="(max-width:900px) 92vw, 420px" alt="{esc(alt)}"
-             width="{bw}" height="{bh}" loading="lazy" decoding="async">
+             width="{bw}" height="{bh}" {load_attrs} decoding="async">
       </div>"""
 
     jump = ""
     if page.get("jump_links"):
         items = "".join(f'<a href="#{a}">{esc(t)}</a>' for t, a in page["jump_links"])
         jump = f'<div class="wrap" style="padding-bottom:8px"><div class="jump">{items}</div></div>'
+
+    # A page may offer more than one value in the Service select when a distinct
+    # search intent shares the page — /home-cleaning also answers maid-service
+    # queries, and the option must exist for those enquiries to be routed.
+    extra_service_options = "".join(
+        f'\n              <option value="{esc(o)}">{esc(o)}</option>'
+        for o in page.get("extra_service_options", [])
+    )
 
     return f"""
 <main id="main">
@@ -517,7 +532,7 @@ def render_hero(page):
           <div class="field">
             <label for="service">Service <span class="req" aria-hidden="true">*</span></label>
             <select id="service" name="service" required>
-              <option value="{esc(page['service_value'])}" selected>{esc(page['service_value'])}</option>
+              <option value="{esc(page['service_value'])}" selected>{esc(page['service_value'])}</option>{extra_service_options}
             </select>
             <span class="err-msg">Please choose a service.</span>
           </div>
@@ -582,7 +597,7 @@ def render_sections(page):
         <ul>{bullets}</ul>
         <div class="anchor-cta">
           <a href="#leadFormTitle" class="btn btn-primary" data-subservice="{s['anchor']}" data-track="quote" data-track-label="{esc(s['title'])}: Get a quote">Get a quote</a>
-          <a href="{wa}" target="_blank" rel="noopener" class="btn btn-ghost" data-track="booking" data-service-name="{esc(page['service_value'])}" data-track-label="{esc(s['title'])}: WhatsApp">WhatsApp</a>
+          <a href="{wa}" target="_blank" rel="noopener" class="btn btn-ghost" data-track="booking" data-service-name="{esc(s.get('service_name', page['service_value']))}" data-track-label="{esc(s['title'])}: WhatsApp">WhatsApp</a>
         </div>
       </article>""")
 
@@ -834,6 +849,13 @@ def render_footer(page):
 
     wa = wa_link(page["wa_text"])
 
+    # Cache pin for assets/nacravo.js. Vercel serves the file with
+    # must-revalidate + ETag, so this is belt-and-braces rather than the
+    # mechanism; it exists on the paid landing page so the tracker revision
+    # serving ad traffic is unambiguous. Set "tracker_pin" to the commit that
+    # last changed the tracker.
+    tracker_pin = f"?v={page['tracker_pin']}" if page.get("tracker_pin") else ""
+
     return f"""
 </main>
 
@@ -910,7 +932,7 @@ def render_footer(page):
   window.NACRAVO_PAGE = {json.dumps({'service': page['service_value'], 'subservices': page.get('subservices', {})}, ensure_ascii=False)};
 </script>
 <script src="/assets/nacravo-nav.js" defer></script>
-<script src="/assets/nacravo.js" defer></script>
+<script src="/assets/nacravo.js{tracker_pin}" defer></script>
 </body>
 </html>
 """

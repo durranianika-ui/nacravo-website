@@ -2,14 +2,14 @@ PAGES = {
     "home-cleaning": {
         "url": "/home-cleaning",
         "breadcrumb": "Home Cleaning",
-        "title": "Home Cleaning Services Dubai | Trained, Insured Team",
-        "meta_description": "Book home cleaning in Dubai with employed, background-checked technicians. Materials included and a fixed price quoted first. Get your quote on WhatsApp.",
+        "title": "Home Cleaning & Maid Service in Dubai | Nacravo",
+        "meta_description": "Home cleaning and maid service in Dubai with employed, background-checked cleaners. Book a one-off clean or a regular maid service. Materials included and a fixed price quoted first. Get your quote on WhatsApp.",
         "og_title": "Home Cleaning in Dubai",
         "og_description": "Employed, vetted cleaners for Dubai apartments and villas. Fixed price, materials included, photo report.",
         "og_image": "hero3-lg.jpg",
-        "h1": "Home Cleaning in Dubai",
-        "eyebrow": "Home cleaning · Apartments · Villas · Dubai",
-        "lead": "Routine and one-off home cleaning for Dubai apartments, townhouses and villas. Our technicians are employed by Nacravo, not sourced from a marketplace, so the same standards apply on every visit. Materials and equipment come with the team, and you approve a fixed price before anyone starts.",
+        "h1": "Home Cleaning & Maid Service in Dubai",
+        "eyebrow": "Home cleaning · Maid service · Apartments · Villas · Dubai",
+        "lead": "Book a maid service or a one-off home clean for Dubai apartments, townhouses and villas — hourly, weekly or monthly. Our cleaners are employed by Nacravo, not sourced from a marketplace, so the same person and the same standards come back each visit. Materials and equipment come with the team, and you approve a fixed price before anyone starts.",
         "trust": [
             ("team", "Employed, vetted technicians"),
             ("tag", "Fixed price upfront"),
@@ -17,10 +17,13 @@ PAGES = {
             ("leaf", "Materials and equipment included"),
         ],
         "service_value": "Home Cleaning",
+        "extra_service_options": ["Maid Service"],
+        "hero_eager": True,
         "service_schema_name": "Home Cleaning Dubai",
         "area_served_schema": ["Dubai"],
         "wa_text": "Hello Nacravo, I'd like a quote for home cleaning in Dubai.",
         "subservices": {
+            "maid-service": "Maid Service",
             "regular-cleaning": "Regular Cleaning",
             "apartment-cleaning": "Apartment Cleaning",
             "villa-cleaning": "Villa Cleaning",
@@ -33,6 +36,7 @@ PAGES = {
             "in-home-ironing": "In-home Ironing",
         },
         "jump_links": [
+            ("Maid Service", "maid-service"),
             ("Regular", "regular-cleaning"),
             ("Apartment", "apartment-cleaning"),
             ("Villa", "villa-cleaning"),
@@ -43,6 +47,21 @@ PAGES = {
         "sections_heading": "What we clean, and how you can book it",
         "sections_intro": "Pick the format that suits your home and your schedule. Every option below is delivered by the same employed teams, with materials supplied.",
         "sections": [
+            {
+                "anchor": "maid-service",
+                "title": "Maid Service",
+                # Distinct search intent sharing this page: attribute its own
+                # WhatsApp enquiries to Maid Service, not to Home Cleaning.
+                "service_name": "Maid Service",
+                "body": "A maid service in Dubai on the schedule you choose — hourly, weekly, fortnightly or monthly. The cleaner is employed by Nacravo and background-checked, and we keep the same person on your address wherever the schedule allows, so you are not briefing someone new every visit. Cleaning materials and equipment come with them. You approve a fixed price before the first visit, and you can change or pause the schedule by WhatsApp.",
+                "bullets": [
+                    "Hourly, weekly or monthly visits",
+                    "Employed, background-checked cleaner",
+                    "Same cleaner where possible",
+                    "Materials and equipment included",
+                ],
+                "wa_text": "Hello Nacravo, I'd like a quote for maid service in Dubai.",
+            },
             {
                 "anchor": "regular-cleaning",
                 "title": "Regular Cleaning",
