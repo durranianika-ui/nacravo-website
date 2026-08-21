@@ -79,6 +79,18 @@
     p.lead_type = "phone";
     push("phone_click", p);
   }
+  function email(p) {
+    // Contact intent, NOT a lead: email clicks must never reach the generate_lead
+    // path, which GTM maps to the Google Ads form-submit conversion. link_url is
+    // reduced to the scheme so the mailbox address never reaches analytics.
+    p = p || {};
+    var raw = p.link_url || p.button_text || "x";
+    if (dup("mail:" + raw)) return;
+    p.link_url = "mailto:";
+    p.button_text = safeEmailLabel(p.button_text);
+    p.lead_type = "email";
+    push("email_click", p);
+  }
   function quote(p)    { p = p || {}; if (dup("quote:" + (p.button_text || "x"))) return; p.lead_type = "quote"; push("quote_click", p); }
   function booking(p)  { p = p || {}; if (dup("book:" + (p.button_text || "x"))) return; p.lead_type = "booking"; push("booking_click", p); }
   function service(name, p) { p = p || {}; if (dup("svc:" + name)) return; p.service_name = name; push("service_view", p); }
@@ -86,7 +98,7 @@
   function cta(type, lbl) { if (dup("cta:" + type + ":" + lbl)) return; push("cta_click", { cta_type: type, button_text: lbl }); }
 
   window.nacravoTrack = { pageView: pageView, formSubmit: formSubmit, whatsapp: whatsapp,
-    phone: phone, quote: quote, booking: booking, service: service, outbound: outbound, cta: cta, push: push };
+    phone: phone, email: email, quote: quote, booking: booking, service: service, outbound: outbound, cta: cta, push: push };
 
   function labelOf(el) {
     return (el.getAttribute("data-track-label") || (el.textContent || "").replace(/\s+/g, " ").trim()).slice(0, 80);
@@ -110,7 +122,7 @@
       var href = anchor.getAttribute("href") || "", text = labelOf(anchor);
       if (/wa\.me|api\.whatsapp\.com|web\.whatsapp\.com|whatsapp:\/\//i.test(href)) { whatsapp({ link_url: href, button_text: text }); return; }
       if (/^tel:/i.test(href)) { phone({ link_url: href, button_text: text }); return; }
-      if (/^mailto:/i.test(href)) { push("generate_lead", { lead_type: "email", link_url: "mailto:", button_text: safeEmailLabel(text) }); return; }
+      if (/^mailto:/i.test(href)) { email({ link_url: href, button_text: text }); return; }
       if (/^https?:\/\//i.test(href)) {
         try { var u = new URL(href, location.href); if (u.host !== location.host) outbound(u.href, { button_text: text }); } catch (err) {}
       }
