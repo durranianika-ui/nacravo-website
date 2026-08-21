@@ -201,7 +201,16 @@ PAGES = {
         # quote priceable, and they separate recurring contracts from one-offs.
         "commercial_fields": True,
         "property_label": "Type of premises",
-        "optional_summary": "Add company name, premises type, date or a note (optional)",
+        "optional_summary": "Add size, frequency, premises type or a note (optional)",
+        # Suggestions only - the field stays free text, so an enquiry from any
+        # part of Dubai is still accepted. Ordered by commercial density.
+        "location_suggestions": [
+            "Business Bay", "DIFC", "Downtown Dubai", "Jumeirah Lake Towers (JLT)",
+            "Dubai Marina", "Sheikh Zayed Road", "Al Quoz", "Al Barsha",
+            "Deira", "Bur Dubai", "Dubai Silicon Oasis", "Dubai Investment Park",
+            "Jebel Ali / JAFZA", "Dubai Media City", "Dubai Internet City",
+            "Dubai Healthcare City", "Dubai Airport Freezone (DAFZA)", "Motor City",
+        ],
         "property_types": [
             "Office", "Clinic or medical", "Retail or showroom", "Salon or gym",
             "Restaurant or cafe", "Warehouse", "Coworking space", "Other commercial",

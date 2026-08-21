@@ -34,7 +34,8 @@ REQUIRED = [
 OPTIONAL = [
     "commercial_fields", "communities", "contextual", "contract_fields",
     "extra_service_options", "gallery_gap", "gallery_items", "hero_eager",
-    "hero_image", "optional_summary", "property_label", "property_types",
+    "hero_image", "location_suggestions", "optional_summary", "property_label",
+    "property_types",
     "quote_href", "tracker_pin",
 ]
 

@@ -362,7 +362,27 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </div>
           <div class="field">
             <label for="location">Location <span class="req" aria-hidden="true">*</span></label>
-            <input type="text" id="location" name="location" placeholder="e.g. Business Bay" autocomplete="address-level2" required>
+            <input type="text" id="location" name="location" placeholder="e.g. Business Bay" autocomplete="address-level2" list="locationOptions" required>
+            <datalist id="locationOptions">
+              <option value="Business Bay"></option>
+              <option value="DIFC"></option>
+              <option value="Downtown Dubai"></option>
+              <option value="Jumeirah Lake Towers (JLT)"></option>
+              <option value="Dubai Marina"></option>
+              <option value="Sheikh Zayed Road"></option>
+              <option value="Al Quoz"></option>
+              <option value="Al Barsha"></option>
+              <option value="Deira"></option>
+              <option value="Bur Dubai"></option>
+              <option value="Dubai Silicon Oasis"></option>
+              <option value="Dubai Investment Park"></option>
+              <option value="Jebel Ali / JAFZA"></option>
+              <option value="Dubai Media City"></option>
+              <option value="Dubai Internet City"></option>
+              <option value="Dubai Healthcare City"></option>
+              <option value="Dubai Airport Freezone (DAFZA)"></option>
+              <option value="Motor City"></option>
+            </datalist>
             <span class="err-msg">Please enter your location.</span>
           </div>
         </div>
@@ -376,6 +396,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </select>
           </div>
         </div>
+        <div class="form-row">
+          <div class="field full">
+            <label for="company">Company name</label>
+            <input type="text" id="company" name="company" autocomplete="organization" placeholder="Which business is this for?">
+          </div>
+        </div>
+
+        <details class="lp-extra">
+          <summary class="lp-more">Add size, frequency, premises type or a note (optional)</summary>
+          <div class="lp-optional">
         <div class="form-row">
           <div class="field">
             <label for="size">Approx. size of premises</label>
@@ -402,16 +432,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             </select>
           </div>
         </div>
-
-        <details class="lp-extra">
-          <summary class="lp-more">Add company name, premises type, date or a note (optional)</summary>
-          <div class="lp-optional">
-            <div class="form-row">
-              <div class="field full">
-                <label for="company">Company name</label>
-                <input type="text" id="company" name="company" autocomplete="organization">
-              </div>
-            </div>
             <div class="form-row">
               <div class="field">
                 <label for="property">Type of premises</label>

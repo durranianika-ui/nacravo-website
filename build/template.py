@@ -373,22 +373,28 @@ def render_hero(page):
         for o in page.get("property_types", DEFAULT_PROPERTY_TYPES)
     )
 
+    # Company name is the strongest qualifier on a B2B enquiry - it is what
+    # separates a real office lead from a residential one - so on commercial
+    # pages it sits in the main flow rather than the optional block. Residential
+    # pages do not render it at all and keep the shorter visible form.
     company_field = ""
     if page.get("commercial_fields"):
         company_field = """
-            <div class="form-row">
-              <div class="field full">
-                <label for="company">Company name</label>
-                <input type="text" id="company" name="company" autocomplete="organization">
-              </div>
-            </div>"""
+        <div class="form-row">
+          <div class="field full">
+            <label for="company">Company name</label>
+            <input type="text" id="company" name="company" autocomplete="organization" placeholder="Which business is this for?">
+          </div>
+        </div>"""
 
     # Commercial pages qualify the enquiry so a quote can be priced and so
     # recurring-contract demand is separable from one-off work. All optional —
-    # they inform the quote, they do not gate the enquiry. Only size and frequency
-    # sit in the main flow; company name goes in the optional block above so the
-    # visible form stays short on mobile. Read by assets/nacravo.js and added to
-    # the WhatsApp handover.
+    # they inform the quote, they do not gate the enquiry. Size and frequency sit
+    # behind the optional disclosure and company name sits in the main flow:
+    # company is what identifies a lead as B2B at all, while size and frequency
+    # only refine a quote that a salesperson can still ask about. ~80% of this
+    # traffic is mobile, where visible form length costs conversions. Read by
+    # assets/nacravo.js and added to the WhatsApp handover.
     commercial_fields = ""
     if page.get("commercial_fields"):
         commercial_fields = """
@@ -491,6 +497,23 @@ def render_hero(page):
         for o in page.get("extra_service_options", [])
     )
 
+    # Location stays a free-text input so no legitimate Dubai enquiry is ever
+    # blocked; the datalist only offers one-tap suggestions, which matters
+    # because roughly 80% of this traffic is mobile.
+    location_list = ""
+    location_datalist = ""
+    if page.get("location_suggestions"):
+        location_list = ' list="locationOptions"'
+        _opts = "".join(
+            f'\n              <option value="{esc(o)}"></option>'
+            for o in page["location_suggestions"]
+        )
+        location_datalist = (
+            '\n            <datalist id="locationOptions">'
+            + _opts
+            + '\n            </datalist>'
+        )
+
     return f"""
 <main id="main">
 <section class="lp-hero">
@@ -538,17 +561,17 @@ def render_hero(page):
           </div>
           <div class="field">
             <label for="location">Location <span class="req" aria-hidden="true">*</span></label>
-            <input type="text" id="location" name="location" placeholder="e.g. Business Bay" autocomplete="address-level2" required>
+            <input type="text" id="location" name="location" placeholder="e.g. Business Bay" autocomplete="address-level2"{location_list} required>{location_datalist}
             <span class="err-msg">Please enter your location.</span>
           </div>
         </div>
 
         <div class="form-row">{sub_options}
-        </div>{commercial_fields}{contract_fields}
+        </div>{company_field}{contract_fields}
 
         <details class="lp-extra">
           <summary class="lp-more">{esc(page.get('optional_summary', 'Add property type, date or a note (optional)'))}</summary>
-          <div class="lp-optional">{company_field}
+          <div class="lp-optional">{commercial_fields}
             <div class="form-row">
               <div class="field">
                 <label for="property">{esc(page.get('property_label', 'Property type'))}</label>
