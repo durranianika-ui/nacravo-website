@@ -172,7 +172,7 @@ PAGES = {
         "og_image": "ba-office-1080.jpg",
         "h1": "Office & Commercial Cleaning in Dubai",
         "eyebrow": "Workplace cleaning",
-        "lead": "Nacravo provides office and commercial cleaning across Dubai, from daily contracts to one-off deep cleans and fit-out handovers. Work is scheduled around your business hours, with uniformed, background-checked technicians employed directly by us. Materials and equipment are included, and the price is fixed and quoted before we start.",
+        "lead": "Nacravo provides office and commercial cleaning in Downtown Dubai, Business Bay, DIFC and across the city, from daily contracts to one-off deep cleans and fit-out handovers. Work is scheduled around your business hours, with uniformed, background-checked technicians employed directly by us. Materials and equipment are included, and the price is fixed and quoted before we start.",
         "trust": [
             ("team", "Employed, uniformed staff"),
             ("tag", "Fixed price quoted"),
@@ -395,7 +395,7 @@ PAGES = {
         "og_image": "ba-sofa-1080.jpg",
         "h1": "Specialized Cleaning Services in Dubai",
         "eyebrow": "Fabric and surface care",
-        "lead": "Sofas, carpets, mattresses and curtains hold Dubai sand dust, humidity and everyday spills that surface cleaning will not lift. Nacravo brings hot water extraction and shampoo equipment to your home or office, treats the fabric, and sends a before-and-after photo report once the job is finished.",
+        "lead": "Sofas, carpets, mattresses and curtains hold Dubai sand dust, humidity and everyday spills that surface cleaning will not lift. Nacravo brings hot water extraction and shampoo equipment to your home or office — in Downtown Dubai, Business Bay, DIFC and across the city — treats the fabric, and sends a before-and-after photo report once the job is finished.",
         "trust": [
             ("team", "Trained in-house team"),
             ("tag", "Fixed price quoted"),

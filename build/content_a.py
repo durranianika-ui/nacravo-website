@@ -9,7 +9,7 @@ PAGES = {
         "og_image": "hero3-lg.jpg",
         "h1": "Home Cleaning & Maid Service in Dubai",
         "eyebrow": "Home cleaning · Maid service · Apartments · Villas · Dubai",
-        "lead": "Book a maid service or a one-off home clean for Dubai apartments, townhouses and villas — hourly, weekly or monthly. Our cleaners are employed by Nacravo, not sourced from a marketplace, so the same person and the same standards come back each visit. Materials and equipment come with the team, and you approve a fixed price before anyone starts.",
+        "lead": "Book a maid service or a one-off home clean for apartments, townhouses and villas in Downtown Dubai, Business Bay, DIFC and across Dubai — hourly, weekly or monthly. Our cleaners are employed by Nacravo, not sourced from a marketplace, so the same person and the same standards come back each visit. Materials and equipment come with the team, and you approve a fixed price before anyone starts.",
         "trust": [
             ("team", "Employed, vetted technicians"),
             ("tag", "Fixed price upfront"),
