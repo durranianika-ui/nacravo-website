@@ -19,6 +19,7 @@ function nacravoLeadProbe() {
 
   const mbarLinks = [...document.querySelectorAll(".mbar a")];
   const chips = [...document.querySelectorAll(".lf-chip")];
+  const radios = [...document.querySelectorAll(".lf-radio")];
   const small = [...document.querySelectorAll(".mbar a, .lf-chip, .lf-nav .btn, .lp-hero-cta .btn")]
     .filter((el) => {
       const r = el.getBoundingClientRect();
@@ -54,11 +55,13 @@ function nacravoLeadProbe() {
           action: f.getAttribute("action"),
           method: f.getAttribute("method"),
           vertical: f.getAttribute("data-vertical"),
-          preselected: (document.querySelector(".lf-chip.is-on") || {}).textContent || null,
+          preselected: (document.querySelector(".lf-radio:checked") || {}).value || null,
           steps: document.querySelectorAll(".lf-step").length,
           chipCount: chips.length,
-          chipsAreRadios: chips.every((c) => c.getAttribute("role") === "radio"),
-          groupIsRadiogroup: !!document.querySelector('.lf-choice[role="radiogroup"]'),
+          // Step 1 is native radios with the chip as the <label>, so the browser
+          // supplies the radiogroup semantics and keyboard behaviour.
+          chipsAreRadios: radios.length === chips.length && radios.every((r) => r.type === "radio"),
+          everyChipHasLabel: chips.every((c) => !!c.getAttribute("for")),
           errorRegionIsAlert: (document.getElementById("leadErrors") || {}).getAttribute
             ? document.getElementById("leadErrors").getAttribute("role")
             : null,
