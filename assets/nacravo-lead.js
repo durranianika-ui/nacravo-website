@@ -73,6 +73,12 @@
     return "s" + Date.now().toString(36) + Math.random().toString(36).slice(2, 12);
   }
 
+  /* "" while no experiment is running, so the parameter is simply absent. */
+  function experimentId() {
+    var e = (window.nacravoExperiment && window.nacravoExperiment.id()) || "";
+    return e || form.getAttribute("data-experiment") || undefined;
+  }
+
   function field(name) { return form.elements[name] || null; }
 
   function value(name) {
@@ -180,7 +186,7 @@
     track("lead_form_started", {
       service: IS_AC ? undefined : (value("service") || undefined),
       problem: IS_AC ? (value("problem") || undefined) : undefined,
-      experiment_id: form.getAttribute("data-experiment") || undefined,
+      experiment_id: experimentId(),
     });
   }
 
@@ -300,7 +306,7 @@
       page_url: location.origin + location.pathname,
       consent_marketing: !!(field("consent_marketing") && field("consent_marketing").checked),
       privacy_version: "1.0",
-      experiment: form.getAttribute("data-experiment") || undefined,
+      experiment: experimentId(),
       submission_id: submissionId,
     };
     if (window.nacravoAttr && window.nacravoAttr.serverParams) {
@@ -447,7 +453,7 @@
         service: IS_AC ? value("problem") : value("service"),
         area_zone: areaZone(value("area")),
         vertical: VERTICAL,
-        experiment_id: form.getAttribute("data-experiment") || undefined,
+        experiment_id: experimentId(),
         lead_type: "form",
         form_name: "lead_flow",
       };

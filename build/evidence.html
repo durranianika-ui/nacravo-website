@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Nacravo lead-flow evidence</title>
+<style>
+  body{margin:0;padding:16px;background:#20241d;color:#F7F4EC;font:13px/1.45 system-ui,sans-serif}
+  h1{font-size:15px;margin:0 0 4px}
+  p.note{margin:0 0 14px;color:#b9c2ae;font-size:12px}
+  .row{display:flex;gap:14px;align-items:flex-start;overflow-x:auto;padding-bottom:8px}
+  figure{margin:0;flex:0 0 auto}
+  figcaption{font-size:11.5px;color:#cdd6c2;margin:0 0 6px;font-weight:600;letter-spacing:.02em}
+  iframe{width:390px;height:720px;border:0;border-radius:10px;background:#fff;display:block}
+</style>
+</head>
+<body>
+<h1>Nacravo paid landing pages &mdash; mobile 390&times;760</h1>
+<p class="note">Each frame renders the built files at a 390px viewport, so the mobile media queries and the sticky bar are the real ones. Production serves these same files (X-Frame-Options blocks framing www.nacravo.com directly); the live pages were verified separately by DOM probe.</p>
+<div class="row" id="row"></div>
+<script>
+const FRAMES = [
+  ['AC repair &mdash; hero + selector', '/ac-repair-dubai?gclid=EV1&utm_medium=cpc'],
+  ['Cleaning &mdash; hero + selector', '/home-cleaning?gclid=EV2&utm_medium=cpc'],
+  ['AC duct &mdash; preselected', '/ac-duct-cleaning-dubai?gclid=EV3&utm_medium=cpc'],
+  ['Office &mdash; commercial scope', '/office-commercial-cleaning?gclid=EV4&utm_medium=cpc'],
+];
+document.getElementById('row').innerHTML = FRAMES.map(([cap, src]) =>
+  '<figure><figcaption>' + cap + '</figcaption><iframe src="' + src + '" loading="eager"></iframe></figure>').join('');
+</script>
+</body>
+</html>

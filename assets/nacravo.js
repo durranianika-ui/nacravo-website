@@ -132,8 +132,25 @@
     }
   }, true);
 
-  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", function () { pageView(); });
-  else pageView();
+  /* lp_view: the landing-page view, distinct from page_view, carrying the
+     dimensions a paid report is sliced by. Only pages that actually carry the
+     lead flow emit it, so it counts landings rather than pageviews. */
+  function landingView() {
+    var form = document.getElementById("leadForm");
+    if (!form) return;
+    var paid = document.documentElement.getAttribute("data-paid") === "1";
+    push("lp_view", {
+      vertical: form.getAttribute("data-vertical") || undefined,
+      service: PAGE.service || undefined,
+      ad_intent: paid ? "paid" : "organic",
+      experiment_id: (window.nacravoExperiment && window.nacravoExperiment.id()) || undefined
+    });
+  }
+
+  function firstView() { pageView(); landingView(); }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", firstView);
+  else firstView();
 
   /* ============================================================
      2. OPTIONAL DIRECT PIXEL LOADERS
@@ -233,6 +250,59 @@
      form and consent code. There is now ONE navigation implementation for the
      whole site. Do not re-add dropdown/mobile-menu handlers here.
      ============================================================ */
+
+  /* ============================================================
+     6. FIELD CORE WEB VITALS
+     LCP, CLS and INP from real sessions, reported once per page when the
+     visitor leaves. Lab timings are not field data; this is what makes a
+     performance claim about these pages checkable. Degrades silently on any
+     browser missing the entry type.
+     ============================================================ */
+  (function () {
+    if (!("PerformanceObserver" in window)) return;
+
+    var lcp = 0, cls = 0, inp = 0, sent = false;
+
+    function observe(type, cb, opts) {
+      try {
+        var po = new PerformanceObserver(function (l) { l.getEntries().forEach(cb); });
+        po.observe(Object.assign({ type: type, buffered: true }, opts || {}));
+        return po;
+      } catch (e) { return null; }
+    }
+
+    observe("largest-contentful-paint", function (e) { lcp = e.startTime; });
+    // Only shifts the visitor did not cause count toward CLS.
+    observe("layout-shift", function (e) { if (!e.hadRecentInput) cls += e.value; });
+    observe("event", function (e) { if (e.duration > inp) inp = e.duration; }, { durationThreshold: 40 });
+
+    function report() {
+      if (sent) return;
+      sent = true;
+      var w = window.innerWidth;
+      push("web_vitals", {
+        lcp_ms: Math.round(lcp) || undefined,
+        cls: Math.round(cls * 1000) / 1000,
+        inp_ms: Math.round(inp) || undefined,
+        device_class: w < 768 ? "mobile" : w < 1024 ? "tablet" : "desktop",
+        ad_intent: document.documentElement.getAttribute("data-paid") === "1" ? "paid" : "organic",
+        experiment_id: (window.nacravoExperiment && window.nacravoExperiment.id()) || undefined,
+        // Thresholds from web.dev, so a report can be read without a lookup.
+        // An unmeasured metric is omitted rather than reported as a failure:
+        // a page the browser never painted has no LCP, not a bad one.
+        lcp_good: lcp > 0 ? lcp <= 2500 : undefined,
+        cls_good: cls <= 0.1,
+        inp_good: inp > 0 ? inp <= 200 : undefined
+      });
+    }
+
+    // visibilitychange is the reliable end-of-session signal on mobile, where
+    // unload frequently never fires.
+    document.addEventListener("visibilitychange", function () {
+      if (document.visibilityState === "hidden") report();
+    });
+    window.addEventListener("pagehide", report);
+  })();
 
   /* Reveal-on-scroll — mobile only, progressive enhancement.
      If any check fails the content simply stays visible. */

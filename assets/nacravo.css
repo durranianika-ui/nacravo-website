@@ -687,3 +687,8 @@ html[data-paid="1"] .foot-legal{padding-top:8px}
 .lf-fallback .btn{width:100%;justify-content:center;min-height:50px;margin-bottom:8px;
   min-width:0;max-width:100%;white-space:normal;text-align:center}
 .lf-fallback .btn:last-child{margin-bottom:0}
+
+/* The rest of the hero copy, kept on the page but out of the first screen. */
+.lp-lead-rest{padding-top:0;padding-bottom:6px}
+.lp-lead-rest p{font-size:15.5px;line-height:1.6;color:#54594C;max-width:62ch;margin:0}
+@media(max-width:900px){.lp-lead-rest p{font-size:14.5px}}

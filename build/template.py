@@ -189,6 +189,21 @@ def lead_flow(page):
     return "general", [(key, label, label, key)], key
 
 
+# Sentence boundary: a full stop, question or exclamation mark, whitespace, then
+# a capital. Deliberately simple — the hero copy is plain prose with no
+# abbreviations, and a missed split only leaves a slightly longer hero.
+_SENTENCE = re.compile(r"(?<=[.!?])\s+(?=[A-Z])")
+
+
+def lead_split(lead, keep=2):
+    """(hero sentences, the rest). The rest is rendered below the hero rather
+    than dropped, so no claim and no keyword leaves the page."""
+    parts = _SENTENCE.split(lead.strip())
+    if len(parts) <= keep:
+        return lead, ""
+    return " ".join(parts[:keep]), " ".join(parts[keep:])
+
+
 def wa_link(text):
     return "https://wa.me/" + WA_NUMBER + "?text=" + quote(text)
 
@@ -235,6 +250,35 @@ def trust_pill(icon, label):
 
 
 # ---------------------------------------------------------------- head
+def _derivative(filename, ext):
+    """images/foo-1080.jpg -> foo-1080.avif, but only if it was actually built."""
+    cand = _IMAGE_DIR / (pathlib.Path(filename).stem + "." + ext)
+    return cand.name if cand.exists() else None
+
+
+def picture(big, small, sizes, alt, load_attrs, cls=""):
+    """<picture> with AVIF and WebP sources over the original JPEG.
+
+    Width and height come from the real JPEG, so the box is reserved before any
+    format loads and there is no layout shift. A format is only offered when
+    both derivatives exist; a half-built set falls back to the JPEG cleanly.
+    """
+    w, h = image_size(big)
+    sw, _ = image_size(small)
+    sources = ""
+    for ext, mime in (("avif", "image/avif"), ("webp", "image/webp")):
+        b, sm = _derivative(big, ext), _derivative(small, ext)
+        if b and sm:
+            sources += (f'\n        <source type="{mime}" '
+                        f'srcset="images/{sm} {sw}w, images/{b} {w}w" sizes="{sizes}">')
+    klass = f' class="{cls}"' if cls else ""
+    return (f'<picture{klass}>{sources}\n'
+            f'        <img src="images/{big}" srcset="images/{small} {sw}w, images/{big} {w}w"\n'
+            f'             sizes="{sizes}" alt="{esc(alt)}"\n'
+            f'             width="{w}" height="{h}" {load_attrs} decoding="async">\n'
+            f'      </picture>')
+
+
 def render_head(page):
     canonical = SITE + page["url"]
     og_image = SITE + "/images/" + page.get("og_image", "hero4-lg.jpg")
@@ -412,7 +456,7 @@ def render_header(page):
     </nav>
     <div class="nav-cta">
       <a href="tel:{PHONE_TEL}" class="btn btn-ghost" aria-label="Call Nacravo on {PHONE_DISPLAY}">Call now</a>
-      <a href="{wa}" target="_blank" rel="noopener" class="btn btn-primary nav-wa" aria-label="Book on WhatsApp">{WA_ICON.format(s=17)}<span class="lbl-full">Book on WhatsApp</span><span class="lbl-short">WhatsApp</span></a>
+      <a href="{wa}" target="_blank" rel="noopener" class="btn btn-primary nav-wa" aria-label="Message Nacravo on WhatsApp">{WA_ICON.format(s=17)}<span class="lbl-full">Message on WhatsApp</span><span class="lbl-short">WhatsApp</span></a>
       <button type="button" class="menu-btn" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
       </button>
@@ -556,16 +600,11 @@ def render_hero(page):
     media = ""
     if page.get("hero_image"):
         big, small, alt = page["hero_image"]
-        bw, bh = image_size(big)
-        sw, _ = image_size(small)
         load_attrs = ('loading="eager" fetchpriority="high"'
                       if page.get("hero_eager") else 'loading="lazy"')
-        media = f"""
-      <div class="lp-hero-media">
-        <img src="images/{big}" srcset="images/{small} {sw}w, images/{big} {bw}w"
-             sizes="(max-width:900px) 92vw, 420px" alt="{esc(alt)}"
-             width="{bw}" height="{bh}" {load_attrs} decoding="async">
-      </div>"""
+        media = ('\n      <div class="lp-hero-media">\n        '
+                 + picture(big, small, "(max-width:900px) 92vw, 420px", alt, load_attrs)
+                 + "\n      </div>")
 
     jump = ""
     if page.get("jump_links"):
@@ -573,6 +612,10 @@ def render_hero(page):
         jump = f'<div class="wrap" style="padding-bottom:8px"><div class="jump">{items}</div></div>'
 
     wa_cta = page.get("wa_cta", copy["wa_cta"])
+    lead_head, lead_rest = lead_split(page["lead"])
+    lead_more = ""
+    if lead_rest:
+        lead_more = ('<div class="wrap lp-lead-rest"><p>' + esc(lead_rest) + "</p></div>")
 
     return f"""
 <main id="main">
@@ -582,7 +625,7 @@ def render_hero(page):
       <div class="lp-hero-head">
         <span class="eyebrow">{esc(page['eyebrow'])}</span>
         <h1>{esc(page['h1'])}</h1>
-        <p class="lead">{esc(page['lead'])}</p>
+        <p class="lead">{esc(lead_head)}</p>
       </div>
       <div class="lp-hero-rest">
         <div class="lp-hero-cta">
@@ -715,6 +758,7 @@ def render_hero(page):
     </div>
   </div>
 </section>
+{lead_more}
 {jump}
 """
 
@@ -975,13 +1019,12 @@ def render_gallery(page):
 
     cells = []
     for big, small, tag, alt in items:
-        w, h = image_size(big)
-        sw, _ = image_size(small)
+        img = picture(big, small,
+                      "(max-width:480px) 92vw,(max-width:760px) 46vw,360px",
+                      alt, 'loading="lazy"')
         cells.append(f"""
       <figure class="gal-cell">
-        <img src="images/{big}" srcset="images/{small} {sw}w, images/{big} {w}w"
-             sizes="(max-width:480px) 92vw,(max-width:760px) 46vw,360px" alt="{esc(alt)}"
-             width="{w}" height="{h}" loading="lazy" decoding="async">
+        {img}
         <figcaption class="gal-tag">{esc(tag)}</figcaption>
       </figure>""")
 

@@ -150,6 +150,33 @@
     }
   };
 
+  // ---- experiment bucketing ------------------------------------------------
+  // Set ACTIVE to the experiment name to start one; leave it "" and nothing is
+  // stamped anywhere. The bucket is stable per device for the life of the
+  // stored id, so a returning visitor never crosses between variants.
+  (function () {
+    var ACTIVE = "";                      // e.g. "lp-v2"; "" = no experiment running
+    var EKEY = "nacravo_exp";
+    function bucket() {
+      var rec = null;
+      try { rec = JSON.parse(localStorage.getItem(EKEY)); } catch (e) {}
+      if (!rec || typeof rec.b !== "number") {
+        rec = { b: Math.random() < 0.5 ? 0 : 1 };
+        try { localStorage.setItem(EKEY, JSON.stringify(rec)); } catch (e) {}
+      }
+      return rec.b;
+    }
+    window.nacravoExperiment = {
+      active: ACTIVE,
+      variant: ACTIVE ? (bucket() === 0 ? "control" : "variant") : "",
+      // The single string that goes into events and the lead record. Empty
+      // when no experiment is running, so callers can pass it straight through.
+      id: function () {
+        return ACTIVE ? ACTIVE + ":" + (bucket() === 0 ? "a" : "b") : "";
+      }
+    };
+  })();
+
   // ---- decorate WhatsApp links with the reference --------------------------
   function decorate(aEl) {
     try {
