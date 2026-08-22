@@ -1074,6 +1074,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
      Shared with every landing page — one implementation, loaded from a single
      file, so the header behaviour can never drift between the homepage and the
      rest of the site. -->
+<script src="/assets/nacravo-attr.js" defer></script>
 <script src="/assets/nacravo-nav.js" defer></script>
 
 <!-- ============ FORM FUNCTIONALITY (vanilla JS only) ============ -->
@@ -1154,6 +1155,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       "",
       "Please contact me."
     ];
+    if (window.nacravoAttr) lines.push("", window.nacravoAttr.waLine());
 
     var message = encodeURIComponent(lines.join("\n"));
     var waURL = "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + message;
@@ -1173,9 +1175,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     // delivered over WhatsApp; this is a local audit trail and never blocks the flow.
     try {
       var store = JSON.parse(localStorage.getItem("nacravo_leads") || "[]");
-      store.push({ ts: new Date().toISOString(), name: f.name, phone: f.phone,
-                   email: f.email, service: f.service, property: f.property,
-                   location: f.location });
+      var rec = { ts: new Date().toISOString(), name: f.name, phone: f.phone,
+                  email: f.email, service: f.service, property: f.property,
+                  location: f.location };
+      if (window.nacravoAttr) rec.attribution = window.nacravoAttr.leadParams();
+      store.push(rec);
       localStorage.setItem("nacravo_leads", JSON.stringify(store));
     } catch (err) {}
 
@@ -1192,7 +1196,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     // Google Ads conversion. GTM runs them, then calls eventCallback; eventTimeout
     // caps the wait so there is no visible delay and it can never hang.
     window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({
+    var leadEvt = {
       event: "generate_lead",
       form_name: "enquiry_form",
       lead_type: "whatsapp",
@@ -1203,7 +1207,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       currency: "AED",
       eventTimeout: 1200,
       eventCallback: openWhatsApp
-    });
+    };
+    // Click attribution (non-PII: click ids, utm, landing page, reference).
+    if (window.nacravoAttr) {
+      var lpar = window.nacravoAttr.leadParams();
+      for (var ak in lpar) { if (Object.prototype.hasOwnProperty.call(lpar, ak) && leadEvt[ak] === undefined) leadEvt[ak] = lpar[ak]; }
+    }
+    window.dataLayer.push(leadEvt);
     // Legacy event kept for any existing GTM trigger (does not double generate_lead).
     if (window.nacravoTrack) {
       window.nacravoTrack.push("form_submit", { form_name: "enquiry_form", lead_type: "whatsapp", service_name: f.service });

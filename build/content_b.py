@@ -182,7 +182,7 @@ PAGES = {
         "service_value": "Office & Commercial Cleaning",
         # Paid traffic lands here, so the tracker revision is pinned explicitly.
         # Bump to the commit that last changed assets/nacravo.js.
-        "tracker_pin": "1a70fa3",
+        "tracker_pin": "20260822",
         "service_schema_name": "Office and Commercial Cleaning Dubai",
         "area_served_schema": ["Dubai"],
         "wa_text": "Hello Nacravo, I'd like a quote for office and commercial cleaning in Dubai.",

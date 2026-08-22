@@ -955,6 +955,7 @@ def render_footer(page):
   window.NACRAVO_PAGE = {json.dumps({'service': page['service_value'], 'subservices': page.get('subservices', {})}, ensure_ascii=False)};
 </script>
 <script src="/assets/nacravo-nav.js" defer></script>
+<script src="/assets/nacravo-attr.js{tracker_pin}" defer></script>
 <script src="/assets/nacravo.js{tracker_pin}" defer></script>
 </body>
 </html>

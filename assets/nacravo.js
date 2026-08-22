@@ -32,6 +32,9 @@
       var o = { event: event, business_name: BUSINESS_NAME, location: LOCATION,
                 page_path: location.pathname + location.search, page_title: document.title };
       if (PAGE.service) o.service_name = PAGE.service;
+      // Attribution reference (assets/nacravo-attr.js). Extra dataLayer params
+      // are ignored by the existing GTM tags, so this is additive and safe.
+      if (window.nacravoAttr) o.lead_ref = window.nacravoAttr.ref;
       if (params) { for (var k in params) { if (Object.prototype.hasOwnProperty.call(params, k) && params[k] !== undefined) o[k] = params[k]; } }
       window.dataLayer.push(o);
     } catch (e) {}
@@ -276,6 +279,7 @@
       if (f.date) lines.push("Preferred Date: " + f.date);
       if (f.notes) lines.push("Additional Notes: " + f.notes);
       lines.push("", "Please contact me.");
+      if (window.nacravoAttr) lines.push("", window.nacravoAttr.waLine());
 
       var waURL = "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(lines.join("\n"));
 
@@ -290,9 +294,11 @@
 
       try {
         var store = JSON.parse(localStorage.getItem("nacravo_leads") || "[]");
-        store.push({ ts: new Date().toISOString(), name: f.name, phone: f.phone,
-                     service: f.service, subservice: f.subservice,
-                     property: f.property, location: f.location });
+        var rec = { ts: new Date().toISOString(), name: f.name, phone: f.phone,
+                    service: f.service, subservice: f.subservice,
+                    property: f.property, location: f.location };
+        if (window.nacravoAttr) rec.attribution = window.nacravoAttr.leadParams();
+        store.push(rec);
         localStorage.setItem("nacravo_leads", JSON.stringify(store));
       } catch (err) {}
 
@@ -306,7 +312,7 @@
       // ONE generate_lead drives both the GA4 tag and the Google Ads conversion
       // inside GTM. eventTimeout caps the wait so the handover never hangs.
       window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({
+      var leadEvt = {
         event: "generate_lead",
         form_name: "lead_form",
         lead_type: "whatsapp",
@@ -322,7 +328,13 @@
         currency: "AED",
         eventTimeout: 1200,
         eventCallback: openWhatsApp
-      });
+      };
+      // Click attribution (non-PII: click ids, utm, landing page, reference).
+      if (window.nacravoAttr) {
+        var lpar = window.nacravoAttr.leadParams();
+        for (var ak in lpar) { if (Object.prototype.hasOwnProperty.call(lpar, ak) && leadEvt[ak] === undefined) leadEvt[ak] = lpar[ak]; }
+      }
+      window.dataLayer.push(leadEvt);
 
       // Backstop if GTM is blocked and eventCallback never runs.
       setTimeout(openWhatsApp, 1500);
