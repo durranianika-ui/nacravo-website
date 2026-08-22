@@ -70,6 +70,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/nacravo.css">
+<script>
+/* Paid landing mode, decided before first paint so the browse chrome never
+   flashes. Applies only to the view that actually carries the ad click:
+   land from an ad and the page drops the navigation that would leak the
+   click away; choose to browse on and the full site comes back. Crawlers
+   never carry a click id, so the indexed page is always the complete one. */
+document.documentElement.className+=" lf-js";
+(function(){try{var q=new URLSearchParams(location.search);
+if(q.get("gclid")||q.get("gbraid")||q.get("wbraid")||/^(cpc|ppc|paid|paidsearch|paid_social)$/i.test(q.get("utm_medium")||"")){document.documentElement.setAttribute("data-paid","1");}}catch(e){}})();
+</script>
 
 <script type="application/ld+json">
 {
@@ -304,95 +314,188 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <p class="lead">Fast AC fault diagnosis and repair, with the price approved before work starts. Water leaks, a unit that trips the breaker, ice on the pipework, strange noises, error codes or cooling that has stopped altogether — we trace the actual cause instead of guessing, show you any part before it is fitted, and confirm the repair price first. We work daily, 7:00 AM to 10:00 PM.</p>
       </div>
       <div class="lp-hero-rest">
-        <div class="trust"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>Licensed and insured</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Parts shown before fitting</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.59 13.41 13.42 20.58a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82Z"/><circle cx="7" cy="7" r="1.4" fill="currentColor" stroke="none"/></svg>Repair price approved first</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Daily 7am-10pm, fast slots</span></div>
         <div class="lp-hero-cta">
-          <a href="https://wa.me/971555403038?text=Hi%20Nacravo%2C%20I%20need%20AC%20repair.%20My%20area%20is%20____%20and%20the%20issue%20is%20____." target="_blank" rel="noopener" class="btn btn-wa" data-track="booking" data-service-name="AC Repair" data-track-label="Hero: WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm4.52 11.99c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.8-.79.97-.14.16-.29.18-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.51.11-.11.25-.29.37-.43.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.43h-.48c-.16 0-.42.06-.64.31-.22.25-.84.82-.84 2 0 1.18.86 2.32.98 2.48.12.16 1.69 2.58 4.1 3.62.57.25 1.02.4 1.37.51.57.18 1.1.16 1.51.1.46-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.11-.22-.17-.47-.29Z"/></svg> WhatsApp for availability &amp; price</a>
-          <a href="tel:+971555403038" class="btn btn-call"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2Z"/></svg> Call now +971 55 540 3038</a>
+          <a href="https://wa.me/971555403038?text=Hi%20Nacravo%2C%20I%20need%20AC%20repair.%20My%20area%20is%20____%20and%20the%20issue%20is%20____." target="_blank" rel="noopener" class="btn btn-wa" data-track="booking" data-service-name="AC Repair" data-track-label="Hero: WhatsApp"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm4.52 11.99c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.8-.79.97-.14.16-.29.18-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.51.11-.11.25-.29.37-.43.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.43h-.48c-.16 0-.42.06-.64.31-.22.25-.84.82-.84 2 0 1.18.86 2.32.98 2.48.12.16 1.69 2.58 4.1 3.62.57.25 1.02.4 1.37.51.57.18 1.1.16 1.51.1.46-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.11-.22-.17-.47-.29Z"/></svg> WhatsApp a Technician</a>
+          <a href="tel:+971555403038" class="btn btn-call"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2Z"/></svg> Call +971 55 540 3038</a>
         </div>
+        <p class="lp-hero-avail">Open daily, 7 AM–10 PM · Same-day subject to availability</p>
+        <div class="trust"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>Licensed and insured</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>Parts shown before fitting</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.59 13.41 13.42 20.58a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82Z"/><circle cx="7" cy="7" r="1.4" fill="currentColor" stroke="none"/></svg>Repair price approved first</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Daily 7am-10pm, fast slots</span></div>
       </div>
     </div>
 
     <div class="lp-form-wrap">
-      <form class="lp-form" id="leadForm" novalidate aria-labelledby="leadFormTitle">
-        <h2 id="leadFormTitle">Get a free quote</h2>
-        <p class="lp-form-sub">Tell us what you need — we reply on WhatsApp with a fixed price.</p>
+      <form class="lp-form lf" id="leadForm" action="/api/leads" method="post" novalidate
+            data-vertical="ac" data-preselect="not-cooling"
+            aria-labelledby="leadFormTitle">
+        <div class="lf-chrome">
+          <h2 id="leadFormTitle" class="lf-head">Send us the problem</h2>
+          <p class="lp-form-sub">Three short questions. A technician replies on WhatsApp.</p>
+          <p class="lf-progress" data-step="1" aria-hidden="true">Step 1 of 3</p>
+        </div>
 
-        <div class="form-row">
-          <div class="field">
-            <label for="name">Name <span class="req" aria-hidden="true">*</span></label>
-            <input type="text" id="name" name="name" placeholder="Your name" autocomplete="name" required>
-            <span class="err-msg">Please enter your name.</span>
-          </div>
-          <div class="field">
-            <label for="phone">Phone <span class="req" aria-hidden="true">*</span></label>
-            <input type="tel" id="phone" name="phone" placeholder="+971…" autocomplete="tel" required>
-            <span class="err-msg">Please enter a valid phone number.</span>
+        <div class="lf-errors" id="leadErrors" role="alert" hidden></div>
+
+        <div class="lf-step" data-step="1">
+          <fieldset class="lf-fieldset">
+            <legend class="lf-q" id="lfQ1">What is your AC doing?</legend>
+            <div class="lf-choice" data-name="problem"><input type="radio" class="lf-radio" id="lfo-not-cooling" name="problem" value="Not cooling" data-intent="not-cooling no-cooling weak-cooling" checked><label class="lf-chip" for="lfo-not-cooling">Not cooling</label><input type="radio" class="lf-radio" id="lfo-leaking" name="problem" value="Leaking" data-intent="leaking water-leak leak"><label class="lf-chip" for="lfo-leaking">Leaking</label><input type="radio" class="lf-radio" id="lfo-noise" name="problem" value="Strange noise" data-intent="noise noisy"><label class="lf-chip" for="lfo-noise">Strange noise</label><input type="radio" class="lf-radio" id="lfo-smell" name="problem" value="Bad smell" data-intent="smell odour odor"><label class="lf-chip" for="lfo-smell">Bad smell</label><input type="radio" class="lf-radio" id="lfo-service" name="problem" value="Service" data-intent="service servicing maintenance ac-servicing"><label class="lf-chip" for="lfo-service">Service</label><input type="radio" class="lf-radio" id="lfo-unsure" name="problem" value="Not sure" data-intent="unsure not-sure other"><label class="lf-chip" for="lfo-unsure">Not sure</label></div>
+            <span class="err-msg">Please choose one to continue.</span>
+          </fieldset>
+          <div class="lf-nav">
+            <button type="button" class="btn btn-primary lf-next" data-lf-next>Continue</button>
           </div>
         </div>
 
-        <div class="form-row">
-          <div class="field">
-            <label for="service">Service <span class="req" aria-hidden="true">*</span></label>
-            <select id="service" name="service" required>
-              <option value="AC Repair" selected>AC Repair</option>
-            </select>
-            <span class="err-msg">Please choose a service.</span>
-          </div>
-          <div class="field">
-            <label for="location">Location <span class="req" aria-hidden="true">*</span></label>
-            <input type="text" id="location" name="location" placeholder="e.g. Business Bay" autocomplete="address-level2" required>
-            <span class="err-msg">Please enter your location.</span>
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="field full">
-            <label for="subservice">Which specific service?</label>
-            <select id="subservice" name="subservice">
-              <option value="">No preference / not sure</option>
-              <option>Not cooling at all</option><option>Water leaking</option><option>Won't start / trips breaker</option><option>Strange noise</option><option>Error code on display</option>
-            </select>
-          </div>
-        </div>
-
-        <details class="lp-extra">
-          <summary class="lp-more">Add property type, date or a note (optional)</summary>
-          <div class="lp-optional">
-            <div class="form-row">
-              <div class="field">
-                <label for="property">Property type</label>
-                <select id="property" name="property">
-                  <option value="">Select…</option>
-                  <option>Apartment</option>
-                  <option>Villa</option>
-                  <option>Townhouse</option>
-                  <option>Office</option>
-                  <option>Retail</option>
-                  <option>Other</option>
-                </select>
-              </div>
-              <div class="field">
-                <label for="date">Preferred date</label>
-                <input type="date" id="date" name="date">
-              </div>
+        <div class="lf-step" data-step="2" hidden>
+          <p class="lf-q">Tell us a little about the job</p>
+          <div class="form-row">
+            <div class="field">
+              <label for="property_type">Where is the AC?</label>
+              <select id="property_type" name="property_type">
+                <option value="">Select…</option>
+                <option>Apartment</option><option>Villa</option><option>Townhouse</option>
+                <option>Office</option><option>Retail</option><option>Other</option>
+              </select>
             </div>
-            <div class="form-row">
-              <div class="field full">
-                <label for="notes">Message</label>
-                <textarea id="notes" name="notes" rows="3" placeholder="Anything we should know?"></textarea>
-              </div>
+            <div class="field">
+              <label for="units">How many AC units?</label>
+              <input type="number" id="units" name="units" min="1" max="999" inputmode="numeric" placeholder="e.g. 4">
+              <span class="lf-hint">Leave blank if you are not sure.</span>
             </div>
           </div>
-        </details>
+          <div class="lf-nav">
+            <button type="button" class="btn btn-ghost" data-lf-back>Back</button>
+            <button type="button" class="btn btn-primary lf-next" data-lf-next>Continue</button>
+          </div>
+        </div>
 
-        <button type="submit" class="btn btn-wa" style="width:100%;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm4.52 11.99c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.8-.79.97-.14.16-.29.18-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.51.11-.11.25-.29.37-.43.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.43h-.48c-.16 0-.42.06-.64.31-.22.25-.84.82-.84 2 0 1.18.86 2.32.98 2.48.12.16 1.69 2.58 4.1 3.62.57.25 1.02.4 1.37.51.57.18 1.1.16 1.51.1.46-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.11-.22-.17-.47-.29Z"/></svg> Get my free quote →</button>
-        <div class="form-status" id="leadStatus" role="status" aria-live="polite">Opening WhatsApp with your enquiry…</div>
+        <div class="lf-step" data-step="3" hidden>
+          <p class="lf-q">Where are you, and where should we reply?</p>
+          <div class="form-row">
+            <div class="field full">
+              <label for="area">Area or building <span class="req" aria-hidden="true">*</span></label>
+              <input type="text" id="area" name="area" placeholder="e.g. Business Bay" autocomplete="address-level2" required aria-describedby="areaHint">
+              
+              <span class="lf-hint" id="areaHint">So we can confirm we cover you.</span>
+              <span class="err-msg">Please enter the area or building.</span>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="field">
+              <label for="phone">WhatsApp / phone number <span class="req" aria-hidden="true">*</span></label>
+              <input type="tel" id="phone" name="phone" placeholder="e.g. 055 123 4567" autocomplete="tel" required aria-describedby="phoneHint">
+              <span class="lf-hint" id="phoneHint">Used only to answer this request.</span>
+              <span class="err-msg">Please enter a valid contact number.</span>
+            </div>
+            <div class="field">
+              <label for="name">Your name <span class="lf-opt">(optional)</span></label>
+              <input type="text" id="name" name="name" placeholder="Who should we ask for?" autocomplete="name">
+            </div>
+          </div>
+
+          <details class="lp-extra">
+            <summary class="lp-more">Add a date or a note (optional)</summary>
+            <div class="lp-optional">
+              <div class="form-row">
+                <div class="field">
+                  <label for="preferred_date">Preferred date</label>
+                  <input type="date" id="preferred_date" name="preferred_date">
+                </div>
+                <div class="field">
+                  <label for="email">Email <span class="lf-opt">(optional)</span></label>
+                  <input type="email" id="email" name="email" autocomplete="email" placeholder="you@email.com">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="field full">
+                  <label for="notes">Anything we should know?</label>
+                  <textarea id="notes" name="notes" rows="3"></textarea>
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <input type="hidden" name="vertical" value="ac">
+          <p class="lf-hp" aria-hidden="true">
+            <label for="website">Leave this field empty</label>
+            <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+          </p>
+
+          <div class="lf-nav">
+            <button type="button" class="btn btn-ghost" data-lf-back>Back</button>
+            <button type="submit" class="btn btn-wa lf-submit" data-lf-submit><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm4.52 11.99c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.8-.79.97-.14.16-.29.18-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.51.11-.11.25-.29.37-.43.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.43h-.48c-.16 0-.42.06-.64.31-.22.25-.84.82-.84 2 0 1.18.86 2.32.98 2.48.12.16 1.69 2.58 4.1 3.62.57.25 1.02.4 1.37.51.57.18 1.1.16 1.51.1.46-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.11-.22-.17-.47-.29Z"/></svg> Send My AC Problem</button>
+          </div>
+
+          <div class="lf-consent">
+            <input type="checkbox" id="consent_marketing" name="consent_marketing">
+            <label for="consent_marketing">Send me occasional Nacravo offers. Optional — you will get an answer to this request either way.</label>
+          </div>
+        </div>
+
+        <div class="form-status" id="leadStatus" role="status" aria-live="polite"></div>
+
+        <!-- Shown only if the lead store is unreachable. Carries everything the
+             visitor already typed, so a backend outage costs an enquiry the
+             extra tap, not the enquiry itself. -->
+        <div class="lf-fallback" id="leadFallback" hidden>
+          <p>We could not store your request automatically. Send it to us directly instead &mdash; everything you filled in is already in the message.</p>
+          <a href="https://wa.me/971555403038" target="_blank" rel="noopener" class="btn btn-wa" id="leadFallbackWa" data-no-track><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm4.52 11.99c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.8-.79.97-.14.16-.29.18-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.51.11-.11.25-.29.37-.43.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.43h-.48c-.16 0-.42.06-.64.31-.22.25-.84.82-.84 2 0 1.18.86 2.32.98 2.48.12.16 1.69 2.58 4.1 3.62.57.25 1.02.4 1.37.51.57.18 1.1.16 1.51.1.46-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.11-.22-.17-.47-.29Z"/></svg> Send my details on WhatsApp</a>
+          <a href="tel:+971555403038" class="btn btn-call"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2Z"/></svg> Call +971 55 540 3038</a>
+        </div>
+
+        <div class="lf-success" id="leadSuccess" hidden>
+          <h2>Thanks — your request is with Nacravo.</h2>
+          <p>We have your details and will come back to you during opening hours (Open daily, 7 AM–10 PM). Quote your reference if you contact us:</p>
+          <p class="lf-ref"><span id="leadRefOut"></span></p>
+          <div class="lf-success-cta">
+            <a href="https://wa.me/971555403038" target="_blank" rel="noopener" class="btn btn-wa" id="leadWaBtn"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm4.52 11.99c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.8-.79.97-.14.16-.29.18-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.51.11-.11.25-.29.37-.43.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.43h-.48c-.16 0-.42.06-.64.31-.22.25-.84.82-.84 2 0 1.18.86 2.32.98 2.48.12.16 1.69 2.58 4.1 3.62.57.25 1.02.4 1.37.51.57.18 1.1.16 1.51.1.46-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.11-.22-.17-.47-.29Z"/></svg> Continue on WhatsApp</a>
+            <a href="tel:+971555403038" class="btn btn-call"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2Z"/></svg> Call +971 55 540 3038</a>
+          </div>
+          <p class="lf-hint">Continuing on WhatsApp is optional — your request has already reached us.</p>
+        </div>
+
         <p class="lp-fineprint">We use your details only to respond to this enquiry. See our <a href="/privacy-policy">Privacy Policy</a>.</p>
       </form>
     </div>
   </div>
 </section>
 <div class="wrap" style="padding-bottom:8px"><div class="jump"><a href="#faults">Faults we fix</a><a href="#diagnosis">Diagnosis process</a><a href="#repair-replace">Repair or replace</a><a href="#availability">Availability</a></div></div>
+
+<!-- GALLERY PLACEHOLDER — /ac-repair-dubai
+     No AC-repair photography exists in the repository. Needs: a technician diagnosing a fault with gauges, and a coil/compressor repair in progress.
+     See build/media.py GALLERY_GAPS. -->
+
+<section class="pillars" id="why">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">Why Nacravo</span>
+      <h2>Why book your AC repair with Nacravo</h2>
+      <p>Faults fixed at the cause, priced before the work.</p>
+    </div>
+    <div class="pillar-grid">
+      <div class="pillar">
+        <div class="pn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F5F2EC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></div>
+        <h3>Diagnosis, not guesswork</h3>
+        <p>We test to find the cause before quoting, so the repair fixes the fault rather than replacing parts on a hunch and hoping.</p>
+      </div>
+      <div class="pillar">
+        <div class="pn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F5F2EC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.59 13.41 13.42 20.58a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82Z"/><circle cx="7" cy="7" r="1.4" fill="currentColor" stroke="none"/></svg></div>
+        <h3>Approved before we proceed</h3>
+        <p>You approve the repair price, and any part, before it is fitted. Nothing is added to the invoice that you did not agree to first.</p>
+      </div>
+      <div class="pillar">
+        <div class="pn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F5F2EC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <h3>Employed, insured technicians</h3>
+        <p>Every technician is on the Nacravo payroll, background-checked and insured — one accountable company if anything needs revisiting, not a rotating cast.</p>
+      </div>
+      <div class="pillar">
+        <div class="pn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F5F2EC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
+        <h3>Documented repair</h3>
+        <p>The fault and the completed repair are photographed, and cooling is retested before we leave, so you have a record of what was done.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
 <section id="services">
   <div class="wrap">
@@ -463,57 +566,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 </section>
 
-<section class="pillars" id="why">
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="eyebrow">Why Nacravo</span>
-      <h2>Why book your AC repair with Nacravo</h2>
-      <p>Faults fixed at the cause, priced before the work.</p>
-    </div>
-    <div class="pillar-grid">
-      <div class="pillar">
-        <div class="pn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F5F2EC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg></div>
-        <h3>Diagnosis, not guesswork</h3>
-        <p>We test to find the cause before quoting, so the repair fixes the fault rather than replacing parts on a hunch and hoping.</p>
-      </div>
-      <div class="pillar">
-        <div class="pn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F5F2EC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.59 13.41 13.42 20.58a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82Z"/><circle cx="7" cy="7" r="1.4" fill="currentColor" stroke="none"/></svg></div>
-        <h3>Approved before we proceed</h3>
-        <p>You approve the repair price, and any part, before it is fitted. Nothing is added to the invoice that you did not agree to first.</p>
-      </div>
-      <div class="pillar">
-        <div class="pn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F5F2EC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-        <h3>Employed, insured technicians</h3>
-        <p>Every technician is on the Nacravo payroll, background-checked and insured — one accountable company if anything needs revisiting, not a rotating cast.</p>
-      </div>
-      <div class="pillar">
-        <div class="pn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F5F2EC" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></div>
-        <h3>Documented repair</h3>
-        <p>The fault and the completed repair are photographed, and cooling is retested before we leave, so you have a record of what was done.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="process" style="background:var(--sand)">
-  <div class="wrap">
-    <div class="sec-head">
-      <span class="eyebrow">How it works</span>
-      <h2>How an AC repair works</h2>
-    </div>
-    <div class="steps">
-      <div class="step"><div class="num">1</div><h3>Describe the fault</h3><p>Tell us what the AC is doing and your area, by WhatsApp, phone or form. A short video of the fault helps.</p></div>
-      <div class="step"><div class="num">2</div><h3>Diagnosis on site</h3><p>A technician tests the system, identifies the cause and explains it plainly.</p></div>
-      <div class="step"><div class="num">3</div><h3>Approve the price</h3><p>You get a fixed repair price, with any part shown to you before it is fitted, and approve before work starts.</p></div>
-      <div class="step"><div class="num">4</div><h3>Repair and retest</h3><p>The repair is completed, cooling is retested and you receive photos of the work.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- GALLERY PLACEHOLDER — /ac-repair-dubai
-     No AC-repair photography exists in the repository. Needs: a technician diagnosing a fault with gauges, and a coil/compressor repair in progress.
-     See build/media.py GALLERY_GAPS. -->
-
 <section id="pricing" style="background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
   <div class="wrap">
     <div class="sec-head">
@@ -538,6 +590,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <li><span class="ck">✓</span>One accountable point of contact on WhatsApp</li>
         </ul>
       </div>
+    </div>
+  </div>
+</section>
+
+<section id="process" style="background:var(--sand)">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">How it works</span>
+      <h2>How an AC repair works</h2>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="num">1</div><h3>Describe the fault</h3><p>Tell us what the AC is doing and your area, by WhatsApp, phone or form. A short video of the fault helps.</p></div>
+      <div class="step"><div class="num">2</div><h3>Diagnosis on site</h3><p>A technician tests the system, identifies the cause and explains it plainly.</p></div>
+      <div class="step"><div class="num">3</div><h3>Approve the price</h3><p>You get a fixed repair price, with any part shown to you before it is fitted, and approve before work starts.</p></div>
+      <div class="step"><div class="num">4</div><h3>Repair and retest</h3><p>The repair is completed, cooling is retested and you receive photos of the work.</p></div>
     </div>
   </div>
 </section>
@@ -687,11 +754,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <!-- Sticky mobile bar (mobile carries the WhatsApp CTA here, so the floating
      button is desktop-only and the two can never overlap) -->
-<div class="mbar">
-  <a href="tel:+971555403038" class="call"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2Z"/></svg> Call</a>
-  <a href="https://wa.me/971555403038?text=Hi%20Nacravo%2C%20I%20need%20AC%20repair.%20My%20area%20is%20____%20and%20the%20issue%20is%20____." target="_blank" rel="noopener" class="wa"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm4.52 11.99c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.8-.79.97-.14.16-.29.18-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.51.11-.11.25-.29.37-.43.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.43h-.48c-.16 0-.42.06-.64.31-.22.25-.84.82-.84 2 0 1.18.86 2.32.98 2.48.12.16 1.69 2.58 4.1 3.62.57.25 1.02.4 1.37.51.57.18 1.1.16 1.51.1.46-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.11-.22-.17-.47-.29Z"/></svg> WhatsApp</a>
-  <a href="#leadFormTitle" class="book" data-track="quote" data-track-label="Sticky: Book service">
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg> Book</a>
+<div class="mbar" role="group" aria-label="Contact Nacravo">
+  <a href="tel:+971555403038" class="call" aria-label="Call Nacravo on +971 55 540 3038"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2Z"/></svg> Call</a>
+  <a href="https://wa.me/971555403038?text=Hi%20Nacravo%2C%20I%20need%20AC%20repair.%20My%20area%20is%20____%20and%20the%20issue%20is%20____." target="_blank" rel="noopener" class="wa" aria-label="Message Nacravo on WhatsApp"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm4.52 11.99c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.8-.79.97-.14.16-.29.18-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.51.11-.11.25-.29.37-.43.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.43h-.48c-.16 0-.42.06-.64.31-.22.25-.84.82-.84 2 0 1.18.86 2.32.98 2.48.12.16 1.69 2.58 4.1 3.62.57.25 1.02.4 1.37.51.57.18 1.1.16 1.51.1.46-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.11-.22-.17-.47-.29Z"/></svg> WhatsApp</a>
 </div>
 
 <a class="wa-float" href="https://wa.me/971555403038?text=Hi%20Nacravo%2C%20I%20need%20AC%20repair.%20My%20area%20is%20____%20and%20the%20issue%20is%20____." target="_blank" rel="noopener" aria-label="Chat with Nacravo on WhatsApp" data-track="booking" data-service-name="AC Repair" data-track-label="Floating WhatsApp"><svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm4.52 11.99c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.8-.79.97-.14.16-.29.18-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.51.11-.11.25-.29.37-.43.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.43h-.48c-.16 0-.42.06-.64.31-.22.25-.84.82-.84 2 0 1.18.86 2.32.98 2.48.12.16 1.69 2.58 4.1 3.62.57.25 1.02.4 1.37.51.57.18 1.1.16 1.51.1.46-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.11-.22-.17-.47-.29Z"/></svg></a>
@@ -725,5 +790,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <script src="/assets/nacravo-nav.js" defer></script>
 <script src="/assets/nacravo-attr.js" defer></script>
 <script src="/assets/nacravo.js" defer></script>
+<script src="/assets/nacravo-lead.js" defer></script>
 </body>
 </html>

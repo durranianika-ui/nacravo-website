@@ -122,6 +122,31 @@
       p.landing_page = a.lp;
       p.landed_at = new Date(a.at).toISOString();
       return p;
+    },
+    // Full attribution payload for POST /api/leads. Server-side only: these
+    // identifiers must never appear in a WhatsApp message, a URL or an
+    // analytics event, so this is deliberately separate from leadParams().
+    serverParams: function () {
+      var a = active(), f = attr.first || a, p = { lead_ref: attr.ref };
+      ["gclid", "gbraid", "wbraid", "utm_source", "utm_medium", "utm_campaign",
+       "utm_term", "utm_content"].forEach(function (k) { if (a[k]) p[k] = a[k]; });
+      p.landing_page = a.lp;
+      p.click_time = new Date(a.at).toISOString();
+      if (f !== a) {
+        if (f.utm_source) p.first_utm_source = f.utm_source;
+        if (f.utm_campaign) p.first_utm_campaign = f.utm_campaign;
+        p.first_landing_page = f.lp;
+        p.first_seen = new Date(f.at).toISOString();
+      }
+      return p;
+    },
+    // True when the visit that owns this lead came from a paid click. Drives
+    // the distraction-free paid landing experience (see .paid rules in
+    // assets/nacravo.css) and nothing else.
+    isPaid: function () {
+      var a = active();
+      return !!(a.gclid || a.gbraid || a.wbraid ||
+                /^(cpc|ppc|paid|paidsearch|paid_social)$/i.test(a.utm_medium || ""));
     }
   };
 

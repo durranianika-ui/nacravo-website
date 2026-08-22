@@ -193,14 +193,17 @@ footer a:hover{color:var(--pearl)}
 @media(max-width:760px){.foot-grid{grid-template-columns:1fr 1fr}}
 
 /* sticky mobile bar */
-.mbar{display:none;position:fixed;bottom:0;left:0;right:0;z-index:60;background:var(--pearl);border-top:1px solid var(--line);padding:10px 14px;gap:10px}
-.mbar a{flex:1;text-align:center;padding:12px;border-radius:10px;font-weight:500;font-size:14px;font-family:'Plus Jakarta Sans';display:flex;align-items:center;justify-content:center;gap:7px}
+.mbar{display:none;position:fixed;bottom:0;left:0;right:0;z-index:60;background:var(--pearl);border-top:1px solid var(--line);padding:8px 12px calc(8px + env(safe-area-inset-bottom));gap:8px;min-height:calc(64px + env(safe-area-inset-bottom))}
+.mbar a{flex:1 1 50%;text-align:center;min-height:48px;padding:12px;border-radius:10px;font-weight:500;font-size:15px;font-family:'Plus Jakarta Sans';display:flex;align-items:center;justify-content:center;gap:8px}
+.mbar a:focus-visible{outline:3px solid var(--moss);outline-offset:-3px}
 .mbar .call{background:#ECE6D8;color:var(--moss)}
 .mbar .wa{background:#25D366;color:#fff}
-.mbar .book{background:var(--moss);color:var(--pearl)}
+/* .book removed: the sticky bar carries exactly two actions, Call and
+   WhatsApp. A third generic 'Book' split attention and narrowed both
+   remaining targets on a 320px screen. */
 /* three actions stay comfortable down to 320px */
 @media(max-width:360px){.mbar{gap:7px;padding-left:10px;padding-right:10px}.mbar a{font-size:13.5px;gap:5px}}
-@media(max-width:900px){.mbar{display:flex}body{padding-bottom:72px}}
+@media(max-width:900px){.mbar{display:flex}body{padding-bottom:calc(80px + env(safe-area-inset-bottom))}}
 
 /* ============ PERFORMANCE ============ */
 /* footer is below all in-page anchors, so skipping its off-screen render is safe */
@@ -297,8 +300,7 @@ footer{content-visibility:auto;contain-intrinsic-size:auto 500px}
   .foot-bottom{flex-direction:column;gap:6px}
 
   /* ---- STICKY BAR (~76px), equal buttons, page cleared below it ---- */
-  .mbar{padding:11px 16px calc(13px + env(safe-area-inset-bottom));gap:12px}
-  .mbar a{flex:1;min-height:52px;padding:0;font-size:15px;gap:8px}
+  .mbar a{min-height:48px;padding:0;font-size:15px;gap:8px}
   body{padding-bottom:calc(96px + env(safe-area-inset-bottom))}
 }
 
@@ -568,3 +570,120 @@ body.nav-open{overflow:hidden}
 
 /* Nav, floating WhatsApp and accessibility rules live in SHARED_UI_CSS —
    they are injected above, and into index.html's managed block. */
+
+/* ===== LEAD FLOW =========================================================
+   Three-step qualification form. The visitor answers what / scope / where
+   before anything is asked that only matters to us, and the lead is written
+   to the CRM by /api/leads before any success state or conversion event.
+   See assets/nacravo-lead.js for the behaviour contract. */
+
+.lf-progress{font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--stone);margin:2px 0 14px;font-weight:600}
+.lf-fieldset{border:0;padding:0;margin:0;min-width:0}
+.lf-q{font-size:16px;font-weight:600;color:var(--moss);margin:0 0 12px;font-family:'Plus Jakarta Sans';padding:0}
+legend.lf-q{float:left;width:100%}
+.lf-choice{display:flex;flex-wrap:wrap;gap:8px;clear:both}
+/* The radio carries the value and the keyboard behaviour; the label is the
+   visible chip. Never display:none the input — that removes it from the tab
+   order and from assistive technology. */
+.lf-radio{position:absolute;width:1px;height:1px;opacity:0;margin:0;pointer-events:none}
+.lf-chip{font:500 14.5px/1.2 'Plus Jakarta Sans',sans-serif;color:var(--moss);background:#fff;
+  border:1.5px solid var(--line);border-radius:999px;padding:12px 16px;min-height:48px;cursor:pointer;
+  display:inline-flex;align-items:center;transition:border-color .15s,background .15s,box-shadow .15s}
+.lf-chip:hover{border-color:var(--sage)}
+.lf-radio:focus-visible + .lf-chip{outline:3px solid var(--moss);outline-offset:2px}
+.lf-radio:checked + .lf-chip{background:var(--moss);border-color:var(--moss);color:var(--pearl);box-shadow:0 2px 10px rgba(46,55,43,.18)}
+.lf-choice.invalid .lf-chip{border-color:#B04A3E}
+
+/* Progressive enhancement: with JS the form is three screens, without it every
+   step is visible at once and submits in one POST. */
+html.lf-js .lf-step{display:none}
+html.lf-js .lf-step.is-current{display:block}
+html:not(.lf-js) .lf-nav [data-lf-next],html:not(.lf-js) .lf-nav [data-lf-back],
+html:not(.lf-js) .lf-progress{display:none}
+.lf-fieldset .err-msg{margin-top:8px}
+.lf-choice.invalid ~ .err-msg{display:block}
+
+.lf-hint{font-size:12.5px;color:var(--stone);line-height:1.45}
+.lf-opt{font-weight:400;color:var(--stone);font-size:12.5px}
+
+.lf-nav{display:flex;gap:10px;margin-top:18px}
+.lf-nav .btn{min-height:50px}
+.lf-nav .lf-next,.lf-nav .lf-submit{flex:1;justify-content:center}
+.lf-nav [data-lf-back]{flex:0 0 auto}
+.lf-submit[aria-busy="true"]{opacity:.72;cursor:progress}
+
+/* Error summary: one place a screen-reader user is sent to, with links into
+   the offending fields. */
+.lf-errors{background:#FDF4F2;border:1px solid #E4B7AF;border-left:4px solid #B04A3E;
+  border-radius:10px;padding:14px 16px;margin-bottom:16px}
+.lf-errors h3{font-size:14.5px;color:#8C3A30;margin:0 0 6px}
+.lf-errors h3:focus{outline:none}
+.lf-errors ul{margin:0;padding-left:18px}
+.lf-errors li{font-size:13.5px;margin:3px 0}
+.lf-errors a{color:#8C3A30;text-decoration:underline}
+
+.form-status{display:none}
+.form-status.show{display:block}
+.form-status.ok{background:#E7EFE0;color:#3B4636;border:1px solid var(--euca)}
+.form-status.busy{background:#F3F0E6;color:#54594C;border:1px solid var(--line)}
+.form-status.err{background:#FDF4F2;color:#8C3A30;border:1px solid #E4B7AF}
+
+/* Honeypot. Hidden from sight and from assistive technology, but still a real
+   focusable-free field an automated filler will complete. */
+.lf-hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+
+.lf-consent{display:flex;gap:10px;align-items:flex-start;margin-top:14px}
+.lf-consent input{margin-top:3px;width:18px;height:18px;flex-shrink:0}
+.lf-consent label{font-size:12.5px;color:var(--stone);line-height:1.5}
+
+.lf-success{text-align:left}
+.lf-success h2{font-size:21px;margin-bottom:8px;color:var(--moss)}
+.lf-success h2:focus{outline:none}
+.lf-success p{font-size:14.5px;color:#54594C;line-height:1.6}
+.lf-ref{margin:14px 0 18px}
+.lf-ref span{display:inline-block;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  font-size:16px;letter-spacing:.04em;background:#ECE6D8;color:var(--moss);
+  border:1px dashed var(--sage);border-radius:10px;padding:10px 14px}
+.lf-success-cta{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
+.lf-success-cta .btn{width:100%;justify-content:center;min-height:52px}
+
+.lp-hero-avail{font-size:13.5px;color:var(--stone);margin:10px 0 0}
+
+@media(max-width:900px){
+  .lp-hero-rest .lp-hero-avail{order:2;margin:10px 0 0}
+  .lp-hero-rest .trust{order:3}
+  .lf-chip{font-size:15px;padding:12px 15px}
+  .lf-nav{flex-wrap:wrap}
+  .lf-nav .btn{width:100%;justify-content:center}
+  .lf-nav [data-lf-back]{order:2}
+  .lf-nav .lf-next,.lf-nav .lf-submit{order:1}
+}
+
+/* ===== PAID LANDING MODE =================================================
+   Set by the inline head snippet (and re-asserted by nacravo-attr.js) when a
+   visit carries a Google click id or a cpc medium. Content is untouched — the
+   page only loses the browse chrome that leaks a paid click away from the one
+   decision it arrived to make. Crawlers never carry a click id, so the indexed
+   page is always the full one. */
+html[data-paid="1"] .nav-links,
+html[data-paid="1"] .crumb,
+html[data-paid="1"] .foot-grid,
+html[data-paid="1"] .rel-grid,
+html[data-paid="1"] #related,
+html[data-paid="1"] .mobile-menu .mm-group,
+html[data-paid="1"] .mobile-menu a[href="/services"],
+html[data-paid="1"] .mobile-menu a[href="/#why"],
+html[data-paid="1"] .mobile-menu a[href="/#packages"],
+html[data-paid="1"] .menu-btn{display:none}
+html[data-paid="1"] .foot-legal{padding-top:8px}
+
+/* hero CTA overflow guard */
+.lp-hero-cta .btn,.lf-success-cta .btn,.cta-band-btns .btn,.anchor-cta .btn,.lf-nav .btn{min-width:0;max-width:100%;white-space:normal;text-align:center;padding-left:18px;padding-right:18px}
+.lp-hero-cta .btn svg,.lf-success-cta .btn svg,.cta-band-btns .btn svg{flex:0 0 auto}
+@media(max-width:359px){.lp-hero-cta .btn,.lf-success-cta .btn,.cta-band-btns .btn{font-size:14.5px;padding-left:12px;padding-right:12px}}
+
+.lf-fallback{margin-top:14px;padding:16px;border:1px solid #E4B7AF;border-radius:12px;background:#FDF4F2}
+.lf-fallback p{font-size:13.5px;color:#8C3A30;margin:0 0 12px;line-height:1.55}
+.lf-fallback .btn{width:100%;justify-content:center;min-height:50px;margin-bottom:8px;
+  min-width:0;max-width:100%;white-space:normal;text-align:center}
+.lf-fallback .btn:last-child{margin-bottom:0}

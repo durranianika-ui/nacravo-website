@@ -348,12 +348,23 @@ footer a:hover{color:var(--pearl)}
 @media(max-width:760px){.foot-grid{grid-template-columns:1fr 1fr}}
 
 /* sticky mobile bar */
-.mbar{display:none;position:fixed;bottom:0;left:0;right:0;z-index:60;background:var(--pearl);border-top:1px solid var(--line);padding:10px 14px;gap:10px}
-.mbar a{flex:1;text-align:center;padding:12px;border-radius:10px;font-weight:500;font-size:14px;font-family:'Plus Jakarta Sans';display:flex;align-items:center;justify-content:center;gap:7px}
+.mbar{display:none;position:fixed;bottom:0;left:0;right:0;z-index:60;background:var(--pearl);border-top:1px solid var(--line);padding:8px 12px calc(8px + env(safe-area-inset-bottom));gap:8px;min-height:calc(64px + env(safe-area-inset-bottom))}
+.mbar a{flex:1 1 50%;text-align:center;min-height:48px;padding:12px;border-radius:10px;font-weight:500;font-size:15px;font-family:'Plus Jakarta Sans';display:flex;align-items:center;justify-content:center;gap:8px}
+.mbar a:focus-visible{outline:3px solid var(--moss);outline-offset:-3px}
 .mbar .call{background:#ECE6D8;color:var(--moss)}
 .mbar .wa{background:#25D366;color:#fff}
-.mbar .book{background:var(--moss);color:var(--pearl)}
-@media(max-width:900px){.mbar{display:flex}body{padding-bottom:72px}}
+/* .book removed: exactly two actions, Call and WhatsApp. */
+.lf-success h2{font-size:21px;margin-bottom:8px;color:var(--moss)}
+.lf-success h2:focus{outline:none}
+.lf-success p{font-size:14.5px;color:#54594C;line-height:1.6}
+.lf-ref{margin:14px 0 18px}
+.lf-ref span{display:inline-block;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:16px;letter-spacing:.04em;background:#ECE6D8;color:var(--moss);border:1px dashed var(--sage);border-radius:10px;padding:10px 14px}
+.lf-success-cta{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
+.lf-success-cta .btn{width:100%;justify-content:center;min-height:52px}
+.lf-hint{font-size:12.5px;color:var(--stone);line-height:1.45}
+.form-status.busy{display:block;background:#F3F0E6;color:#54594C;border:1px solid var(--line)}
+.form-status.err{display:block;background:#FDF4F2;color:#8C3A30;border:1px solid #E4B7AF}
+@media(max-width:900px){.mbar{display:flex}body{padding-bottom:calc(80px + env(safe-area-inset-bottom))}}
 @media(max-width:360px){.mbar{gap:7px;padding-left:10px;padding-right:10px}.mbar a{font-size:13.5px;gap:5px}}
 
 /* ============ PERFORMANCE ============ */
@@ -451,8 +462,8 @@ footer{content-visibility:auto;contain-intrinsic-size:auto 500px}
   .foot-bottom{flex-direction:column;gap:6px}
 
   /* ---- STICKY BAR (~76px), equal buttons, page cleared below it ---- */
-  .mbar{padding:11px 16px calc(13px + env(safe-area-inset-bottom));gap:12px}
-  .mbar a{flex:1;min-height:52px;padding:0;font-size:15px;gap:8px}
+  .mbar{gap:8px}
+  .mbar a{min-height:48px;padding:0;font-size:15px;gap:8px}
   body{padding-bottom:calc(96px + env(safe-area-inset-bottom))}
 }
 
@@ -1014,6 +1025,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </button>
         <div class="form-status" id="formStatus" role="status" aria-live="polite">Opening WhatsApp with your enquiry…</div>
       </form>
+      <div class="lf-success" id="leadSuccessHome" hidden>
+        <h2>Thanks &mdash; your request is with Nacravo.</h2>
+        <p>We have your details and will come back to you during opening hours (open daily, 7&nbsp;AM&ndash;10&nbsp;PM). Quote your reference if you contact us:</p>
+        <p class="lf-ref"><span id="leadRefHome"></span></p>
+        <div class="lf-success-cta">
+          <a href="https://wa.me/971555403038" target="_blank" rel="noopener" class="btn btn-wa" id="leadWaHome" data-no-track>Continue on WhatsApp</a>
+          <a href="tel:+971555403038" class="btn btn-call">Call +971 55 540 3038</a>
+        </div>
+        <p class="lf-hint">Continuing on WhatsApp is optional &mdash; your request has already reached us.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -1057,18 +1078,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </footer>
 
 <!-- STICKY MOBILE BAR -->
-<div class="mbar">
-  <a href="tel:+971555403038" class="call">
+<div class="mbar" role="group" aria-label="Contact Nacravo">
+  <a href="tel:+971555403038" class="call" aria-label="Call Nacravo on +971 55 540 3038">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2Z"/></svg>
     Call
   </a>
-  <a href="https://wa.me/971555403038" target="_blank" rel="noopener" class="wa">
+  <a href="https://wa.me/971555403038" target="_blank" rel="noopener" class="wa" aria-label="Message Nacravo on WhatsApp">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.9-4.45 9.9-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm4.52 11.99c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.25-.64.8-.79.97-.14.16-.29.18-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.51.11-.11.25-.29.37-.43.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.4-.42-.56-.43h-.48c-.16 0-.42.06-.64.31-.22.25-.84.82-.84 2 0 1.18.86 2.32.98 2.48.12.16 1.69 2.58 4.1 3.62.57.25 1.02.4 1.37.51.57.18 1.1.16 1.51.1.46-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.14-1.18-.06-.11-.22-.17-.47-.29Z"/></svg>
     WhatsApp
-  </a>
-  <a href="#contact" class="book" data-track="quote" data-track-label="Sticky: Book service">
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-    Book
   </a>
 </div>
 
@@ -1091,26 +1108,44 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   "use strict";
 
   var WHATSAPP_NUMBER = "971555403038"; // Nacravo WhatsApp (no + / spaces)
-  var form   = document.getElementById("enquiryForm");
-  var status = document.getElementById("formStatus");
+  var form    = document.getElementById("enquiryForm");
+  var status  = document.getElementById("formStatus");
+  var success = document.getElementById("leadSuccessHome");
+  var refOut  = document.getElementById("leadRefHome");
+  var waBtn   = document.getElementById("leadWaHome");
 
-  // Helper: mark a field valid/invalid
   function setInvalid(el, isInvalid) {
     var field = el.closest(".field");
     if (field) field.classList.toggle("invalid", isInvalid);
   }
-
-  // Basic email + phone checks
   function validEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()); }
   function validPhone(v) { return /[0-9]{7,}/.test(v.replace(/[\s()+-]/g, "")); }
 
-  // One-shot guard: a completed enquiry fires the conversion and opens WhatsApp
-  // exactly once — even on double-click or repeat submit (prevents duplicate leads).
-  var leadSent = false;
+  function announce(msg, kind) {
+    status.textContent = msg || "";
+    status.className = "form-status" + (kind ? " " + kind : "");
+  }
+
+  /* Bucketed, non-identifying zone. The typed location goes to the CRM only. */
+  function areaZone(area) {
+    var a = (area || "").toLowerCase();
+    if (/business\s*bay/.test(a)) return "business-bay";
+    if (/downtown|burj|dubai\s*mall/.test(a)) return "downtown";
+    if (/difc|financial\s*cent/.test(a)) return "difc";
+    if (/marina|jbr|jlt|jumeirah\s*lake/.test(a)) return "marina-jlt";
+    if (/palm|jumeirah/.test(a)) return "jumeirah-palm";
+    return a ? "other-dubai" : "unknown";
+  }
+
+  var submitting = false, done = false, submissionId = null;
+  function newSubmissionId() {
+    try { return crypto.randomUUID().replace(/-/g, ""); } catch (e) {}
+    return "s" + Date.now().toString(36) + Math.random().toString(36).slice(2, 12);
+  }
 
   form.addEventListener("submit", function (e) {
-    e.preventDefault(); // never submit normally — we build a WhatsApp message instead
-    if (leadSent) return;
+    e.preventDefault();
+    if (submitting || done) return;
 
     var f = {
       name:     form.name.value.trim(),
@@ -1125,114 +1160,126 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       notes:    form.notes.value.trim()
     };
 
-    // ---- Validate required fields ----
     var ok = true;
     function check(el, valid) { setInvalid(el, !valid); if (!valid) ok = false; }
-
     check(form.name,     f.name.length > 1);
     check(form.phone,    validPhone(f.phone));
     check(form.email,    validEmail(f.email));
     check(form.service,  f.service !== "");
     check(form.property, f.property !== "");
     check(form.location, f.location.length > 1);
-
     if (!ok) {
-      status.className = "form-status"; // hide success note
-      // focus the first invalid field
+      announce("Please correct the highlighted fields.", "err");
       var firstBad = form.querySelector(".field.invalid input, .field.invalid select");
       if (firstBad) firstBad.focus();
       return;
     }
 
-    // ---- Build the professional WhatsApp message ----
-    var lines = [
-      "Hello Nacravo,",
-      "",
-      "I'd like to request a quotation.",
-      "",
-      "Name: " + f.name,
-      "Phone: " + f.phone,
-      "Email: " + f.email,
-      "Service Required: " + f.service,
-      "Property Type: " + f.property,
-      "Bedrooms: " + (f.bedrooms || "-"),
-      "Location: " + f.location,
-      "Preferred Date: " + (f.date || "-"),
-      "Preferred Time: " + (f.time || "-"),
-      "Additional Notes: " + (f.notes || "-"),
-      "",
-      "Please contact me."
-    ];
-    if (window.nacravoAttr) lines.push("", window.nacravoAttr.waLine());
-
-    var message = encodeURIComponent(lines.join("\n"));
-    var waURL = "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + message;
-
-    // ---- Valid, complete enquiry from here: lock the flow (no duplicates) ----
-    leadSent = true;
+    submitting = true;
+    if (!submissionId) submissionId = newSubmissionId();
     var submitBtn = form.querySelector('button[type="submit"]');
-    if (submitBtn) submitBtn.disabled = true;
-    status.className = "form-status ok"; // "Opening WhatsApp with your enquiry…"
+    if (submitBtn) { submitBtn.disabled = true; submitBtn.setAttribute("aria-busy", "true"); }
+    announce("Sending your request to Nacravo\u2026", "busy");
 
-    // Reserve a WhatsApp tab *inside* the click gesture so the popup blocker can't
-    // stop it. We point this tab at WhatsApp only AFTER tracking has fired.
-    var waWin = null;
-    try { waWin = window.open("about:blank", "_blank"); } catch (err) {}
-
-    // "Lead saved": keep a lightweight client-side record. The real lead is
-    // delivered over WhatsApp; this is a local audit trail and never blocks the flow.
-    try {
-      var store = JSON.parse(localStorage.getItem("nacravo_leads") || "[]");
-      var rec = { ts: new Date().toISOString(), name: f.name, phone: f.phone,
-                  email: f.email, service: f.service, property: f.property,
-                  location: f.location };
-      if (window.nacravoAttr) rec.attribution = window.nacravoAttr.leadParams();
-      store.push(rec);
-      localStorage.setItem("nacravo_leads", JSON.stringify(store));
-    } catch (err) {}
-
-    // Open WhatsApp exactly once — after tracking, or after a safety timeout.
-    var opened = false;
-    function openWhatsApp() {
-      if (opened) return; opened = true;
-      if (waWin && !waWin.closed) { try { waWin.location.href = waURL; return; } catch (err) {} }
-      window.location.href = waURL; // same-tab fallback (mobile / blocked popup)
-    }
-
-    // ---- Fire tracking through GTM (the single tracking layer), THEN WhatsApp ----
-    // One dataLayer event drives BOTH tags in GTM: GA4 `generate_lead` and the
-    // Google Ads conversion. GTM runs them, then calls eventCallback; eventTimeout
-    // caps the wait so there is no visible delay and it can never hang.
-    window.dataLayer = window.dataLayer || [];
-    var leadEvt = {
-      event: "generate_lead",
-      form_name: "enquiry_form",
-      lead_type: "whatsapp",
-      service_name: f.service,
+    var payload = {
+      vertical: "general",
+      service: f.service,
       property_type: f.property,
-      location: f.location,
-      value: 0,
-      currency: "AED",
-      eventTimeout: 1200,
-      eventCallback: openWhatsApp
+      size: f.bedrooms || undefined,
+      area: f.location,
+      name: f.name,
+      email: f.email,
+      phone: f.phone,
+      preferred_date: f.date || undefined,
+      notes: [f.time ? "Preferred time: " + f.time : "", f.notes].filter(Boolean).join(" | ") || undefined,
+      page_url: location.origin + location.pathname,
+      privacy_version: "1.0",
+      submission_id: submissionId
     };
-    // Click attribution (non-PII: click ids, utm, landing page, reference).
-    if (window.nacravoAttr) {
-      var lpar = window.nacravoAttr.leadParams();
-      for (var ak in lpar) { if (Object.prototype.hasOwnProperty.call(lpar, ak) && leadEvt[ak] === undefined) leadEvt[ak] = lpar[ak]; }
-    }
-    window.dataLayer.push(leadEvt);
-    // Legacy event kept for any existing GTM trigger (does not double generate_lead).
-    if (window.nacravoTrack) {
-      window.nacravoTrack.push("form_submit", { form_name: "enquiry_form", lead_type: "whatsapp", service_name: f.service });
+    if (window.nacravoAttr && window.nacravoAttr.serverParams) {
+      var a = window.nacravoAttr.serverParams();
+      for (var k in a) if (Object.prototype.hasOwnProperty.call(a, k) && payload[k] === undefined) payload[k] = a[k];
     }
 
-    // Backstop: if GTM never loads (e.g. blocked), eventCallback won't run — open
-    // WhatsApp anyway, just above eventTimeout so tracking wins whenever GTM is present.
-    setTimeout(openWhatsApp, 1500);
+    function release(msg) {
+      submitting = false;
+      if (submitBtn) { submitBtn.disabled = false; submitBtn.removeAttribute("aria-busy"); }
+      announce(msg, "err");
+    }
+
+    fetch("/api/leads", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    })
+      .then(function (r) { return r.json().catch(function () { return {}; })
+        .then(function (j) { return { status: r.status, body: j }; }); })
+      .then(function (out) {
+        if (out.status === 201 || out.status === 200) return succeed(out.body, out.status);
+        if (out.status === 400) return release("Please check your details and try again.");
+        if (out.status === 429) return release("We have already received several requests from this device. Please call or message us on WhatsApp instead.");
+        return release("We could not save your request just now. Please try again, or reach us on WhatsApp or by phone.");
+      })
+      .catch(function () {
+        release("Your request did not reach us \u2014 check your connection and try again, or use WhatsApp or Call.");
+      });
+
+    function succeed(body, httpStatus) {
+      done = true; submitting = false;
+      var ref = (body && body.lead_ref) || (window.nacravoAttr && window.nacravoAttr.ref) || "";
+      var leadId = (body && body.lead_id) || "";
+
+      /* One conversion per lead. A 200/dup replay is the same customer action
+         as the 201 before it, so it must not fire a second conversion. */
+      if (!body.dup && httpStatus === 201) {
+        window.dataLayer = window.dataLayer || [];
+        var base = {
+          lead_id: leadId, lead_ref: ref, event_id: leadId,
+          vertical: "general", service: f.service,
+          area_zone: areaZone(f.location), property_type: f.property,
+          lead_type: "form", form_name: "enquiry_form"
+        };
+        var created = { event: "lead_created" };
+        for (var k1 in base) created[k1] = base[k1];
+        window.dataLayer.push(created);
+        /* Kept so the existing GTM Google Ads tag keeps working unchanged —
+           but now it fires only AFTER the CRM has the lead. */
+        var legacy = { event: "generate_lead", service_name: f.service, value: 0, currency: "AED" };
+        for (var k2 in base) legacy[k2] = base[k2];
+        window.dataLayer.push(legacy);
+      }
+
+      var lines = [
+        "Hello Nacravo,", "", "I'd like to request a quotation.", "",
+        "Service Required: " + f.service,
+        "Property Type: " + f.property,
+        "Bedrooms: " + (f.bedrooms || "-"),
+        "Location: " + f.location,
+        "Preferred Date: " + (f.date || "-"),
+        "Preferred Time: " + (f.time || "-"),
+        "", "Ref: " + ref
+      ];
+      var waURL = "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(lines.join("\n"));
+      if (waBtn) {
+        waBtn.setAttribute("href", waURL);
+        waBtn.addEventListener("click", function () {
+          try {
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push({ event: "wa_opened", lead_id: leadId, service: f.service, cta_location: "lead_success" });
+          } catch (err) {}
+        });
+      }
+      if (refOut) refOut.textContent = ref;
+      announce("");
+      form.hidden = true;
+      if (success) {
+        success.hidden = false;
+        var h = success.querySelector("h2");
+        if (h) { h.setAttribute("tabindex", "-1"); try { h.focus(); } catch (err) {} }
+      }
+    }
   });
 
-  // Clear the invalid state as the user fixes a field
   form.addEventListener("input", function (e) {
     if (e.target.closest(".field.invalid")) setInvalid(e.target, false);
   });

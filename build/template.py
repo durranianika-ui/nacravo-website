@@ -16,6 +16,9 @@ Design rules encoded below:
 import html
 import json
 import pathlib
+import re
+
+import proof
 import struct
 from urllib.parse import quote
 
@@ -93,6 +96,97 @@ NAV_MAINTENANCE = [
     ("Handyman Services", "/handyman-services"),
     ("Annual Maintenance", "/annual-maintenance"),
 ]
+
+
+# ---------------------------------------------------------------- lead flow
+# Operating hours supplied by Nacravo. "Same-day subject to availability" is a
+# hedged statement of fact, not a response-time promise: no minute-based SLA is
+# published anywhere until inbox and dispatch data can prove one.
+HOURS_LINE = "Open daily, 7 AM\u201310 PM \u00b7 Same-day subject to availability"
+
+# Step-1 answers. The values are the CRM vocabulary and must stay inside the
+# allow-lists in api/leads.js — a value that is not on the list is dropped
+# server-side rather than written to the Lead Register.
+CLEAN_CHIPS = {
+    "apartment":  ("Apartment", "Apartment Cleaning", "apartment apartment-cleaning home-cleaning maid-service regular-cleaning"),
+    "villa":      ("Villa", "Villa Cleaning", "villa villa-cleaning townhouse-cleaning"),
+    "deep":       ("Deep clean", "Deep Cleaning", "deep deep-cleaning post-construction"),
+    "move":       ("Move in/out", "Move In/Out Cleaning", "move move-in move-out move-in-out move-in-out-cleaning"),
+    "office":     ("Office", "Office Cleaning", "office commercial office-commercial-cleaning"),
+    "sofa":       ("Sofa / upholstery", "Sofa & Upholstery Cleaning", "sofa upholstery carpet mattress curtain sofa-cleaning"),
+    "holiday":    ("Holiday home", "Holiday Home Cleaning", "holiday holiday-home airbnb holiday-home-cleaning"),
+    "specialist": ("Specialist clean", "Specialized Cleaning", "specialist specialized specialized-cleaning"),
+}
+AC_CHIPS = {
+    "not-cooling": ("Not cooling", "Not cooling", "not-cooling no-cooling weak-cooling"),
+    "leaking":     ("Leaking", "Leaking", "leaking water-leak leak"),
+    "noise":       ("Strange noise", "Strange noise", "noise noisy"),
+    "smell":       ("Bad smell", "Bad smell", "smell odour odor"),
+    "service":     ("Service", "Service", "service servicing maintenance ac-servicing"),
+    "chemical":    ("Chemical clean", "Chemical clean", "chemical chemical-wash chemical-cleaning"),
+    "duct":        ("Duct cleaning", "Duct cleaning", "duct ducts duct-cleaning"),
+    "install":     ("Installation", "Installation", "install installation new-ac"),
+    "amc":         ("Maintenance contract", "Maintenance contract", "amc contract maintenance-contract"),
+    "unsure":      ("Not sure", "Not sure", "unsure not-sure other"),
+}
+
+# url -> (vertical, [chip keys in display order], preselected chip key)
+LEAD_FLOWS = {
+    "/home-cleaning":               ("cleaning", ["apartment", "villa", "deep", "move", "office", "sofa"], "apartment"),
+    "/deep-cleaning":               ("cleaning", ["deep", "apartment", "villa", "move", "office", "sofa"], "deep"),
+    "/move-in-out-cleaning":        ("cleaning", ["move", "deep", "apartment", "villa", "office", "sofa"], "move"),
+    "/holiday-home-cleaning":       ("cleaning", ["holiday", "apartment", "villa", "deep", "sofa"], "holiday"),
+    "/office-commercial-cleaning":  ("cleaning", ["office", "deep", "sofa", "specialist"], "office"),
+    "/specialized-cleaning":        ("cleaning", ["sofa", "specialist", "deep", "apartment", "villa"], "sofa"),
+    "/ac-service-dubai":            ("ac", ["not-cooling", "leaking", "noise", "smell", "service", "chemical", "unsure"], ""),
+    "/ac-servicing-dubai":          ("ac", ["service", "not-cooling", "smell", "leaking", "noise", "unsure"], "service"),
+    "/ac-repair-dubai":             ("ac", ["not-cooling", "leaking", "noise", "smell", "service", "unsure"], "not-cooling"),
+    "/ac-chemical-cleaning-dubai":  ("ac", ["chemical", "smell", "not-cooling", "service", "unsure"], "chemical"),
+    "/ac-duct-cleaning-dubai":      ("ac", ["duct", "smell", "service", "unsure"], "duct"),
+    "/ac-installation-dubai":       ("ac", ["install", "service", "unsure"], "install"),
+    "/ac-maintenance-contract-dubai": ("ac", ["amc", "service", "chemical", "unsure"], "amc"),
+}
+
+# Step-1 question and the CTA vocabulary, per vertical. "Book" and "Submit" are
+# deliberately absent: nothing is booked at this point and a generic verb tells
+# the visitor nothing about what happens next.
+FLOW_COPY = {
+    "cleaning": {
+        "q1": "What do you need cleaned?",
+        "wa_cta": "Get Price on WhatsApp",
+        "submit": "Get My Cleaning Price",
+        "form_head": "Get your cleaning price",
+        "form_sub": "Three short questions. We reply on WhatsApp with a fixed price.",
+    },
+    "ac": {
+        "q1": "What is your AC doing?",
+        "wa_cta": "WhatsApp a Technician",
+        "submit": "Send My AC Problem",
+        "form_head": "Send us the problem",
+        "form_sub": "Three short questions. A technician replies on WhatsApp.",
+    },
+    "general": {
+        "q1": "What do you need?",
+        "wa_cta": "Get Price on WhatsApp",
+        "submit": "Send My Request",
+        "form_head": "Request a quote",
+        "form_sub": "Three short questions. We reply on WhatsApp with a fixed price.",
+    },
+}
+
+
+def lead_flow(page):
+    """(vertical, chip list, preselected key) for a page. Pages outside the
+    cleaning/AC paid corridors fall back to a single-service general flow so
+    every form on the site still creates a real server-side lead."""
+    v, keys, pre = LEAD_FLOWS.get(page["url"], (None, None, None))
+    if v == "cleaning":
+        return v, [(k,) + CLEAN_CHIPS[k] for k in keys], pre
+    if v == "ac":
+        return v, [(k,) + AC_CHIPS[k] for k in keys], pre
+    label = page["service_value"]
+    key = re.sub(r"[^a-z0-9]+", "-", label.lower()).strip("-")
+    return "general", [(key, label, label, key)], key
 
 
 def wa_link(text):
@@ -267,6 +361,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/nacravo.css">
+<script>
+/* Paid landing mode, decided before first paint so the browse chrome never
+   flashes. Applies only to the view that actually carries the ad click:
+   land from an ad and the page drops the navigation that would leak the
+   click away; choose to browse on and the full site comes back. Crawlers
+   never carry a click id, so the indexed page is always the complete one. */
+document.documentElement.className+=" lf-js";
+(function(){{try{{var q=new URLSearchParams(location.search);
+if(q.get("gclid")||q.get("gbraid")||q.get("wbraid")||/^(cpc|ppc|paid|paidsearch|paid_social)$/i.test(q.get("utm_medium")||"")){{document.documentElement.setAttribute("data-paid","1");}}}}catch(e){{}}}})();
+</script>
 
 {schema_html}
 </head>
@@ -347,136 +451,115 @@ def render_header(page):
 
 # ---------------------------------------------------------------- hero + lead form
 def render_hero(page):
-    """Copy on the left, lead form on the right. No decorative hero image, so the
-    form is visible without scrolling and the LCP element is text."""
+    """Copy and both direct CTAs first, then a three-step qualification flow.
+
+    The old single form asked for name, phone, service and location before the
+    visitor had said what the job actually was, validated locally, pushed a
+    conversion and then handed over to WhatsApp — so a visitor who never sent
+    the message produced a counted conversion and no lead. The flow below asks
+    what / scope / where-and-number, and POSTs to /api/leads before anything is
+    announced or counted (see assets/nacravo-lead.js).
+    """
     trust = "".join(trust_pill(i, l) for i, l in page["trust"])
     wa = wa_link(page["wa_text"])
+    vertical, chips, preselect = lead_flow(page)
+    copy = FLOW_COPY[vertical]
+    is_ac = vertical == "ac"
+    field_name = "problem" if is_ac else "service"
 
-    sub_options = ""
-    if page.get("subservices"):
-        opts = "".join(f"<option>{esc(v)}</option>" for v in page["subservices"].values())
-        sub_options = f"""
-          <div class="field full">
-            <label for="subservice">Which specific service?</label>
-            <select id="subservice" name="subservice">
-              <option value="">No preference / not sure</option>
-              {opts}
-            </select>
-          </div>"""
-
-    # Property-type choices default to the residential-led list. Commercial pages
-    # override them so a B2B visitor is never offered "Villa"/"Apartment", which
-    # both muddies the enquiry and signals the wrong audience.
-    DEFAULT_PROPERTY_TYPES = ["Apartment", "Villa", "Townhouse", "Office", "Retail", "Other"]
-    property_options = "\n                  ".join(
-        f"<option>{esc(o)}</option>"
-        for o in page.get("property_types", DEFAULT_PROPERTY_TYPES)
+    # Real radios: native arrow-key navigation and ARIA, and a step 1 that still
+    # works with JavaScript off. The visible chip is the <label>.
+    chip_html = "".join(
+        '<input type="radio" class="lf-radio" id="lfo-{key}" name="{name}" value="{val}"'
+        ' data-intent="{intent}"{checked}>'
+        '<label class="lf-chip" for="lfo-{key}">{label}</label>'.format(
+            key=esc(key), name=field_name, val=esc(value), intent=esc(intent),
+            label=esc(label), checked=" checked" if key == preselect else "")
+        for (key, label, value, intent) in chips
     )
 
-    # Company name is the strongest qualifier on a B2B enquiry - it is what
-    # separates a real office lead from a residential one - so on commercial
-    # pages it sits in the main flow rather than the optional block. Residential
-    # pages do not render it at all and keep the shorter visible form.
-    company_field = ""
-    if page.get("commercial_fields"):
-        company_field = """
-        <div class="form-row">
-          <div class="field full">
-            <label for="company">Company name</label>
-            <input type="text" id="company" name="company" autocomplete="organization" placeholder="Which business is this for?">
+    # ---- step 2: scope. Only questions that change the quote are asked, and a
+    # commercial answer never sees a bedroom count (handled by data-when).
+    if is_ac:
+        step2 = """
+          <div class="form-row">
+            <div class="field">
+              <label for="property_type">Where is the AC?</label>
+              <select id="property_type" name="property_type">
+                <option value="">Select\u2026</option>
+                <option>Apartment</option><option>Villa</option><option>Townhouse</option>
+                <option>Office</option><option>Retail</option><option>Other</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="units">How many AC units?</label>
+              <input type="number" id="units" name="units" min="1" max="999" inputmode="numeric" placeholder="e.g. 4">
+              <span class="lf-hint">Leave blank if you are not sure.</span>
+            </div>
+          </div>"""
+    else:
+        step2 = """
+          <div class="form-row" data-when="residential">
+            <div class="field">
+              <label for="property_type">Property type</label>
+              <select id="property_type" name="property_type">
+                <option value="">Select\u2026</option>
+                <option>Apartment</option><option>Villa</option><option>Townhouse</option><option>Other</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="size">How big is it?</label>
+              <select id="size" name="size">
+                <option value="">Select\u2026</option>
+                <option>Studio</option><option>1 bedroom</option><option>2 bedrooms</option>
+                <option>3 bedrooms</option><option>4+ bedrooms</option>
+              </select>
+            </div>
           </div>
-        </div>"""
+          <div class="form-row" data-when="commercial" hidden>
+            <div class="field">
+              <label for="size_commercial">Approx. size of premises</label>
+              <select id="size_commercial" name="size">
+                <option value="">Select\u2026</option>
+                <option>Under 1,000 sq ft</option><option>1,000 - 3,000 sq ft</option>
+                <option>3,000 - 7,000 sq ft</option><option>7,000 - 15,000 sq ft</option>
+                <option>Over 15,000 sq ft</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="company">Company name</label>
+              <input type="text" id="company" name="company" autocomplete="organization" placeholder="Which business is this for?">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="field full">
+              <label for="frequency">How often?</label>
+              <select id="frequency" name="frequency">
+                <option value="">Not sure yet</option>
+                <option>One-off</option><option>Weekly</option><option>Fortnightly</option>
+                <option>Monthly</option><option>Daily (6-7 days a week)</option>
+                <option>5 days a week</option><option>3 days a week</option>
+              </select>
+            </div>
+          </div>"""
 
-    # Commercial pages qualify the enquiry so a quote can be priced and so
-    # recurring-contract demand is separable from one-off work. All optional —
-    # they inform the quote, they do not gate the enquiry. Size and frequency sit
-    # behind the optional disclosure and company name sits in the main flow:
-    # company is what identifies a lead as B2B at all, while size and frequency
-    # only refine a quote that a salesperson can still ask about. ~80% of this
-    # traffic is mobile, where visible form length costs conversions. Read by
-    # assets/nacravo.js and added to the WhatsApp handover.
-    commercial_fields = ""
-    if page.get("commercial_fields"):
-        commercial_fields = """
-        <div class="form-row">
-          <div class="field">
-            <label for="size">Approx. size of premises</label>
-            <select id="size" name="size">
-              <option value="">Not sure</option>
-              <option>Under 1,000 sq ft</option>
-              <option>1,000 - 3,000 sq ft</option>
-              <option>3,000 - 7,000 sq ft</option>
-              <option>7,000 - 15,000 sq ft</option>
-              <option>Over 15,000 sq ft</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="frequency">Cleaning frequency</label>
-            <select id="frequency" name="frequency">
-              <option value="">Not sure yet</option>
-              <option>Daily (6-7 days a week)</option>
-              <option>5 days a week</option>
-              <option>3 days a week</option>
-              <option>Weekly</option>
-              <option>Fortnightly</option>
-              <option>Monthly</option>
-              <option>One-off deep clean</option>
-            </select>
-          </div>
-        </div>"""
+    # Location stays free text so no legitimate Dubai enquiry is ever blocked;
+    # the datalist only offers one-tap suggestions on a mostly-mobile audience.
+    area_list = ""
+    area_datalist = ""
+    if page.get("location_suggestions"):
+        area_list = ' list="areaOptions"'
+        _opts = "".join('<option value="{0}"></option>'.format(esc(o))
+                        for o in page["location_suggestions"])
+        area_datalist = '<datalist id="areaOptions">' + _opts + "</datalist>"
 
-    # Maintenance-contract pages collect a little more so the quote is meaningful.
-    # These fields are read by assets/nacravo.js and added to the WhatsApp handover.
-    contract_fields = ""
-    if page.get("contract_fields"):
-        contract_fields = """
-        <div class="form-row">
-          <div class="field">
-            <label for="propertyuse">Residential or commercial?</label>
-            <select id="propertyuse" name="propertyuse">
-              <option value="">Select…</option>
-              <option>Residential</option>
-              <option>Commercial</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="frequency">Preferred visit frequency</label>
-            <select id="frequency" name="frequency">
-              <option value="">Not sure yet</option>
-              <option>Quarterly (every 3 months)</option>
-              <option>Every 4 months</option>
-              <option>Twice a year</option>
-              <option>Monthly</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="field">
-            <label for="properties">Number of properties</label>
-            <input type="number" id="properties" name="properties" min="1" inputmode="numeric" placeholder="e.g. 1">
-          </div>
-          <div class="field">
-            <label for="units">Approx. number of AC units</label>
-            <input type="number" id="units" name="units" min="1" inputmode="numeric" placeholder="e.g. 4">
-          </div>
-        </div>"""
-
-    # Hero image: sits below the copy in the left column so it appears beside
-    # the form on desktop without displacing it, and after the form on mobile.
-    # loading="lazy" is safe here — browsers fetch in-viewport lazy images
-    # immediately — and the LCP element on these pages is the H1 text, not an image.
     media = ""
     if page.get("hero_image"):
         big, small, alt = page["hero_image"]
         bw, bh = image_size(big)
         sw, _ = image_size(small)
-        # Pages whose hero image IS the LCP element opt in with hero_eager, which
-        # swaps the lazy default for an eager, high-priority fetch.
-        load_attrs = (
-            'loading="eager" fetchpriority="high"'
-            if page.get("hero_eager")
-            else 'loading="lazy"'
-        )
+        load_attrs = ('loading="eager" fetchpriority="high"'
+                      if page.get("hero_eager") else 'loading="lazy"')
         media = f"""
       <div class="lp-hero-media">
         <img src="images/{big}" srcset="images/{small} {sw}w, images/{big} {bw}w"
@@ -489,30 +572,7 @@ def render_hero(page):
         items = "".join(f'<a href="#{a}">{esc(t)}</a>' for t, a in page["jump_links"])
         jump = f'<div class="wrap" style="padding-bottom:8px"><div class="jump">{items}</div></div>'
 
-    # A page may offer more than one value in the Service select when a distinct
-    # search intent shares the page — /home-cleaning also answers maid-service
-    # queries, and the option must exist for those enquiries to be routed.
-    extra_service_options = "".join(
-        f'\n              <option value="{esc(o)}">{esc(o)}</option>'
-        for o in page.get("extra_service_options", [])
-    )
-
-    # Location stays a free-text input so no legitimate Dubai enquiry is ever
-    # blocked; the datalist only offers one-tap suggestions, which matters
-    # because roughly 80% of this traffic is mobile.
-    location_list = ""
-    location_datalist = ""
-    if page.get("location_suggestions"):
-        location_list = ' list="locationOptions"'
-        _opts = "".join(
-            f'\n              <option value="{esc(o)}"></option>'
-            for o in page["location_suggestions"]
-        )
-        location_datalist = (
-            '\n            <datalist id="locationOptions">'
-            + _opts
-            + '\n            </datalist>'
-        )
+    wa_cta = page.get("wa_cta", copy["wa_cta"])
 
     return f"""
 <main id="main">
@@ -525,77 +585,131 @@ def render_hero(page):
         <p class="lead">{esc(page['lead'])}</p>
       </div>
       <div class="lp-hero-rest">
-        <div class="trust">{trust}</div>
         <div class="lp-hero-cta">
-          <a href="{wa}" target="_blank" rel="noopener" class="btn btn-wa" data-track="booking" data-service-name="{esc(page['service_value'])}" data-track-label="Hero: WhatsApp">{WA_ICON.format(s=18)} {esc(page.get('wa_cta', 'WhatsApp for availability & price'))}</a>
-          <a href="tel:{PHONE_TEL}" class="btn btn-call">{PHONE_ICON} Call now {PHONE_DISPLAY}</a>
+          <a href="{wa}" target="_blank" rel="noopener" class="btn btn-wa" data-track="booking" data-service-name="{esc(page['service_value'])}" data-track-label="Hero: WhatsApp">{WA_ICON.format(s=18)} {esc(wa_cta)}</a>
+          <a href="tel:{PHONE_TEL}" class="btn btn-call">{PHONE_ICON} Call {PHONE_DISPLAY}</a>
         </div>
+        <p class="lp-hero-avail">{esc(HOURS_LINE)}</p>
+        <div class="trust">{trust}</div>
       </div>{media}
     </div>
 
     <div class="lp-form-wrap">
-      <form class="lp-form" id="leadForm" novalidate aria-labelledby="leadFormTitle">
-        <h2 id="leadFormTitle">Get a free quote</h2>
-        <p class="lp-form-sub">Tell us what you need — we reply on WhatsApp with a fixed price.</p>
+      <form class="lp-form lf" id="leadForm" action="/api/leads" method="post" novalidate
+            data-vertical="{vertical}" data-preselect="{esc(preselect or '')}"
+            aria-labelledby="leadFormTitle">
+        <div class="lf-chrome">
+          <h2 id="leadFormTitle" class="lf-head">{esc(copy['form_head'])}</h2>
+          <p class="lp-form-sub">{esc(copy['form_sub'])}</p>
+          <p class="lf-progress" data-step="1" aria-hidden="true">Step 1 of 3</p>
+        </div>
 
-        <div class="form-row">
-          <div class="field">
-            <label for="name">Name <span class="req" aria-hidden="true">*</span></label>
-            <input type="text" id="name" name="name" placeholder="Your name" autocomplete="name" required>
-            <span class="err-msg">Please enter your name.</span>
-          </div>
-          <div class="field">
-            <label for="phone">Phone <span class="req" aria-hidden="true">*</span></label>
-            <input type="tel" id="phone" name="phone" placeholder="+971…" autocomplete="tel" required>
-            <span class="err-msg">Please enter a valid phone number.</span>
+        <div class="lf-errors" id="leadErrors" role="alert" hidden></div>
+
+        <div class="lf-step" data-step="1">
+          <fieldset class="lf-fieldset">
+            <legend class="lf-q" id="lfQ1">{esc(copy['q1'])}</legend>
+            <div class="lf-choice" data-name="{field_name}">{chip_html}</div>
+            <span class="err-msg">Please choose one to continue.</span>
+          </fieldset>
+          <div class="lf-nav">
+            <button type="button" class="btn btn-primary lf-next" data-lf-next>Continue</button>
           </div>
         </div>
 
-        <div class="form-row">
-          <div class="field">
-            <label for="service">Service <span class="req" aria-hidden="true">*</span></label>
-            <select id="service" name="service" required>
-              <option value="{esc(page['service_value'])}" selected>{esc(page['service_value'])}</option>{extra_service_options}
-            </select>
-            <span class="err-msg">Please choose a service.</span>
-          </div>
-          <div class="field">
-            <label for="location">Location <span class="req" aria-hidden="true">*</span></label>
-            <input type="text" id="location" name="location" placeholder="e.g. Business Bay" autocomplete="address-level2"{location_list} required>{location_datalist}
-            <span class="err-msg">Please enter your location.</span>
+        <div class="lf-step" data-step="2" hidden>
+          <p class="lf-q">Tell us a little about the job</p>{step2}
+          <div class="lf-nav">
+            <button type="button" class="btn btn-ghost" data-lf-back>Back</button>
+            <button type="button" class="btn btn-primary lf-next" data-lf-next>Continue</button>
           </div>
         </div>
 
-        <div class="form-row">{sub_options}
-        </div>{company_field}{contract_fields}
-
-        <details class="lp-extra">
-          <summary class="lp-more">{esc(page.get('optional_summary', 'Add property type, date or a note (optional)'))}</summary>
-          <div class="lp-optional">{commercial_fields}
-            <div class="form-row">
-              <div class="field">
-                <label for="property">{esc(page.get('property_label', 'Property type'))}</label>
-                <select id="property" name="property">
-                  <option value="">Select…</option>
-                  {property_options}
-                </select>
-              </div>
-              <div class="field">
-                <label for="date">Preferred date</label>
-                <input type="date" id="date" name="date">
-              </div>
-            </div>
-            <div class="form-row">
-              <div class="field full">
-                <label for="notes">Message</label>
-                <textarea id="notes" name="notes" rows="3" placeholder="Anything we should know?"></textarea>
-              </div>
+        <div class="lf-step" data-step="3" hidden>
+          <p class="lf-q">Where are you, and where should we reply?</p>
+          <div class="form-row">
+            <div class="field full">
+              <label for="area">Area or building <span class="req" aria-hidden="true">*</span></label>
+              <input type="text" id="area" name="area" placeholder="e.g. Business Bay" autocomplete="address-level2"{area_list} required aria-describedby="areaHint">
+              {area_datalist}
+              <span class="lf-hint" id="areaHint">So we can confirm we cover you.</span>
+              <span class="err-msg">Please enter the area or building.</span>
             </div>
           </div>
-        </details>
+          <div class="form-row">
+            <div class="field">
+              <label for="phone">WhatsApp / phone number <span class="req" aria-hidden="true">*</span></label>
+              <input type="tel" id="phone" name="phone" placeholder="e.g. 055 123 4567" autocomplete="tel" required aria-describedby="phoneHint">
+              <span class="lf-hint" id="phoneHint">Used only to answer this request.</span>
+              <span class="err-msg">Please enter a valid contact number.</span>
+            </div>
+            <div class="field">
+              <label for="name">Your name <span class="lf-opt">(optional)</span></label>
+              <input type="text" id="name" name="name" placeholder="Who should we ask for?" autocomplete="name">
+            </div>
+          </div>
 
-        <button type="submit" class="btn btn-wa" style="width:100%;justify-content:center">{WA_ICON.format(s=18)} Get my free quote →</button>
-        <div class="form-status" id="leadStatus" role="status" aria-live="polite">Opening WhatsApp with your enquiry…</div>
+          <details class="lp-extra">
+            <summary class="lp-more">Add a date or a note (optional)</summary>
+            <div class="lp-optional">
+              <div class="form-row">
+                <div class="field">
+                  <label for="preferred_date">Preferred date</label>
+                  <input type="date" id="preferred_date" name="preferred_date">
+                </div>
+                <div class="field">
+                  <label for="email">Email <span class="lf-opt">(optional)</span></label>
+                  <input type="email" id="email" name="email" autocomplete="email" placeholder="you@email.com">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="field full">
+                  <label for="notes">Anything we should know?</label>
+                  <textarea id="notes" name="notes" rows="3"></textarea>
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <input type="hidden" name="vertical" value="{vertical}">
+          <p class="lf-hp" aria-hidden="true">
+            <label for="website">Leave this field empty</label>
+            <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+          </p>
+
+          <div class="lf-nav">
+            <button type="button" class="btn btn-ghost" data-lf-back>Back</button>
+            <button type="submit" class="btn btn-wa lf-submit" data-lf-submit>{WA_ICON.format(s=18)} {esc(copy['submit'])}</button>
+          </div>
+
+          <div class="lf-consent">
+            <input type="checkbox" id="consent_marketing" name="consent_marketing">
+            <label for="consent_marketing">Send me occasional Nacravo offers. Optional \u2014 you will get an answer to this request either way.</label>
+          </div>
+        </div>
+
+        <div class="form-status" id="leadStatus" role="status" aria-live="polite"></div>
+
+        <!-- Shown only if the lead store is unreachable. Carries everything the
+             visitor already typed, so a backend outage costs an enquiry the
+             extra tap, not the enquiry itself. -->
+        <div class="lf-fallback" id="leadFallback" hidden>
+          <p>We could not store your request automatically. Send it to us directly instead &mdash; everything you filled in is already in the message.</p>
+          <a href="https://wa.me/{WA_NUMBER}" target="_blank" rel="noopener" class="btn btn-wa" id="leadFallbackWa" data-no-track>{WA_ICON.format(s=18)} Send my details on WhatsApp</a>
+          <a href="tel:{PHONE_TEL}" class="btn btn-call">{PHONE_ICON} Call {PHONE_DISPLAY}</a>
+        </div>
+
+        <div class="lf-success" id="leadSuccess" hidden>
+          <h2>Thanks \u2014 your request is with Nacravo.</h2>
+          <p>We have your details and will come back to you during opening hours ({esc(HOURS_LINE.split(' \u00b7 ')[0])}). Quote your reference if you contact us:</p>
+          <p class="lf-ref"><span id="leadRefOut"></span></p>
+          <div class="lf-success-cta">
+            <a href="https://wa.me/{WA_NUMBER}" target="_blank" rel="noopener" class="btn btn-wa" id="leadWaBtn">{WA_ICON.format(s=18)} Continue on WhatsApp</a>
+            <a href="tel:{PHONE_TEL}" class="btn btn-call">{PHONE_ICON} Call {PHONE_DISPLAY}</a>
+          </div>
+          <p class="lf-hint">Continuing on WhatsApp is optional \u2014 your request has already reached us.</p>
+        </div>
+
         <p class="lp-fineprint">We use your details only to respond to this enquiry. See our <a href="/privacy-policy">Privacy Policy</a>.</p>
       </form>
     </div>
@@ -795,6 +909,50 @@ def render_faq(page):
 """
 
 
+def render_reviews(page):
+    """Verified customer proof. Renders only when build/proof.py carries a real
+    rating and real quotes — there is no placeholder to forget to replace, so an
+    invented rating cannot be published. See build/proof.py for what is needed."""
+    if not proof.has(proof.REVIEWS):
+        return ""
+    r = proof.REVIEWS
+    quotes = "".join(f"""
+      <figure class="rev-card">
+        <blockquote>{esc(q['text'])}</blockquote>
+        <figcaption>{esc(q['name'])} \u00b7 {esc(q['date'])}</figcaption>
+      </figure>""" for q in r.get("quotes", []))
+    return f"""
+<section id="reviews">
+  <div class="wrap">
+    <div class="sec-head center">
+      <span class="eyebrow">Reviews</span>
+      <h2>What Dubai customers say</h2>
+      <p class="rev-rating"><strong>{esc(str(r['rating']))}</strong> from {esc(str(r['count']))} Google reviews \u00b7
+        <a href="{esc(r['url'])}" target="_blank" rel="noopener">read them on Google</a></p>
+    </div>
+    <div class="rev-grid">{quotes}
+    </div>
+  </div>
+</section>
+"""
+
+
+def render_proof_strip(page):
+    """The above-the-fold verified-proof row: rating, then the remedy policy.
+    Both are omitted entirely while unverified, rather than softened."""
+    bits = []
+    if proof.has(proof.REVIEWS):
+        r = proof.REVIEWS
+        bits.append(f'<span class="ps-item"><strong>{esc(str(r["rating"]))}</strong> '
+                    f'from {esc(str(r["count"]))} Google reviews</span>')
+    if proof.has(proof.WARRANTY):
+        bits.append(f'<span class="ps-item">{esc(proof.WARRANTY["heading"])}</span>')
+    if not bits:
+        return ""
+    return ('\n<section class="proof-strip"><div class="wrap">'
+            + "".join(bits) + "</div></section>\n")
+
+
 def render_gallery(page):
     """Proof photos, below the fold and lazy-loaded.
 
@@ -920,11 +1078,9 @@ def render_footer(page):
 
 <!-- Sticky mobile bar (mobile carries the WhatsApp CTA here, so the floating
      button is desktop-only and the two can never overlap) -->
-<div class="mbar">
-  <a href="tel:{PHONE_TEL}" class="call">{PHONE_ICON} Call</a>
-  <a href="{wa}" target="_blank" rel="noopener" class="wa">{WA_ICON.format(s=16)} WhatsApp</a>
-  <a href="{page.get('quote_href', '#leadFormTitle')}" class="book" data-track="quote" data-track-label="Sticky: Book service">
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg> Book</a>
+<div class="mbar" role="group" aria-label="Contact Nacravo">
+  <a href="tel:{PHONE_TEL}" class="call" aria-label="Call Nacravo on {PHONE_DISPLAY}">{PHONE_ICON} Call</a>
+  <a href="{wa}" target="_blank" rel="noopener" class="wa" aria-label="Message Nacravo on WhatsApp">{WA_ICON.format(s=16)} WhatsApp</a>
 </div>
 
 <a class="wa-float" href="{wa}" target="_blank" rel="noopener" aria-label="Chat with Nacravo on WhatsApp" data-track="booking" data-service-name="{esc(page['service_value'])}" data-track-label="Floating WhatsApp">{WA_ICON.format(s=30)}</a>
@@ -958,6 +1114,7 @@ def render_footer(page):
 <script src="/assets/nacravo-nav.js" defer></script>
 <script src="/assets/nacravo-attr.js{tracker_pin}" defer></script>
 <script src="/assets/nacravo.js{tracker_pin}" defer></script>
+<script src="/assets/nacravo-lead.js{tracker_pin}" defer></script>
 </body>
 </html>
 """
@@ -968,12 +1125,17 @@ def render_page(page):
         render_head(page)
         + render_header(page)
         + render_hero(page)
+        + render_proof_strip(page)
+        # Proof before persuasion: real photographs and the employed-team story
+        # come ahead of the service grid, so a first-time visitor sees evidence
+        # before another page of benefit copy.
+        + render_gallery(page)
+        + render_why(page)
         + render_sections(page)
         + render_cta_band(page, page["band1_heading"], page["band1_body"], "quote")
-        + render_why(page)
-        + render_process(page)
-        + render_gallery(page)
         + render_pricing(page)
+        + render_process(page)
+        + render_reviews(page)
         + render_areas(page)
         + render_faq(page)
         + render_related(page)
