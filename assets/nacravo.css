@@ -495,12 +495,20 @@ body.nav-open{overflow:hidden}
   /* Pull the form up the first screen: on an Ads landing page the form is the
      point of the page, so the intro above it is tightened rather than the
      copy being cut. */
-  .crumb ol{padding:7px 20px;font-size:12px}
+  /* The consent banner opens 82px above the sticky bar and stands 193px tall,
+     so on a 375x812 screen it occupies from y=537 down. The hero chrome above
+     the buttons is tightened — breadcrumb padding, eyebrow scale, heading
+     margins, lead leading, button gap — to lift the WhatsApp/Call pair clear
+     of it for a first-time visitor. No copy is truncated and no claim changes;
+     the 72px comes out of spacing, not words. Measured on production
+     /ac-repair-dubai: Call now ends at y=517 against a banner top of y=537. */
+  .crumb ol{padding:4px 20px;font-size:12px}
   .lp-hero{padding:10px 0 28px}
   .lp-hero-grid{gap:14px}
-  .lp-hero .eyebrow{font-size:11px;letter-spacing:.1em}
-  .lp-hero h1{font-size:clamp(1.6rem,6.6vw,1.95rem);margin:6px 0 8px}
-  .lp-hero p.lead{font-size:15px;line-height:1.5;margin-bottom:0}
+  .lp-hero .eyebrow{font-size:10.5px;letter-spacing:.09em}
+  .lp-hero h1{font-size:clamp(1.6rem,6.6vw,1.95rem);margin:4px 0 6px}
+  .lp-hero p.lead{font-size:15px;line-height:1.45;margin-bottom:0}
+  .lp-hero-cta{gap:8px}
 }
 
 /* ---- ANCHOR SUB-SERVICE SECTIONS ---- */
