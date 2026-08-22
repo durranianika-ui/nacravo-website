@@ -85,7 +85,7 @@ PAGES = {
         "service_value": "AC Servicing",
         "service_schema_name": "AC Servicing Dubai",
         "area_served_schema": ["Downtown Dubai", "Business Bay", "DIFC"],
-        "wa_text": "Hello Nacravo, I need AC servicing in Dubai — my AC is not cooling properly.",
+        "wa_text": "Hi Nacravo, I need AC servicing — my AC is not cooling properly. My area is ____ and I have ____ AC units.",
         "subservices": {
             "split-service": "Split AC service",
             "window-service": "Window AC service",
@@ -269,7 +269,7 @@ PAGES = {
         "service_value": "AC Chemical Cleaning",
         "service_schema_name": "AC Chemical Cleaning Dubai",
         "area_served_schema": ["Downtown Dubai", "Business Bay", "DIFC"],
-        "wa_text": "Hello Nacravo, I need an AC chemical cleaning quote — my AC has a smell / weak cooling.",
+        "wa_text": "Hi Nacravo, I need AC chemical cleaning — my AC has a smell / weak cooling. My area is ____ and I have ____ AC units.",
         "subservices": {
             "smell": "Persistent bad smell",
             "mould": "Visible mould on coils",
@@ -436,7 +436,7 @@ PAGES = {
         "service_value": "AC Duct Cleaning",
         "service_schema_name": "AC Duct Cleaning Dubai",
         "area_served_schema": ["Downtown Dubai", "Business Bay", "DIFC"],
-        "wa_text": "Hello Nacravo, I need an AC duct cleaning assessment — dust is coming from my vents.",
+        "wa_text": "Hi Nacravo, I need an AC duct cleaning assessment — dust is coming from my vents. My area is ____ and the property is ____.",
         "subservices": {
             "vent-dust": "Dust around the vents",
             "airflow": "Weak or restricted airflow",
@@ -609,7 +609,7 @@ PAGES = {
         "service_value": "AC Repair",
         "service_schema_name": "AC Repair Dubai",
         "area_served_schema": ["Downtown Dubai", "Business Bay", "DIFC"],
-        "wa_text": "Hello Nacravo, my AC is leaking / not cooling and I need a repair in Dubai.",
+        "wa_text": "Hi Nacravo, I need AC repair. My area is ____ and the issue is ____.",
         "subservices": {
             "not-cooling": "Not cooling at all",
             "leaking": "Water leaking",
@@ -781,7 +781,7 @@ PAGES = {
         "service_value": "AC Installation",
         "service_schema_name": "AC Installation Dubai",
         "area_served_schema": ["Downtown Dubai", "Business Bay", "DIFC"],
-        "wa_text": "Hello Nacravo, I'd like a quote for AC installation in Dubai.",
+        "wa_text": "Hi Nacravo, I need AC installation. My area is ____ and I need ____ units installed.",
         "subservices": {
             "split-install": "New split AC installation",
             "window-install": "Window AC installation",
@@ -953,7 +953,7 @@ PAGES = {
         "service_value": "AC Maintenance Contract",
         "service_schema_name": "AC Maintenance Contract Dubai",
         "area_served_schema": ["Downtown Dubai", "Business Bay", "DIFC"],
-        "wa_text": "Hello Nacravo, I'd like a quote for an AC maintenance contract in Dubai.",
+        "wa_text": "Hi Nacravo, I'd like an AC maintenance contract. My area is ____ and I have ____ AC units.",
         "contract_fields": True,   # renders the extra contract fields in the lead form
         "subservices": {
             "apartment": "Apartment owner",

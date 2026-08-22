@@ -19,7 +19,7 @@ PAGES = {
         "service_value": "Holiday Home Cleaning",
         "service_schema_name": "Holiday Home Cleaning Dubai",
         "area_served_schema": ["Dubai"],
-        "wa_text": "Hello Nacravo, I'd like a quote for holiday home cleaning in Dubai.",
+        "wa_text": "Hi Nacravo, I need holiday home turnover cleaning. My area is ____ and the unit is ____.",
         "subservices": {
             "airbnb-cleaning": "Airbnb Cleaning",
             "holiday-home-turnover": "Holiday Home Turnover",
@@ -49,7 +49,7 @@ PAGES = {
                     "Floors vacuumed and mopped",
                     "Damage and missing items photographed",
                 ],
-                "wa_text": "Hello Nacravo, I'd like a quote for Airbnb cleaning in Dubai.",
+                "wa_text": "Hi Nacravo, I need Airbnb turnover cleaning. My area is ____ and the unit is ____.",
             },
             {
                 "anchor": "holiday-home-turnover",
@@ -185,7 +185,7 @@ PAGES = {
         "tracker_pin": "20260822",
         "service_schema_name": "Office and Commercial Cleaning Dubai",
         "area_served_schema": ["Dubai"],
-        "wa_text": "Hello Nacravo, I'd like a quote for office and commercial cleaning in Dubai.",
+        "wa_text": "Hi Nacravo, I need office cleaning. Location is ____ and office size is approximately ____.",
         "subservices": {
             "office-cleaning": "Office Cleaning",
             "office-deep-cleaning": "Office Deep Cleaning",
@@ -236,7 +236,7 @@ PAGES = {
                     "Glass partitions and touch points",
                     "Waste collected and bins relined",
                 ],
-                "wa_text": "Hello Nacravo, I'd like a quote for office cleaning in Dubai.",
+                "wa_text": "Hi Nacravo, I need office cleaning. Location is ____ and office size is approximately ____.",
             },
             {
                 "anchor": "office-deep-cleaning",
@@ -248,7 +248,7 @@ PAGES = {
                     "Skirting, vents and high surfaces",
                     "Washroom descaling throughout",
                 ],
-                "wa_text": "Hello Nacravo, I'd like a quote for office deep cleaning in Dubai.",
+                "wa_text": "Hi Nacravo, I need an office deep clean. Location is ____ and office size is approximately ____.",
             },
             {
                 "anchor": "daily-contracts",
@@ -260,7 +260,7 @@ PAGES = {
                     "Fixed schedule around your hours",
                     "Materials and equipment included",
                 ],
-                "wa_text": "Hello Nacravo, I'd like a quote for a daily cleaning contract in Dubai.",
+                "wa_text": "Hi Nacravo, I need a daily office cleaning contract. Location is ____ and office size is approximately ____.",
             },
             {
                 "anchor": "commercial-cleaning",
@@ -272,7 +272,7 @@ PAGES = {
                     "Surface-appropriate products used",
                     "Back-of-house and storage areas",
                 ],
-                "wa_text": "Hello Nacravo, I'd like a quote for commercial cleaning in Dubai.",
+                "wa_text": "Hi Nacravo, I need commercial cleaning. Location is ____ and the premises are ____.",
             },
             {
                 "anchor": "office-carpet-shampoo",
@@ -320,7 +320,7 @@ PAGES = {
                     "Counters and till points",
                     "Stockroom and staff areas",
                 ],
-                "wa_text": "Hello Nacravo, I'd like a quote for retail cleaning in Dubai.",
+                "wa_text": "Hi Nacravo, I need retail / showroom cleaning. Location is ____ and the floor area is approximately ____.",
             },
             {
                 "anchor": "fit-out-cleaning",
@@ -332,7 +332,7 @@ PAGES = {
                     "New joinery and glazing cleaned",
                     "Staged around trades and snagging",
                 ],
-                "wa_text": "Hello Nacravo, I'd like a quote for fit out cleaning in Dubai.",
+                "wa_text": "Hi Nacravo, I need fit-out / post-construction cleaning. Location is ____ and the area is approximately ____.",
             },
         ],
         "band1_heading": "Need a quote for your premises?",
@@ -405,7 +405,7 @@ PAGES = {
         "service_value": "Specialized Cleaning",
         "service_schema_name": "Specialized Cleaning Dubai",
         "area_served_schema": ["Dubai"],
-        "wa_text": "Hello Nacravo, I'd like a quote for specialized cleaning in Dubai.",
+        "wa_text": "Hi Nacravo, I need upholstery cleaning for ____. My area is ____.",
         "subservices": {
             "sofa-cleaning": "Sofa Cleaning",
             "carpet-cleaning": "Carpet Cleaning",
@@ -433,7 +433,7 @@ PAGES = {
                     "Hot water extraction through the fabric",
                     "Separate method for leather seating",
                 ],
-                "wa_text": "Hello Nacravo, I'd like a quote for sofa cleaning in Dubai.",
+                "wa_text": "Hi Nacravo, I need sofa cleaning for a ____ seater. My area is ____.",
             },
             {
                 "anchor": "carpet-cleaning",
@@ -445,7 +445,7 @@ PAGES = {
                     "Fine dust drawn out of the pile",
                     "Pile groomed for even drying",
                 ],
-                "wa_text": "Hello Nacravo, I'd like a quote for carpet cleaning in Dubai.",
+                "wa_text": "Hi Nacravo, I need carpet cleaning. My area is ____ and there are ____ carpets / rooms.",
             },
             {
                 "anchor": "mattress-cleaning",
@@ -457,7 +457,7 @@ PAGES = {
                     "Marks and stains worked by hand",
                     "Extraction to reduce drying time",
                 ],
-                "wa_text": "Hello Nacravo, I'd like a quote for mattress cleaning in Dubai.",
+                "wa_text": "Hi Nacravo, I need mattress cleaning. My area is ____ and I have ____ mattresses (size ____).",
             },
             {
                 "anchor": "curtain-cleaning",
@@ -469,7 +469,7 @@ PAGES = {
                     "Off-site option for delicate fabrics",
                     "Take-down and rehang handled by us",
                 ],
-                "wa_text": "Hello Nacravo, I'd like a quote for curtain cleaning in Dubai.",
+                "wa_text": "Hi Nacravo, I need curtain cleaning. My area is ____ and there are ____ windows / panels.",
             },
             {
                 "anchor": "interior-windows",

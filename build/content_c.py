@@ -19,7 +19,7 @@ PAGES = {
         "service_value": "Handyman Services",
         "service_schema_name": "Handyman Services Dubai",
         "area_served_schema": ["Dubai"],
-        "wa_text": "Hello Nacravo, I'd like a quote for handyman services in Dubai.",
+        "wa_text": "Hi Nacravo, I need a handyman. My area is ____ and the job is ____.",
         "subservices": {
             "plumbing": "Plumbing",
             "electrical": "Electrical",
@@ -248,7 +248,7 @@ PAGES = {
         "service_value": "Pest Control",
         "service_schema_name": "Pest Control Services Dubai",
         "area_served_schema": ["Dubai"],
-        "wa_text": "Hello Nacravo, I'd like a quote for pest control in Dubai.",
+        "wa_text": "Hi Nacravo, I need pest control. My area is ____ and the pest is ____.",
         "subservices": {
             "cockroach-control": "Cockroach Control",
             "bed-bugs": "Bed Bug Treatment",
@@ -412,7 +412,7 @@ PAGES = {
         "service_value": "Annual Maintenance Contract",
         "service_schema_name": "Annual Maintenance Contract Dubai",
         "area_served_schema": ["Dubai"],
-        "wa_text": "Hello Nacravo, I'd like a quote for an annual maintenance contract in Dubai.",
+        "wa_text": "Hi Nacravo, I'd like an annual maintenance contract. My area is ____ and the property is ____.",
         "subservices": {
             "apartment-amc": "Apartment AMC",
             "villa-amc": "Villa AMC",

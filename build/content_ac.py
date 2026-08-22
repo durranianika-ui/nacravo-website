@@ -36,7 +36,7 @@ PAGE = {
     "service_value": "AC Services",
     "service_schema_name": "AC Service Dubai",
     "area_served_schema": ["Downtown Dubai", "Business Bay", "DIFC"],
-    "wa_text": "Hello Nacravo, I'd like a quote for AC service in Dubai.",
+    "wa_text": "Hi Nacravo, I need AC service. My area is ____ and I have ____ AC units.",
 
     "sections_heading": "Complete AC service, done properly",
     "sections_intro": (
@@ -55,7 +55,7 @@ PAGE = {
             ),
             "bullets": ["Filter clean and reseat", "Coil and drain inspection",
                         "Gas pressure and thermostat check", "Cooling performance test"],
-            "wa_text": "Hello Nacravo, I'd like a quote for AC servicing in Dubai.",
+            "wa_text": "Hi Nacravo, I need AC servicing. My area is ____ and I have ____ AC units.",
         },
         {
             "anchor": "chemical-wash",
@@ -68,7 +68,7 @@ PAGE = {
             ),
             "bullets": ["Coils removed and deep-treated", "Mould and bacteria dissolved",
                         "Blower and drain pan flushed", "Smells removed at the source"],
-            "wa_text": "Hello Nacravo, I'd like a quote for an AC chemical wash in Dubai.",
+            "wa_text": "Hi Nacravo, I need AC chemical cleaning. My area is ____ and I have ____ AC units.",
         },
         {
             "anchor": "duct-cleaning",
@@ -81,7 +81,7 @@ PAGE = {
             ),
             "bullets": ["Duct and grille cleaning", "Dust and debris removal",
                         "Insulation and damp check", "Airflow verified after"],
-            "wa_text": "Hello Nacravo, I'd like a quote for AC duct cleaning in Dubai.",
+            "wa_text": "Hi Nacravo, I need AC duct cleaning. My area is ____ and the property is ____.",
         },
         {
             "anchor": "repair",
@@ -94,7 +94,7 @@ PAGE = {
             ),
             "bullets": ["Fault traced to the cause", "Parts shown before fitting",
                         "Fixed repair price agreed first", "Cooling retested before we leave"],
-            "wa_text": "Hello Nacravo, my AC needs repair in Dubai.",
+            "wa_text": "Hi Nacravo, I need AC repair. My area is ____ and the issue is ____.",
         },
         {
             "anchor": "installation",
@@ -107,7 +107,7 @@ PAGE = {
             ),
             "bullets": ["Correct sizing for the room", "Drain line set to proper fall",
                         "Pipework pressure-tested", "Commissioned and handed over"],
-            "wa_text": "Hello Nacravo, I'd like a quote for AC installation in Dubai.",
+            "wa_text": "Hi Nacravo, I need AC installation. My area is ____ and I need ____ units installed.",
         },
         {
             "anchor": "diagnostics",
@@ -146,7 +146,7 @@ PAGE = {
             ),
             "bullets": ["Indoor coil, blower and drain", "Outdoor condenser cleaned",
                         "Fan and capacitor checked", "Both units tested together"],
-            "wa_text": "Hello Nacravo, I'd like a quote for split AC service in Dubai.",
+            "wa_text": "Hi Nacravo, I need split AC service. My area is ____ and I have ____ split units.",
         },
         {
             "anchor": "window-ac",
@@ -172,7 +172,7 @@ PAGE = {
             ),
             "bullets": ["Visits scheduled through the year", "Per-unit service history kept",
                         "Wear flagged before failure", "Priority booking for contract properties"],
-            "wa_text": "Hello Nacravo, I'd like a quote for an AC maintenance plan in Dubai.",
+            "wa_text": "Hi Nacravo, I'd like an AC maintenance contract. My area is ____ and I have ____ AC units.",
         },
     ],
 

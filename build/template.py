@@ -527,8 +527,8 @@ def render_hero(page):
       <div class="lp-hero-rest">
         <div class="trust">{trust}</div>
         <div class="lp-hero-cta">
-          <a href="{wa}" target="_blank" rel="noopener" class="btn btn-wa" data-track="booking" data-service-name="{esc(page['service_value'])}" data-track-label="Hero: WhatsApp">{WA_ICON.format(s=18)} WhatsApp us</a>
-          <a href="tel:{PHONE_TEL}" class="btn btn-ghost">{PHONE_ICON} Call now</a>
+          <a href="{wa}" target="_blank" rel="noopener" class="btn btn-wa" data-track="booking" data-service-name="{esc(page['service_value'])}" data-track-label="Hero: WhatsApp">{WA_ICON.format(s=18)} {esc(page.get('wa_cta', 'WhatsApp for availability & price'))}</a>
+          <a href="tel:{PHONE_TEL}" class="btn btn-call">{PHONE_ICON} Call now {PHONE_DISPLAY}</a>
         </div>
       </div>{media}
     </div>
@@ -619,8 +619,9 @@ def render_sections(page):
         <p>{esc(s['body'])}</p>
         <ul>{bullets}</ul>
         <div class="anchor-cta">
-          <a href="#leadFormTitle" class="btn btn-primary" data-subservice="{s['anchor']}" data-track="quote" data-track-label="{esc(s['title'])}: Get a quote">Get a quote</a>
-          <a href="{wa}" target="_blank" rel="noopener" class="btn btn-ghost" data-track="booking" data-service-name="{esc(s.get('service_name', page['service_value']))}" data-track-label="{esc(s['title'])}: WhatsApp">WhatsApp</a>
+          <a href="{wa}" target="_blank" rel="noopener" class="btn btn-wa" data-track="booking" data-service-name="{esc(s.get('service_name', page['service_value']))}" data-track-label="{esc(s['title'])}: WhatsApp">{WA_ICON.format(s=17)} WhatsApp</a>
+          <a href="tel:{PHONE_TEL}" class="btn btn-call" data-track-label="{esc(s['title'])}: Call">{PHONE_ICON} Call</a>
+          <a href="#leadFormTitle" class="btn btn-ghost" data-subservice="{s['anchor']}" data-track="quote" data-track-label="{esc(s['title'])}: Get a quote">Get a quote</a>
         </div>
       </article>""")
 
@@ -657,9 +658,9 @@ def render_cta_band(page, heading, body, anchor_id="cta"):
         <p>{esc(body)}</p>
       </div>
       <div class="cta-band-btns">
-        <a href="{quote_href}" class="btn btn-primary" data-track="quote" data-track-label="Mid-page: Get a quote">Get a quote</a>
-        <a href="tel:{PHONE_TEL}" class="btn btn-ghost">Call now</a>
-        <a href="{wa}" target="_blank" rel="noopener" class="btn btn-wa" data-track="booking" data-service-name="{esc(page['service_value'])}" data-track-label="Mid-page: WhatsApp">WhatsApp</a>
+        <a href="{wa}" target="_blank" rel="noopener" class="btn btn-wa" data-track="booking" data-service-name="{esc(page['service_value'])}" data-track-label="Mid-page: WhatsApp">{WA_ICON.format(s=17)} WhatsApp</a>
+        <a href="tel:{PHONE_TEL}" class="btn btn-call">{PHONE_ICON} Call {PHONE_DISPLAY}</a>
+        <a href="{quote_href}" class="btn btn-ghost" data-track="quote" data-track-label="Mid-page: Get a quote">Get a quote</a>
       </div>
     </div>
   </div>

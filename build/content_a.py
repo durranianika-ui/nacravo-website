@@ -21,7 +21,7 @@ PAGES = {
         "hero_eager": True,
         "service_schema_name": "Home Cleaning Dubai",
         "area_served_schema": ["Dubai"],
-        "wa_text": "Hello Nacravo, I'd like a quote for home cleaning in Dubai.",
+        "wa_text": "Hi Nacravo, I need a home cleaning quote. My area is ____ and the property is ____.",
         "subservices": {
             "maid-service": "Maid Service",
             "regular-cleaning": "Regular Cleaning",
@@ -60,7 +60,7 @@ PAGES = {
                     "Same cleaner where possible",
                     "Materials and equipment included",
                 ],
-                "wa_text": "Hello Nacravo, I'd like a quote for maid service in Dubai.",
+                "wa_text": "Hi Nacravo, I need a maid service. My area is ____ and I need ____ hours.",
             },
             {
                 "anchor": "regular-cleaning",
@@ -72,7 +72,7 @@ PAGES = {
                     "Dust on ledges and vents",
                     "Same team where possible",
                 ],
-                "wa_text": "Hello Nacravo, I'd like a quote for regular cleaning in Dubai.",
+                "wa_text": "Hi Nacravo, I need regular cleaning. My area is ____ and I'd like ____ visits a week.",
             },
             {
                 "anchor": "apartment-cleaning",
@@ -84,7 +84,7 @@ PAGES = {
                     "Balcony sweep and glass",
                     "Building access rules respected",
                 ],
-                "wa_text": "Hello Nacravo, I'd like a quote for apartment cleaning in Dubai.",
+                "wa_text": "Hi Nacravo, I need apartment cleaning. My area is ____ and it's a ____ bedroom apartment.",
             },
             {
                 "anchor": "villa-cleaning",
@@ -96,7 +96,7 @@ PAGES = {
                     "Staircases and multiple bathrooms",
                     "Majlis and maid room optional",
                 ],
-                "wa_text": "Hello Nacravo, I'd like a quote for villa cleaning in Dubai.",
+                "wa_text": "Hi Nacravo, I need villa cleaning. My area is ____ and the villa has ____ bedrooms.",
             },
             {
                 "anchor": "hourly-cleaning",
@@ -108,7 +108,7 @@ PAGES = {
                     "Single or repeat bookings",
                     "Photo report after the visit",
                 ],
-                "wa_text": "Hello Nacravo, I'd like a quote for hourly cleaning in Dubai.",
+                "wa_text": "Hi Nacravo, I need hourly cleaning. My area is ____ and I need ____ hours.",
             },
             {
                 "anchor": "weekly-cleaning",
@@ -120,7 +120,7 @@ PAGES = {
                     "Limescale kept under control",
                     "Rescheduling by WhatsApp",
                 ],
-                "wa_text": "Hello Nacravo, I'd like a quote for weekly cleaning in Dubai.",
+                "wa_text": "Hi Nacravo, I need weekly cleaning. My area is ____ and the property is ____.",
             },
             {
                 "anchor": "monthly-cleaning",
@@ -132,7 +132,7 @@ PAGES = {
                     "Grout and glass attention",
                     "Checklist agreed in advance",
                 ],
-                "wa_text": "Hello Nacravo, I'd like a quote for monthly cleaning in Dubai.",
+                "wa_text": "Hi Nacravo, I need monthly cleaning. My area is ____ and the property is ____.",
             },
             {
                 "anchor": "steam-cleaning",
@@ -253,7 +253,7 @@ PAGES = {
         "service_value": "Deep Cleaning",
         "service_schema_name": "Deep Cleaning Dubai",
         "area_served_schema": ["Dubai"],
-        "wa_text": "Hello Nacravo, I'd like a quote for deep cleaning in Dubai.",
+        "wa_text": "Hi Nacravo, I need a deep cleaning quote. My area is ____ and the property is ____.",
         "subservices": {
             "apartment-deep-cleaning": "Apartment Deep Cleaning",
             "villa-deep-cleaning": "Villa Deep Cleaning",
@@ -402,7 +402,7 @@ PAGES = {
         "service_value": "Move In / Move Out Cleaning",
         "service_schema_name": "Move In Move Out Cleaning Dubai",
         "area_served_schema": ["Dubai"],
-        "wa_text": "Hello Nacravo, I'd like a quote for move in / move out cleaning in Dubai.",
+        "wa_text": "Hi Nacravo, I need move in / move out cleaning. My area is ____ and the property is ____.",
         "subservices": {
             "move-in-cleaning": "Move In Cleaning",
             "move-out-cleaning": "Move Out Cleaning",
@@ -459,7 +459,7 @@ PAGES = {
                     "Limescale, grout and silicone",
                     "Photos of every area covered",
                 ],
-                "wa_text": "Hello Nacravo, I'd like a quote for end of tenancy cleaning in Dubai.",
+                "wa_text": "Hi Nacravo, I need end of tenancy cleaning. My area is ____ and the property is ____.",
             },
             {
                 "anchor": "empty-property-cleaning",
