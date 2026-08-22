@@ -338,7 +338,15 @@ footer{content-visibility:auto;contain-intrinsic-size:auto 500px}
 .cc-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
 .foot-legal button{display:inline;color:#9AA391;background:none;border:none;font:inherit;font-size:13px;cursor:pointer;padding:0}
 .foot-legal button:hover{color:var(--pearl)}
-@media(max-width:600px){.cc-row .cc-btn{flex:1;text-align:center}}
+@media(max-width:900px){.cc-banner{bottom:calc(82px + env(safe-area-inset-bottom))}}
+@media(max-width:600px){
+  .cc-banner{left:8px;right:8px;padding:12px 14px 10px;border-radius:14px}
+  .cc-banner h2{font-size:14px;margin-bottom:4px}
+  .cc-banner p{font-size:12px;line-height:1.45;margin-bottom:9px}
+  .cc-row{gap:8px}
+  .cc-row .cc-btn{flex:1 1 40%;text-align:center;padding:9px 8px;font-size:13px}
+  .cc-row #ccPrefs{flex:1 1 100%;background:none;border:none;padding:5px 0 0;font-size:12.5px;text-decoration:underline;color:var(--sage-text)}
+}
 
 /* ---- FLOATING WHATSAPP ----
    Desktop only by design: below 900px the existing .mbar sticky bar already
