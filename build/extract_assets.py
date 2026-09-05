@@ -197,6 +197,25 @@ LANDING_CSS = """
 .jump a{font-size:13.5px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:8px 15px;color:#44483D;transition:.15s}
 .jump a:hover{border-color:var(--sage);color:var(--moss)}
 
+/* Verified-proof row under the hero and the reviews grid. Both render only
+   when build/proof.py carries confirmed content, so these rules are inert
+   until a real rating and real quotes exist. */
+.proof-strip{background:var(--pearl);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:13px 0}
+.proof-strip .wrap{display:flex;flex-wrap:wrap;justify-content:center;align-items:baseline;gap:4px 26px;text-align:center}
+.ps-item{font-size:15px;color:#44483D;line-height:1.5}
+.ps-item strong{font-size:19px;color:var(--moss);font-weight:700}
+.lp-hero-rating{font-size:14.5px;color:#54594C;margin-top:7px;line-height:1.5}
+.lp-hero-rating strong{font-size:17px;color:var(--moss);font-weight:700}
+#reviews{background:var(--pearl);border-top:1px solid var(--line)}
+.rev-rating{font-size:15.5px;color:#54594C;margin-top:8px;line-height:1.6}
+.rev-rating strong{font-size:20px;color:var(--moss)}
+.rev-rating a{color:var(--sage);text-decoration:underline}
+.rev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:26px}
+.rev-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;margin:0;display:flex;flex-direction:column}
+.rev-card blockquote{font-size:15px;color:#44483D;line-height:1.65;margin:0 0 14px;flex:1}
+.rev-card figcaption{font-size:13.5px;color:var(--stone);border-top:1px solid var(--line);padding-top:12px}
+@media(max-width:900px){.rev-grid{grid-template-columns:1fr}.proof-strip .wrap{gap:4px 18px}.ps-item{font-size:14.5px}}
+
 /* Nav, floating WhatsApp and accessibility rules live in SHARED_UI_CSS —
    they are injected above, and into index.html's managed block. */
 """
