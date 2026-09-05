@@ -4,9 +4,16 @@
 <script>
 window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}
 (function(){var c=null;try{c=JSON.parse(localStorage.getItem('nacravo_consent'));}catch(e){}
- var a=(c&&c.analytics)?'granted':'denied',d=(c&&c.ad)?'granted':'denied';
- gtag('consent','default',{ad_storage:d,ad_user_data:d,ad_personalization:d,analytics_storage:a,functionality_storage:'granted',security_storage:'granted',wait_for_update:500});
- if(c){gtag('consent','update',{ad_storage:d,ad_user_data:d,ad_personalization:d,analytics_storage:a});}
+ /* Prior opt-in is only legally required in the EEA, the UK and Switzerland.
+    Everywhere else — including the UAE, the only market we advertise in —
+    non-essential storage now defaults to granted and the banner is an opt-OUT.
+    Denying by default worldwide bought no legal cover here and cost us every
+    Google Ads conversion: with ad_storage denied no _gcl cookie is written, so
+    no GCLID survives the click and the conversion beacon never fires. */
+ var EEA=['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IE','IT','LV','LT','LU','MT','NL','PL','PT','RO','SK','SI','ES','SE','IS','LI','NO','GB','CH'];
+ function def(ad,an,region){var o={ad_storage:ad,ad_user_data:ad,ad_personalization:ad,analytics_storage:an,functionality_storage:'granted',security_storage:'granted',wait_for_update:500};if(region){o.region=region;}gtag('consent','default',o);}
+ if(c){def(c.ad?'granted':'denied',c.analytics?'granted':'denied');}
+ else{def('granted','granted');def('denied','denied',EEA);}
 })();
 </script>
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -290,7 +297,7 @@ footer a:hover{color:var(--pearl)}
 </footer>
 <div class="cc-banner" id="ccBanner" role="dialog" aria-modal="false" aria-label="Cookie consent">
   <h2>We value your privacy</h2>
-  <p>We use essential cookies to run this site and, with your consent, analytics and advertising cookies (Google, Meta, Microsoft) to improve our service and marketing. See our <a href="/cookie-policy">Cookie Policy</a>.</p>
+  <p>We use essential cookies to run this site, plus analytics and advertising cookies (Google, Meta, Microsoft) to improve our service and marketing. You can reject non-essential cookies or change your choice at any time. See our <a href="/cookie-policy">Cookie Policy</a>.</p>
   <div class="cc-row">
     <button class="cc-btn primary" id="ccAccept">Accept all</button>
     <button class="cc-btn" id="ccReject">Reject non-essential</button>
