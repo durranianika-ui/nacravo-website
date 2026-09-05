@@ -639,7 +639,7 @@ def render_hero(page):
           <a href="{wa}" target="_blank" rel="noopener" class="btn btn-wa" data-track="booking" data-service-name="{esc(page['service_value'])}" data-track-label="Hero: WhatsApp">{WA_ICON.format(s=18)} {esc(wa_cta)}</a>
           <a href="tel:{PHONE_TEL}" class="btn btn-call">{PHONE_ICON} Call {PHONE_DISPLAY}</a>
         </div>
-        <p class="lp-hero-avail">{esc(HOURS_LINE)}</p>
+        <p class="lp-hero-avail">{esc(HOURS_LINE)}</p>{render_hero_rating()}
         <div class="trust">{trust}</div>
       </div>{media}
     </div>
@@ -988,14 +988,24 @@ def render_reviews(page):
 """
 
 
+def render_hero_rating():
+    """The verified Google rating, rendered beside the first CTA where it does
+    the most work. Like every other proof component it renders only when
+    build/proof.py carries a confirmed rating, so it cannot be faked."""
+    if not proof.has(proof.REVIEWS):
+        return ""
+    r = proof.REVIEWS
+    return ('\n        <p class="lp-hero-rating"><strong>' + esc(str(r["rating"]))
+            + "</strong> from " + esc(str(r["count"])) + " Google reviews</p>")
+
+
 def render_proof_strip(page):
-    """The above-the-fold verified-proof row: rating, then the remedy policy.
-    Both are omitted entirely while unverified, rather than softened."""
+    """The verified remedy policy, shown as a row under the hero. Omitted
+    entirely while unverified, rather than softened."""
+    # The rating is deliberately NOT repeated here: render_hero_rating() already
+    # shows it beside the first CTA, and restating it one screen later reads as
+    # padding rather than proof. This row is for the remedy policy.
     bits = []
-    if proof.has(proof.REVIEWS):
-        r = proof.REVIEWS
-        bits.append(f'<span class="ps-item"><strong>{esc(str(r["rating"]))}</strong> '
-                    f'from {esc(str(r["count"]))} Google reviews</span>')
     if proof.has(proof.WARRANTY):
         bits.append(f'<span class="ps-item">{esc(proof.WARRANTY["heading"])}</span>')
     if not bits:

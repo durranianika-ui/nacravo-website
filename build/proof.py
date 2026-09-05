@@ -36,7 +36,45 @@ TO POPULATE
 # Google Business Profile evidence.
 #   {"rating": 4.8, "count": 137, "url": "https://...", "quotes": [
 #       {"name": "...", "date": "2026-07-14", "text": "..."}]}
-REVIEWS = {}
+REVIEWS = {
+    # Verified 2026-09-05 against the public Google Business Profile for
+    # NACRAVO L.L.C (Regal Tower 1905, Al Mustaqbal St, Business Bay, Dubai),
+    # read directly from Google Maps, not from any internal record.
+    #   Profile showed: 5.0, 16 reviews. Re-check both numbers before any
+    #   publish that touches this block; a stale count is a false claim.
+    # Quotes are copied verbatim. Google itself truncates the two longer
+    # reviews in its UI, so they are quoted up to the last complete sentence
+    # Google displays and closed with an ellipsis; nothing is paraphrased and
+    # no wording has been altered. Google shows only relative ages
+    # ("a month ago", "2 months ago"), so the month below is derived from the
+    # 2026-09-05 verification date and is accurate to the month, not the day.
+    "rating": 5.0,
+    "count": 16,
+    "url": "https://maps.google.com/?cid=14148478390686907049",
+    "verified_on": "2026-09-05",
+    "quotes": [
+        {
+            "name": "Brahmin Boston",
+            "date": "August 2026",
+            "text": ("Was very impressed with the house cleaning service that I used today. "
+                     "The team arrived on time, were very professional, had all the required "
+                     "equipment and their attention to detail was very impressive."),
+        },
+        {
+            "name": "Ajith Siva",
+            "date": "July 2026",
+            "text": ("I engaged NACRAVO for a full home deep cleaning of my apartment, and they "
+                     "exceeded all expectations. The staff arrived exactly on time and were "
+                     "incredibly professional throughout the entire process."),
+        },
+        {
+            "name": "Mehrab Murshid",
+            "date": "July 2026",
+            "text": ("Very professional and a competent team. Thanks guys i would love to avail "
+                     "your services again in the future!!"),
+        },
+    ],
+}
 
 # Written service-recovery / workmanship policy.
 #   {"heading": "...", "body": "...", "scope": "...", "duration": "..."}
