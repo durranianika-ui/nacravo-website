@@ -296,6 +296,74 @@ const CLEAN_LEAD = {
     decodeURIComponent(down.wa_url || "").indexOf("Business Bay") !== -1, r.body);
   mondayHandler = defaultMonday;
 
+  /* ---- Meta Conversions API ------------------------------------------- *
+   * The browser's Meta Lead event is dropped for a large share of visitors.
+   * The server sends the same event with the same event_id so Meta can dedup,
+   * and it must obey exactly the same rule as the browser: only a lead that
+   * actually reached Nacravo is reported. */
+  const realFetch2 = globalThis.fetch;
+
+  // (a) No token configured -> the endpoint must not talk to Meta at all.
+  delete process.env.META_CAPI_TOKEN;
+  process.env.LEAD_WEBHOOK_URL = "https://example.invalid/hook";
+  let metaCalls = [];
+  globalThis.fetch = async (url, opts) => {
+    if (String(url).indexOf("graph.facebook.com") !== -1) metaCalls.push({ url: String(url), body: JSON.parse(opts.body) });
+    return { ok: true, status: 200, json: async () => ({}), text: async () => "" };
+  };
+  r = await post(Object.assign({}, AC_LEAD, { submission_id: "capioffabcdefg12" }));
+  check("no META_CAPI_TOKEN -> nothing is sent to Meta",
+    metaCalls.length === 0 && r.statusCode === 201, metaCalls.length);
+
+  // (b) Token configured and the lead stored -> exactly one Lead event.
+  process.env.META_CAPI_TOKEN = "capi-test-token";
+  process.env.META_DATASET_ID = "4194940093973084";
+  metaCalls = [];
+  r = await post(Object.assign({}, AC_LEAD, { submission_id: "capionabcdefgh12" }));
+  const stored = typeof r.body === "string" ? JSON.parse(r.body) : r.body;
+  const ev = metaCalls[0] && metaCalls[0].body && metaCalls[0].body.data && metaCalls[0].body.data[0];
+  check("a stored lead sends exactly one Meta Lead event",
+    metaCalls.length === 1 && ev && ev.event_name === "Lead" && ev.action_source === "website",
+    JSON.stringify(ev && { n: ev.event_name, a: ev.action_source }));
+  check("the Meta event carries the dataset id and an access token",
+    metaCalls[0].url.indexOf("/4194940093973084/events") !== -1 &&
+    metaCalls[0].body.access_token === "capi-test-token", metaCalls[0].url);
+  check("event_id matches the lead_id the browser also reports (dedup key)",
+    ev.event_id === stored.lead_id && !!stored.lead_id, { e: ev.event_id, l: stored.lead_id });
+
+  /* Meta must only ever receive hashed identifiers. A plaintext phone or
+     email in this payload would be a real privacy defect, not a bug. */
+  const raw = JSON.stringify(metaCalls[0].body);
+  check("no plaintext phone or email is sent to Meta",
+    raw.indexOf("555403038") === -1 && raw.indexOf("@") === -1, raw.slice(0, 200));
+  check("phone is sent as a sha256 hash",
+    Array.isArray(ev.user_data.ph) && /^[a-f0-9]{64}$/.test(ev.user_data.ph[0]), ev.user_data.ph);
+
+  // (c) fbclid with no _fbc cookie must be rebuilt into Meta's fbc format.
+  metaCalls = [];
+  r = await post(Object.assign({}, AC_LEAD, {
+    submission_id: "capifbclidabcd12", fbclid: "IwAR_test_click_id",
+  }));
+  const ev2 = metaCalls[0] && metaCalls[0].body.data[0];
+  check("fbclid is rebuilt into an fbc value when the cookie is missing",
+    !!ev2 && typeof ev2.user_data.fbc === "string" &&
+    /^fb\.1\.\d+\.IwAR_test_click_id$/.test(ev2.user_data.fbc), ev2 && ev2.user_data.fbc);
+
+  // (d) An unstored enquiry is NOT reported. The browser counts it on the tap.
+  delete process.env.LEAD_WEBHOOK_URL;
+  delete process.env.MONDAY_API_TOKEN;
+  metaCalls = [];
+  r = await post(Object.assign({}, AC_LEAD, { submission_id: "capinosinkabcd12" }));
+  const un = typeof r.body === "string" ? JSON.parse(r.body) : r.body;
+  check("an unstored enquiry is never reported to Meta (no phantom lead)",
+    un.stored === false && metaCalls.length === 0, metaCalls.length);
+
+  delete process.env.META_CAPI_TOKEN;
+  delete process.env.META_DATASET_ID;
+  globalThis.fetch = realFetch2;
+  process.env.MONDAY_API_TOKEN = "test-token";
+  mondayHandler = defaultMonday;
+
   /* ---- rate limiting ---------------------------------------------------- */
   const h = stickyHandler();
   let last = null;

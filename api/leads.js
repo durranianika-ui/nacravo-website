@@ -291,6 +291,7 @@ function leadRecord(lead, leadId, leadRef, submissionId) {
     gclid: a.gclid || "",
     gbraid: a.gbraid || "",
     wbraid: a.wbraid || "",
+    fbclid: a.fbclid || "",
     utm_source: a.utm_source || "",
     utm_medium: a.utm_medium || "",
     utm_campaign: a.utm_campaign || "",
@@ -357,6 +358,120 @@ async function storeLead(lead, leadId, leadRef, submissionId) {
     console.error("[leads] durable storage failed (" + sink.kind + ") ref=" + leadRef + " " +
       String(e && e.message).slice(0, 200));
     return { stored: false, delivery: "failed" };
+  }
+}
+
+/* ------------------------------------------------- Meta Conversions API --
+ * The browser already reports this lead to Meta: the page pushes
+ * `generate_lead` with `event_id`, and a GTM tag turns that into a Meta
+ * `Lead`. That signal is fragile — ad blockers, ITP and iOS drop a large share
+ * of it — so the same event is also sent server-side, carrying the SAME
+ * event_id. Meta keeps whichever arrives first and discards the twin, so this
+ * ADDS coverage without ever adding a second conversion.
+ *
+ * Two rules make it safe:
+ *   1. It only fires when the enquiry was genuinely STORED, exactly like the
+ *      browser's conversion. An enquiry that only got as far as the WhatsApp
+ *      handover is not counted here, because the browser counts it on the tap.
+ *   2. It is off unless META_CAPI_TOKEN is set. With no token this function
+ *      returns immediately and nothing about the endpoint changes.
+ */
+const META_API_VERSION = "v21.0";
+const META_DATASET_ID = (process.env.META_DATASET_ID || "4194940093973084").trim();
+const META_TIMEOUT_MS = 2500;
+
+/* Meta requires SHA-256 of the normalised value, lower-cased hex. */
+function sha256(v) {
+  return require("crypto").createHash("sha256").update(String(v), "utf8").digest("hex");
+}
+
+/* Phone: digits only, country code included, no "+". Email: trimmed and
+   lower-cased. Anything empty is omitted rather than hashed as "". */
+function hashedUser(lead) {
+  const u = {};
+  const phone = String(lead.phone || "").replace(/[^0-9]/g, "");
+  if (phone) u.ph = [sha256(phone)];
+  const email = String(lead.email || "").trim().toLowerCase();
+  if (email) u.em = [sha256(email)];
+  const name = String(lead.name || "").trim().toLowerCase();
+  if (name) {
+    const parts = name.split(/\s+/);
+    if (parts[0]) u.fn = [sha256(parts[0])];
+    if (parts.length > 1) u.ln = [sha256(parts[parts.length - 1])];
+  }
+  u.country = [sha256("ae")];
+  return u;
+}
+
+function cookieValue(req, name) {
+  const raw = String((req.headers || {}).cookie || "");
+  const m = raw.match(new RegExp("(?:^|;\s*)" + name + "=([^;]*)"));
+  return m ? decodeURIComponent(m[1]) : "";
+}
+
+/* _fbc is Meta's click cookie. If the pixel never got to write it — the usual
+   case when a tracker is blocked — it can be rebuilt from the fbclid the
+   attribution layer captured on landing. */
+function fbc(req, lead) {
+  const cookie = cookieValue(req, "_fbc");
+  if (cookie) return cookie;
+  const id = (lead.attribution || {}).fbclid;
+  if (!id) return "";
+  const at = Date.parse((lead.attribution || {}).click_time || "") || Date.now();
+  return "fb.1." + at + "." + id;
+}
+
+async function metaCapi(req, lead, leadId) {
+  const token = (process.env.META_CAPI_TOKEN || "").trim();
+  if (!token || !META_DATASET_ID) return { sent: false, reason: "not_configured" };
+
+  const user_data = hashedUser(lead);
+  const bp = cookieValue(req, "_fbp");
+  if (bp) user_data.fbp = bp;
+  const bc = fbc(req, lead);
+  if (bc) user_data.fbc = bc;
+  const ip = clientIp(req);
+  if (ip) user_data.client_ip_address = ip;
+  const ua = String((req.headers || {})["user-agent"] || "");
+  if (ua) user_data.client_user_agent = ua;
+
+  const event = {
+    event_name: "Lead",
+    event_time: Math.floor(Date.now() / 1000),
+    /* The dedup key. The browser sends the same string as its eventID, so
+       Meta counts this lead once however many copies of it arrive. */
+    event_id: leadId,
+    action_source: "website",
+    event_source_url: lead.page_url || "https://www.nacravo.com/",
+    user_data,
+    custom_data: {
+      content_category: lead.vertical || "",
+      content_name: lead.service || lead.problem || "",
+      lead_event_source: "nacravo_website_form",
+    },
+  };
+
+  const ctl = new AbortController();
+  const timer = setTimeout(() => ctl.abort(), META_TIMEOUT_MS);
+  try {
+    const r = await fetch(
+      "https://graph.facebook.com/" + META_API_VERSION + "/" + META_DATASET_ID + "/events",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ data: [event], access_token: token }),
+        signal: ctl.signal,
+      });
+    if (!r.ok) throw new Error("meta HTTP " + r.status);
+    return { sent: true };
+  } catch (e) {
+    /* Measurement must never cost a customer their enquiry, so this is a log
+       line and nothing more. */
+    console.error("[leads] Meta CAPI failed lead_id=" + leadId + " " +
+      String(e && e.message).slice(0, 200));
+    return { sent: false, reason: "failed" };
+  } finally {
+    clearTimeout(timer);
   }
 }
 
@@ -432,6 +547,7 @@ function readLead(b) {
     gclid: str(b.gclid, 200),
     gbraid: str(b.gbraid, 200),
     wbraid: str(b.wbraid, 200),
+    fbclid: str(b.fbclid, 200),
     utm_source: str(b.utm_source, 40),
     utm_medium: str(b.utm_medium, 40),
     utm_campaign: str(b.utm_campaign, 60),
@@ -462,7 +578,9 @@ function paidSource(a) {
   if (a.gclid || a.gbraid || a.wbraid) return "Google Ads";
   const s = (a.utm_source || "").toLowerCase();
   if (s === "google") return "Google Ads";
-  if (/^(meta|facebook|fb|instagram|ig)$/.test(s)) return "Meta Ads";
+  /* fbclid first: click-to-website Meta ads usually carry no utm_source at
+     all, so without this a paid Meta lead is filed as organic Website. */
+  if (a.fbclid || /^(meta|facebook|fb|instagram|ig)$/.test(s)) return "Meta Ads";
   return "Website";
 }
 
@@ -597,6 +715,9 @@ module.exports = async (req, res) => {
      the customer gets through. */
   const outcome = await storeLead(lead, leadId, leadRef, submissionId);
   const finalId = outcome.lead_id || leadId;
+  /* Report to Meta only for an enquiry that genuinely landed, and only for a
+     first submission — a duplicate replay is the same customer action. */
+  if (outcome.stored && !outcome.dup) await metaCapi(req, lead, finalId);
   const finalRef = outcome.lead_ref || leadRef;
   /* A stored enquiry needs a follow-up opener; an unstored one needs to carry
      the whole enquiry, because sending it IS the delivery. */

@@ -4,7 +4,8 @@
  * localStorage so a later lead (form -> WhatsApp handover, WhatsApp tap or
  * phone call) can be traced back to the click that produced it:
  *
- *   gclid / gbraid / wbraid, utm_* params, landing page, first-seen timestamp
+ *   gclid / gbraid / wbraid / fbclid, utm_* params, landing page, first-seen
+ *   timestamp
  *
  * plus a short human-readable reference token (e.g. "NCR-GA-K7Q2Z-4X") that is
  * appended to every WhatsApp prefill. The token encodes source + campaign +
@@ -53,17 +54,20 @@
     var t = { at: now(), lp: location.pathname };
     try {
       var q = new URLSearchParams(location.search);
-      ["gclid", "gbraid", "wbraid", "utm_source", "utm_medium", "utm_campaign",
+      ["gclid", "gbraid", "wbraid", "fbclid", "utm_source", "utm_medium", "utm_campaign",
        "utm_term", "utm_content"].forEach(function (k) {
         var v = q.get(k); if (v) t[k] = v.slice(0, 200);
       });
     } catch (e) {}
-    t.tagged = !!(t.gclid || t.gbraid || t.wbraid || t.utm_source);
+    t.tagged = !!(t.gclid || t.gbraid || t.wbraid || t.fbclid || t.utm_source);
     return t;
   }
 
   function srcChar(t) {
     if (t.gclid || t.gbraid || t.wbraid) return "G";
+    // A Meta click id is proof of Meta even when the ad carries no utm_source,
+    // which is the normal case for click-to-website Meta ads.
+    if (t.fbclid) return "M";
     var s = (t.utm_source || "").toLowerCase();
     if (s === "google") return "G";
     if (/^(meta|facebook|fb|instagram|ig)$/.test(s)) return "M";
@@ -128,7 +132,7 @@
     // analytics event, so this is deliberately separate from leadParams().
     serverParams: function () {
       var a = active(), f = attr.first || a, p = { lead_ref: attr.ref };
-      ["gclid", "gbraid", "wbraid", "utm_source", "utm_medium", "utm_campaign",
+      ["gclid", "gbraid", "wbraid", "fbclid", "utm_source", "utm_medium", "utm_campaign",
        "utm_term", "utm_content"].forEach(function (k) { if (a[k]) p[k] = a[k]; });
       p.landing_page = a.lp;
       p.click_time = new Date(a.at).toISOString();
