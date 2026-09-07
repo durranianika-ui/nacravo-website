@@ -1,28 +1,38 @@
-/* POST /api/leads — create a real Nacravo lead record, server-side.
+/* POST /api/leads — accept a Nacravo website enquiry and get it to the business.
  *
- * This endpoint is the system of record for a website enquiry. Before it
- * existed the "quote form" validated locally, pushed a conversion event and
- * then opened WhatsApp: if the visitor never sent the WhatsApp message,
- * Nacravo received nothing while the ad platforms had already recorded a
- * conversion. Now the lead is written to the CRM FIRST and the WhatsApp /
- * phone handover is an optional continuation.
+ * Before this endpoint existed the quote form validated locally, pushed a
+ * conversion event and then opened WhatsApp: a visitor who never sent that
+ * message produced a counted conversion and no enquiry. This endpoint exists
+ * to fix the CONVERSION SEMANTICS — a conversion must correspond to something
+ * Nacravo actually received. It does NOT exist to impose a CRM.
+ *
+ * A lead store is OPTIONAL and configured per deployment (see configuredSink).
+ * Nacravo's site is static and owns no database, so the dependable floor under
+ * everything is the WhatsApp handover the business has always run on. The rule
+ * this file enforces:
+ *
+ *   an enquiry is never destroyed, and a conversion is never counted for an
+ *   enquiry the business did not actually receive.
  *
  * Contract
- *   201 { ok, lead_id, lead_ref, submission_id, summary }   new lead stored
- *   200 { ok, dup:true, lead_id, lead_ref, ... }            idempotent replay
+ *   201 { ok, stored:true,  lead_id, lead_ref, submission_id, summary }  stored server-side
+ *   200 { ok, stored:true,  dup:true, ... }                             idempotent replay
+ *   200 { ok, stored:false, handover:"whatsapp", wa_url, lead_ref, ... } no sink configured;
+ *                                                                       client must complete
+ *                                                                       the handover, and only
+ *                                                                       then count a conversion
  *   400 { error:"validation", fields:{ field: code } }      fixable by the user
  *   405 { error }                                           wrong method
  *   413 { error }                                           body too large
  *   429 { error, retry_after }                              rate limited
- *   503 { error:"lead store not configured" }               MONDAY_API_TOKEN unset
- *   502 { error:"lead store unavailable" }                  CRM write failed
+ *   502 { error:"lead store unavailable" }                  a CONFIGURED sink failed
+ *
+ * There is deliberately no 503: an unconfigured integration is a valid state,
+ * not an outage, and must never cost a customer their enquiry.
  *
  * Privacy: name / phone / building never leave this function except to the
- * Monday CRM. The response carries no attribution identifiers, and the client
- * is expected to send only non-PII to analytics.
- *
- * Destination: Monday board "01 - Lead Register" (5101496395) — the board the
- * business already runs on. No parallel database is created.
+ * configured sink. The response carries no attribution identifiers, and the
+ * client is expected to send only non-PII to analytics.
  */
 
 const BOARD_ID = "5101496395";
@@ -227,6 +237,87 @@ function htmlPage(title, heading, bodyHtml, code) {
 const WA_HREF = "https://wa.me/971555403038";
 const TEL_HREF = "tel:+971555403038";
 
+/* ------------------------------------------------------------ lead sinks --
+ * A lead store is OPTIONAL. Nacravo's site is static and owns no database;
+ * any CRM is an integration the business may or may not run. Sinks are tried
+ * in order of preference and the first one configured wins. Adding a sink is
+ * an environment change, never a code change, and removing every sink must
+ * never cost a customer their enquiry.
+ *
+ *   LEAD_WEBHOOK_URL   generic JSON POST — email relay, automation platform,
+ *                      spreadsheet, or whatever backend Nacravo actually picks
+ *   MONDAY_API_TOKEN   opt-in Monday board write (off unless deliberately set)
+ */
+function configuredSink() {
+  const hook = (process.env.LEAD_WEBHOOK_URL || "").trim();
+  if (/^https:\/\//i.test(hook)) {
+    return { kind: "webhook", url: hook, token: (process.env.LEAD_WEBHOOK_TOKEN || "").trim() };
+  }
+  const token = (process.env.MONDAY_API_TOKEN || "").trim();
+  if (token) return { kind: "monday", token };
+  return null;
+}
+
+async function postWebhook(sink, lead, leadId, leadRef, submissionId) {
+  const headers = { "Content-Type": "application/json" };
+  if (sink.token) headers.Authorization = "Bearer " + sink.token;
+  const r = await fetch(sink.url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({
+      lead_id: leadId,
+      lead_ref: leadRef,
+      submission_id: submissionId,
+      received_at: new Date().toISOString(),
+      name: lead.name || "",
+      phone: lead.phone,
+      email: lead.email || "",
+      area: lead.area,
+      vertical: lead.vertical,
+      service: lead.service || lead.problem || "",
+      property_type: lead.property_type || "",
+      units: lead.units || "",
+      preferred_date: lead.preferred_date || "",
+      notes: buildNotes(lead, leadId),
+      attribution: lead.attribution,
+      subject: itemName(lead, leadRef),
+    }),
+  });
+  if (!r.ok) throw new Error("webhook HTTP " + r.status);
+}
+
+/* The enquiry, written out as a message the visitor only has to send. This is
+   the channel Nacravo has always actually run on, so it is the dependable
+   floor under every other delivery route. */
+function handoverUrl(lead, leadRef) {
+  const L = [];
+  L.push(lead.vertical === "ac" ? "Hi Nacravo, I need AC help." : "Hi Nacravo, I need a cleaning quote.");
+  if (lead.service) L.push("Service: " + lead.service);
+  if (lead.problem) L.push("Problem: " + lead.problem);
+  if (lead.property_type) L.push("Property: " + lead.property_type);
+  if (lead.size) L.push("Size: " + lead.size);
+  if (lead.units) L.push("AC units: " + lead.units);
+  if (lead.area) L.push("Area: " + lead.area);
+  if (lead.preferred_date) L.push("Preferred date: " + lead.preferred_date);
+  if (lead.name) L.push("Name: " + lead.name);
+  if (lead.notes) L.push("Note: " + lead.notes);
+  L.push("Ref: " + leadRef);
+  return WA_HREF + "?text=" + encodeURIComponent(L.join("\n"));
+}
+
+function receivedPage(leadRef) {
+  return htmlPage(
+    "Request received", "Thanks — your request is with Nacravo.",
+    "<p>We have your details and will come back to you during opening hours " +
+    "(open daily, 7 AM–10 PM). Quote this reference if you contact us:</p>" +
+    "<p><code>" + escapeHtml(leadRef) + "</code></p>" +
+    '<a class="btn wa" href="' + WA_HREF + "?text=" +
+    encodeURIComponent("Hi Nacravo - following up on my request. Ref: " + leadRef) +
+    '">Continue on WhatsApp</a>' +
+    '<a class="btn call" href="' + TEL_HREF + '">Call +971 55 540 3038</a>' +
+    "<p>Continuing on WhatsApp is optional — your request has already reached us.</p>");
+}
+
 /* ------------------------------------------------------------------ shape */
 
 function readLead(b) {
@@ -417,17 +508,62 @@ module.exports = async (req, res) => {
     return;
   }
 
-  const token = process.env.MONDAY_API_TOKEN;
-  if (!token) {
-    // Fail loudly rather than silently accepting a lead nothing will receive.
-    console.error("[leads] MONDAY_API_TOKEN missing - lead rejected", { submissionId });
-    res.status(503).json({ error: "lead store not configured" });
+  const leadRef = lead.attribution.ref || mintRef();
+  const leadId = mintLeadId();
+  const sink = configuredSink();
+
+  /* No lead store is configured for this deployment. That is a valid state:
+     Nacravo's website has never owned a database, and a CRM is an optional
+     integration, not a prerequisite for taking an enquiry. So do not destroy
+     the enquiry, and do not pretend it was stored either. Hand the visitor
+     back a WhatsApp message that already carries everything they typed plus a
+     server-minted reference, and let the client count the conversion only when
+     that handover actually happens. */
+  if (!sink) {
+    const waUrl = handoverUrl(lead, leadRef);
+    if (wantsHtml(req) && typeof res.send === "function") {
+      res.setHeader("Content-Type", "text/html; charset=utf-8");
+      res.status(200).send(htmlPage(
+        "One more tap", "Send your request to Nacravo",
+        "<p>Your answers are ready. Tap below to send them &mdash; the message is already written.</p>" +
+        "<p>Your reference:</p><p><code>" + escapeHtml(leadRef) + "</code></p>" +
+        '<a class="btn wa" href="' + escapeHtml(waUrl) + '">Send my request on WhatsApp</a>' +
+        '<a class="btn call" href="' + TEL_HREF + '">Call +971 55 540 3038</a>'));
+      return;
+    }
+    res.status(200).json({
+      ok: true,
+      stored: false,
+      handover: "whatsapp",
+      wa_url: waUrl,
+      lead_id: leadId,
+      lead_ref: leadRef,
+      submission_id: submissionId,
+      summary: { vertical: lead.vertical, service: lead.service || lead.problem, area: lead.area },
+    });
     return;
   }
 
-  const leadRef = lead.attribution.ref || mintRef();
-  const leadId = mintLeadId();
+  if (sink.kind === "webhook") {
+    try {
+      await postWebhook(sink, lead, leadId, leadRef, submissionId);
+      if (wantsHtml(req) && typeof res.send === "function") {
+        res.setHeader("Content-Type", "text/html; charset=utf-8");
+        res.status(201).send(receivedPage(leadRef));
+        return;
+      }
+      res.status(201).json({
+        ok: true, stored: true, lead_id: leadId, lead_ref: leadRef, submission_id: submissionId,
+        summary: { vertical: lead.vertical, service: lead.service || lead.problem, area: lead.area },
+      });
+    } catch (e) {
+      console.error("[leads] webhook delivery failed", String(e && e.message).slice(0, 300));
+      res.status(502).json({ error: "lead store unavailable" });
+    }
+    return;
+  }
 
+  const token = sink.token;
   try {
     // Idempotency: one item per submission id. A retry, a double-click or a
     // resubmitted page returns the original lead instead of creating a second.
@@ -443,7 +579,7 @@ module.exports = async (req, res) => {
       const cv = {};
       (hit.column_values || []).forEach((c) => { cv[c.id] = c.text; });
       res.status(200).json({
-        ok: true, dup: true,
+        ok: true, dup: true, stored: true,
         lead_id: cv[COL.webLeadId] || leadId,
         lead_ref: cv[COL.ref] || leadRef,
         submission_id: submissionId,
@@ -478,6 +614,7 @@ module.exports = async (req, res) => {
     }
     res.status(201).json({
       ok: true,
+      stored: true,
       lead_id: leadId,
       lead_ref: leadRef,
       submission_id: submissionId,

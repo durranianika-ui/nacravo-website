@@ -749,15 +749,22 @@ def render_hero(page):
           <a href="tel:{PHONE_TEL}" class="btn btn-call">{PHONE_ICON} Call {PHONE_DISPLAY}</a>
         </div>
 
+        <!-- Two truths, one panel. When a lead store is configured the enquiry
+             is already with Nacravo. When none is, it is not: the visitor still
+             has to send it, so the copy says so and the conversion waits for
+             the tap. Never tell someone we have their request when we do not. -->
         <div class="lf-success" id="leadSuccess" hidden>
-          <h2>Thanks \u2014 your request is with Nacravo.</h2>
-          <p>We have your details and will come back to you during opening hours ({esc(HOURS_LINE.split(' \u00b7 ')[0])}). Quote your reference if you contact us:</p>
+          <h2 data-when="stored">Thanks \u2014 your request is with Nacravo.</h2>
+          <h2 data-when="handover" hidden>One more tap and it is sent.</h2>
+          <p data-when="stored">We have your details and will come back to you during opening hours ({esc(HOURS_LINE.split(' \u00b7 ')[0])}). Quote your reference if you contact us:</p>
+          <p data-when="handover" hidden>Your answers are written into a message for you \u2014 nothing to retype. Send it and we reply during opening hours ({esc(HOURS_LINE.split(' \u00b7 ')[0])}). Your reference:</p>
           <p class="lf-ref"><span id="leadRefOut"></span></p>
           <div class="lf-success-cta">
-            <a href="https://wa.me/{WA_NUMBER}" target="_blank" rel="noopener" class="btn btn-wa" id="leadWaBtn">{WA_ICON.format(s=18)} Continue on WhatsApp</a>
+            <a href="https://wa.me/{WA_NUMBER}" target="_blank" rel="noopener" class="btn btn-wa" id="leadWaBtn">{WA_ICON.format(s=18)} <span data-when="stored">Continue on WhatsApp</span><span data-when="handover" hidden>Send my request on WhatsApp</span></a>
             <a href="tel:{PHONE_TEL}" class="btn btn-call">{PHONE_ICON} Call {PHONE_DISPLAY}</a>
           </div>
-          <p class="lf-hint">Continuing on WhatsApp is optional \u2014 your request has already reached us.</p>
+          <p class="lf-hint" data-when="stored">Continuing on WhatsApp is optional \u2014 your request has already reached us.</p>
+          <p class="lf-hint" data-when="handover" hidden>Prefer to talk? Calling works just as well \u2014 quote the reference above.</p>
         </div>
 
         <p class="lp-fineprint">We use your details only to respond to this enquiry. See our <a href="/privacy-policy">Privacy Policy</a>.</p>

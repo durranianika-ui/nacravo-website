@@ -28,9 +28,12 @@ const TYPES = {
 };
 
 /* ------------------------------------------------------------- CRM stub */
-// Stub unless a real token is present, so a local run can never write a test
-// lead into the operators' board by accident.
-const STUB = process.env.NACRAVO_STUB_CRM === "1" || !process.env.MONDAY_API_TOKEN;
+// Opt IN to the stub. Previously the absence of a token switched the stub on
+// AND minted a fake one, so a local run always looked like a configured CRM —
+// which is precisely how a hard Monday dependency shipped to a production
+// deployment that has never had a token. With no token and no NACRAVO_STUB_CRM
+// the dev server now reproduces production exactly: no sink, handover path.
+const STUB = process.env.NACRAVO_STUB_CRM === "1";
 const stubItems = [];
 if (STUB) {
   process.env.MONDAY_API_TOKEN = process.env.MONDAY_API_TOKEN || "stub-token";
