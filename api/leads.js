@@ -14,21 +14,28 @@
  *   an enquiry is never destroyed, and a conversion is never counted for an
  *   enquiry the business did not actually receive.
  *
- * Contract
- *   201 { ok, stored:true,  lead_id, lead_ref, submission_id, summary }  stored server-side
- *   200 { ok, stored:true,  dup:true, ... }                             idempotent replay
- *   200 { ok, stored:false, handover:"whatsapp", wa_url, lead_ref, ... } no sink configured;
- *                                                                       client must complete
- *                                                                       the handover, and only
- *                                                                       then count a conversion
+ * Order of events, and it matters:
+ *   1. validate            2. mint a lead reference
+ *   3. ATTEMPT durable storage (never fatal, 4s ceiling)
+ *   4. respond with the WhatsApp handover either way
+ *   5. the client counts a conversion at the genuine point — the 201 when the
+ *      lead is stored, otherwise the handover tap, once
+ *
+ * Contract — every successful path carries wa_url, so the journey always ends
+ * somewhere real:
+ *   201 { ok, stored:true,  delivery:"webhook"|"monday", wa_url, ... }  stored
+ *   200 { ok, stored:true,  dup:true, ... }                            replay
+ *   200 { ok, stored:false, delivery:"no_sink", wa_url, ... }          nothing configured
+ *   200 { ok, stored:false, delivery:"failed",  wa_url, ... }          sink down/slow
  *   400 { error:"validation", fields:{ field: code } }      fixable by the user
  *   405 { error }                                           wrong method
  *   413 { error }                                           body too large
  *   429 { error, retry_after }                              rate limited
- *   502 { error:"lead store unavailable" }                  a CONFIGURED sink failed
  *
- * There is deliberately no 503: an unconfigured integration is a valid state,
- * not an outage, and must never cost a customer their enquiry.
+ * There is deliberately no 502 and no 503. An unconfigured integration is a
+ * valid state and a broken one is an operations problem — neither is the
+ * customer's, and neither may cost them their enquiry. Storage failures are
+ * loud in the logs and invisible in the journey.
  *
  * Privacy: name / phone / building never leave this function except to the
  * configured sink. The response carries no attribution identifiers, and the
@@ -258,32 +265,99 @@ function configuredSink() {
   return null;
 }
 
+/* One flat row per enquiry — shaped for a spreadsheet or an append-only log,
+   not for any particular CRM's schema. Everything needed to reconcile a lead
+   against an ad click later is on the row itself. */
+function leadRecord(lead, leadId, leadRef, submissionId) {
+  const a = lead.attribution || {};
+  return {
+    received_at: new Date().toISOString(),
+    lead_ref: leadRef,
+    lead_id: leadId,
+    submission_id: submissionId,
+    name: lead.name || "",
+    phone: lead.phone,
+    email: lead.email || "",
+    area: lead.area,
+    vertical: lead.vertical,
+    service: lead.service || lead.problem || "",
+    property_type: lead.property_type || "",
+    size: lead.size || "",
+    units: lead.units || "",
+    frequency: lead.frequency || "",
+    preferred_date: lead.preferred_date || "",
+    customer_note: lead.notes || "",
+    page_url: lead.page_url || "",
+    gclid: a.gclid || "",
+    gbraid: a.gbraid || "",
+    wbraid: a.wbraid || "",
+    utm_source: a.utm_source || "",
+    utm_medium: a.utm_medium || "",
+    utm_campaign: a.utm_campaign || "",
+    utm_term: a.utm_term || "",
+    utm_content: a.utm_content || "",
+    click_time: a.click_time || "",
+    first_source: a.first_source || "",
+    first_campaign: a.first_campaign || "",
+    first_landing: a.first_landing || "",
+    first_seen: a.first_seen || "",
+    experiment: lead.experiment || "",
+    marketing_consent: lead.consent_marketing ? "yes" : "no",
+    privacy_version: lead.privacy_version || "",
+    delivery_status: "received",
+    subject: itemName(lead, leadRef),
+    notes: buildNotes(lead, leadId),
+  };
+}
+
+/* A slow sink must not become the customer's problem, so the request is
+   abandoned well inside the time a person will wait on a submit button. */
+const SINK_TIMEOUT_MS = 4000;
+
 async function postWebhook(sink, lead, leadId, leadRef, submissionId) {
   const headers = { "Content-Type": "application/json" };
-  if (sink.token) headers.Authorization = "Bearer " + sink.token;
-  const r = await fetch(sink.url, {
-    method: "POST",
-    headers,
-    body: JSON.stringify({
-      lead_id: leadId,
-      lead_ref: leadRef,
-      submission_id: submissionId,
-      received_at: new Date().toISOString(),
-      name: lead.name || "",
-      phone: lead.phone,
-      email: lead.email || "",
-      area: lead.area,
-      vertical: lead.vertical,
-      service: lead.service || lead.problem || "",
-      property_type: lead.property_type || "",
-      units: lead.units || "",
-      preferred_date: lead.preferred_date || "",
-      notes: buildNotes(lead, leadId),
-      attribution: lead.attribution,
-      subject: itemName(lead, leadRef),
-    }),
-  });
-  if (!r.ok) throw new Error("webhook HTTP " + r.status);
+  const record = leadRecord(lead, leadId, leadRef, submissionId);
+  /* The secret goes in BOTH places on purpose. Most receivers read the bearer
+     header, but a Google Apps Script web app never sees request headers at
+     all — it only gets the body and the query string. Sending both means the
+     same URL works for either kind of endpoint. */
+  if (sink.token) {
+    headers.Authorization = "Bearer " + sink.token;
+    record.token = sink.token;
+  }
+  const ctl = new AbortController();
+  const timer = setTimeout(() => ctl.abort(), SINK_TIMEOUT_MS);
+  try {
+    const r = await fetch(sink.url, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(record),
+      signal: ctl.signal,
+    });
+    if (!r.ok) throw new Error("webhook HTTP " + r.status);
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+/* Attempt durable storage. This NEVER throws and never decides the customer's
+   outcome: it reports what happened so the response can tell the truth, and
+   the enquiry survives every branch through the WhatsApp handover. */
+async function storeLead(lead, leadId, leadRef, submissionId) {
+  const sink = configuredSink();
+  if (!sink) return { stored: false, delivery: "no_sink" };
+  try {
+    if (sink.kind === "webhook") {
+      await postWebhook(sink, lead, leadId, leadRef, submissionId);
+      return { stored: true, delivery: "webhook" };
+    }
+    return await storeMonday(sink.token, lead, leadId, leadRef, submissionId);
+  } catch (e) {
+    // Loud in the logs, invisible to the customer, never a lost enquiry.
+    console.error("[leads] durable storage failed (" + sink.kind + ") ref=" + leadRef + " " +
+      String(e && e.message).slice(0, 200));
+    return { stored: false, delivery: "failed" };
+  }
 }
 
 /* The enquiry, written out as a message the visitor only has to send. This is
@@ -303,6 +377,12 @@ function handoverUrl(lead, leadRef) {
   if (lead.notes) L.push("Note: " + lead.notes);
   L.push("Ref: " + leadRef);
   return WA_HREF + "?text=" + encodeURIComponent(L.join("\n"));
+}
+
+/* The enquiry is already safe; this only opens the conversation. */
+function followUpUrl(leadRef) {
+  return WA_HREF + "?text=" +
+    encodeURIComponent("Hi Nacravo - following up on my request. Ref: " + leadRef);
 }
 
 function receivedPage(leadRef) {
@@ -510,61 +590,49 @@ module.exports = async (req, res) => {
 
   const leadRef = lead.attribution.ref || mintRef();
   const leadId = mintLeadId();
-  const sink = configuredSink();
 
-  /* No lead store is configured for this deployment. That is a valid state:
-     Nacravo's website has never owned a database, and a CRM is an optional
-     integration, not a prerequisite for taking an enquiry. So do not destroy
-     the enquiry, and do not pretend it was stored either. Hand the visitor
-     back a WhatsApp message that already carries everything they typed plus a
-     server-minted reference, and let the client count the conversion only when
-     that handover actually happens. */
-  if (!sink) {
-    const waUrl = handoverUrl(lead, leadRef);
-    if (wantsHtml(req) && typeof res.send === "function") {
-      res.setHeader("Content-Type", "text/html; charset=utf-8");
-      res.status(200).send(htmlPage(
+  /* The whole journey, in order: mint a reference, TRY to store durably, then
+     hand the visitor to WhatsApp whatever happened. Storage is a secondary
+     concern that reports its outcome; it is never allowed to decide whether
+     the customer gets through. */
+  const outcome = await storeLead(lead, leadId, leadRef, submissionId);
+  const finalId = outcome.lead_id || leadId;
+  const finalRef = outcome.lead_ref || leadRef;
+  /* A stored enquiry needs a follow-up opener; an unstored one needs to carry
+     the whole enquiry, because sending it IS the delivery. */
+  const waUrl = outcome.stored ? followUpUrl(finalRef) : handoverUrl(lead, finalRef);
+
+  if (wantsHtml(req) && typeof res.send === "function") {
+    res.setHeader("Content-Type", "text/html; charset=utf-8");
+    res.status(outcome.stored ? (outcome.dup ? 200 : 201) : 200).send(
+      outcome.stored ? receivedPage(finalRef) : htmlPage(
         "One more tap", "Send your request to Nacravo",
         "<p>Your answers are ready. Tap below to send them &mdash; the message is already written.</p>" +
-        "<p>Your reference:</p><p><code>" + escapeHtml(leadRef) + "</code></p>" +
+        "<p>Your reference:</p><p><code>" + escapeHtml(finalRef) + "</code></p>" +
         '<a class="btn wa" href="' + escapeHtml(waUrl) + '">Send my request on WhatsApp</a>' +
         '<a class="btn call" href="' + TEL_HREF + '">Call +971 55 540 3038</a>'));
-      return;
-    }
-    res.status(200).json({
-      ok: true,
-      stored: false,
-      handover: "whatsapp",
-      wa_url: waUrl,
-      lead_id: leadId,
-      lead_ref: leadRef,
-      submission_id: submissionId,
-      summary: { vertical: lead.vertical, service: lead.service || lead.problem, area: lead.area },
-    });
     return;
   }
 
-  if (sink.kind === "webhook") {
-    try {
-      await postWebhook(sink, lead, leadId, leadRef, submissionId);
-      if (wantsHtml(req) && typeof res.send === "function") {
-        res.setHeader("Content-Type", "text/html; charset=utf-8");
-        res.status(201).send(receivedPage(leadRef));
-        return;
-      }
-      res.status(201).json({
-        ok: true, stored: true, lead_id: leadId, lead_ref: leadRef, submission_id: submissionId,
-        summary: { vertical: lead.vertical, service: lead.service || lead.problem, area: lead.area },
-      });
-    } catch (e) {
-      console.error("[leads] webhook delivery failed", String(e && e.message).slice(0, 300));
-      res.status(502).json({ error: "lead store unavailable" });
-    }
-    return;
-  }
+  res.status(outcome.stored ? (outcome.dup ? 200 : 201) : 200).json({
+    ok: true,
+    stored: !!outcome.stored,
+    dup: !!outcome.dup,
+    delivery: outcome.delivery,
+    handover: "whatsapp",
+    wa_url: waUrl,
+    lead_id: finalId,
+    lead_ref: finalRef,
+    submission_id: submissionId,
+    summary: { vertical: lead.vertical, service: lead.service || lead.problem, area: lead.area },
+  });
+};
 
-  const token = sink.token;
-  try {
+/* Monday remains a sink you can opt into, nothing more. It is off unless
+   MONDAY_API_TOKEN is deliberately set, and its failure degrades to the
+   handover like any other sink's. */
+async function storeMonday(token, lead, leadId, leadRef, submissionId) {
+  {
     // Idempotency: one item per submission id. A retry, a double-click or a
     // resubmitted page returns the original lead instead of creating a second.
     const found = await monday(token,
@@ -578,13 +646,11 @@ module.exports = async (req, res) => {
     if (hit) {
       const cv = {};
       (hit.column_values || []).forEach((c) => { cv[c.id] = c.text; });
-      res.status(200).json({
-        ok: true, dup: true, stored: true,
+      return {
+        stored: true, dup: true, delivery: "monday",
         lead_id: cv[COL.webLeadId] || leadId,
         lead_ref: cv[COL.ref] || leadRef,
-        submission_id: submissionId,
-      });
-      return;
+      };
     }
 
     await monday(token,
@@ -598,30 +664,6 @@ module.exports = async (req, res) => {
         vals: JSON.stringify(columnValues(lead, leadId, submissionId)),
       });
 
-    if (wantsHtml(req) && typeof res.send === "function") {
-      res.setHeader("Content-Type", "text/html; charset=utf-8");
-      res.status(201).send(htmlPage(
-        "Request received", "Thanks \u2014 your request is with Nacravo.",
-        "<p>We have your details and will come back to you during opening hours " +
-        "(open daily, 7\u00a0AM\u201310\u00a0PM). Quote this reference if you contact us:</p>" +
-        "<p><code>" + escapeHtml(leadRef) + "</code></p>" +
-        '<a class="btn wa" href="' + WA_HREF + "?text=" +
-        encodeURIComponent("Hi Nacravo - following up on my request. Ref: " + leadRef) +
-        '">Continue on WhatsApp</a>' +
-        '<a class="btn call" href="' + TEL_HREF + '">Call +971 55 540 3038</a>' +
-        "<p>Continuing on WhatsApp is optional \u2014 your request has already reached us.</p>"));
-      return;
-    }
-    res.status(201).json({
-      ok: true,
-      stored: true,
-      lead_id: leadId,
-      lead_ref: leadRef,
-      submission_id: submissionId,
-      summary: { vertical: lead.vertical, service: lead.service || lead.problem, area: lead.area },
-    });
-  } catch (e) {
-    console.error("[leads] CRM write failed", String(e && e.message).slice(0, 300));
-    res.status(502).json({ error: "lead store unavailable" });
+    return { stored: true, delivery: "monday", lead_id: leadId, lead_ref: leadRef };
   }
-};
+}

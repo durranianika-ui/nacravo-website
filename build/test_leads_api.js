@@ -129,6 +129,47 @@ const CLEAN_LEAD = {
     seen.length === 1 && seen[0].url === "https://example.invalid/hook" &&
     seen[0].body.phone === "+971555403038" && seen[0].body.area === "Business Bay" &&
     !!seen[0].body.lead_ref, JSON.stringify(seen[0] && seen[0].body).slice(0, 200));
+
+  /* The row has to carry everything needed to reconcile a lead against an ad
+     click later, or the log is only half a record. */
+  const rec = seen[0].body;
+  const need = ["received_at", "lead_ref", "lead_id", "submission_id", "phone", "area",
+    "vertical", "service", "page_url", "gclid", "gbraid", "wbraid", "utm_source",
+    "utm_medium", "utm_campaign", "utm_term", "utm_content", "click_time",
+    "marketing_consent", "delivery_status"];
+  const missing = need.filter((k) => !(k in rec));
+  check("the record carries every reconciliation field", missing.length === 0, missing);
+  check("click ids and campaign survive onto the record",
+    rec.gclid === "TEST_GCLID_1" && rec.utm_campaign === "24059561727" &&
+    rec.utm_term === "ac repair dubai" && rec.page_url !== undefined &&
+    /^\d{4}-\d{2}-\d{2}T/.test(rec.received_at), JSON.stringify({ g: rec.gclid, c: rec.utm_campaign }));
+
+  /* A web app cannot read request headers, so the secret must also be in the
+     body — otherwise a Sheet-backed sink rejects every lead. */
+  globalThis.fetch = realFetch;
+  const seen2 = [];
+  process.env.LEAD_WEBHOOK_TOKEN = "s3cret";
+  globalThis.fetch = async (url, opts) => {
+    seen2.push({ headers: opts.headers, body: JSON.parse(opts.body) });
+    return { ok: true, status: 200, json: async () => ({}), text: async () => "" };
+  };
+  r = await post(Object.assign({}, AC_LEAD, { submission_id: "tokenabcdefgh123" }));
+  check("the shared secret travels in the body AND the bearer header",
+    seen2[0].body.token === "s3cret" &&
+    seen2[0].headers.Authorization === "Bearer s3cret", JSON.stringify(seen2[0] && seen2[0].headers));
+  delete process.env.LEAD_WEBHOOK_TOKEN;
+
+  /* A hanging sink must not hold the customer on a spinner. */
+  globalThis.fetch = (url, opts) => new Promise((resolve, reject) => {
+    opts.signal.addEventListener("abort", () => reject(new Error("aborted")));
+  });
+  const t0 = Date.now();
+  r = await post(Object.assign({}, AC_LEAD, { submission_id: "slowabcdefgh1234" }));
+  const slow = typeof r.body === "string" ? JSON.parse(r.body) : r.body;
+  check("a hanging sink is abandoned and the customer still gets through",
+    r.statusCode === 200 && slow.stored === false && slow.delivery === "failed" &&
+    !!slow.wa_url && Date.now() - t0 < 8000, { ms: Date.now() - t0, body: r.body });
+
   globalThis.fetch = realFetch;
   delete process.env.LEAD_WEBHOOK_URL;
 
@@ -239,10 +280,20 @@ const CLEAN_LEAD = {
   check("honeypot submissions are absorbed without a CRM write",
     r.statusCode === 201 && calls.length === 0, { status: r.statusCode, calls: calls.length });
 
-  /* ---- CRM failure ------------------------------------------------------ */
+  /* ---- sink failure: degrade, never block -------------------------------
+     A secondary store going down is not the customer's problem. The journey
+     must complete, the response must not claim a save that did not happen,
+     and the enquiry must still have a way to reach Nacravo. */
   mondayHandler = () => { throw new Error("monday is down"); };
   r = await post(Object.assign({}, AC_LEAD, { submission_id: "failureabc123456" }));
-  check("502 when the CRM write fails (no false success)", r.statusCode === 502, r.body);
+  const down = typeof r.body === "string" ? JSON.parse(r.body) : r.body;
+  check("a failing sink still lets the customer through (no 502 dead end)",
+    r.statusCode === 200 && down.ok === true, r.body);
+  check("a failing sink reports stored:false (no false success)",
+    down.stored === false && down.delivery === "failed", r.body);
+  check("a failing sink still hands over the enquiry on WhatsApp",
+    down.handover === "whatsapp" &&
+    decodeURIComponent(down.wa_url || "").indexOf("Business Bay") !== -1, r.body);
   mondayHandler = defaultMonday;
 
   /* ---- rate limiting ---------------------------------------------------- */
