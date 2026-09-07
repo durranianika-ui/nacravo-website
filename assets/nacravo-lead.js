@@ -443,9 +443,13 @@
     var leadId = (body && body.lead_id) || "";
     var isDup = !!(body && body.dup);
 
-    /* ONE conversion per lead. A 200/dup replay is the same customer action as
-       the 201 that preceded it, so it must not fire a second conversion. */
-    if (!isDup && status === 201) {
+    /* Did the business actually receive this enquiry? Only a server-side sink
+       can answer yes. With no sink configured the endpoint returns
+       stored:false and the enquiry still needs the WhatsApp handover, so the
+       conversion belongs to that tap, not to this response. */
+    var stored = !(body && body.stored === false);
+
+    function fireConversion() {
       var payload = {
         lead_id: leadId,
         lead_ref: ref,
@@ -459,7 +463,8 @@
       };
       track("lead_created", payload);
       /* Kept so the existing GTM Google Ads conversion tag keeps working
-         unchanged — but now it fires only AFTER the CRM has the lead. */
+         unchanged — but it fires only once the enquiry has genuinely
+         reached Nacravo. */
       var legacy = {};
       for (var k in payload) if (Object.prototype.hasOwnProperty.call(payload, k)) legacy[k] = payload[k];
       legacy.service_name = payload.service;
@@ -468,13 +473,30 @@
       track("generate_lead", legacy);
     }
 
-    var waURL = "https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(waMessage(ref));
+    /* ONE conversion per lead. A 200/dup replay is the same customer action as
+       the 201 that preceded it, so it must not fire a second conversion. */
+    if (!isDup && status === 201 && stored) fireConversion();
+
+    var waURL = (body && body.wa_url) ||
+      ("https://wa.me/" + WA_NUMBER + "?text=" + encodeURIComponent(waMessage(ref)));
     if (waBtn) {
       waBtn.setAttribute("href", waURL);
       waBtn.setAttribute("data-no-track", "");   // counted as wa_opened, not whatsapp_click
       waBtn.addEventListener("click", function () {
+        if (!stored && !waBtn.hasAttribute("data-counted")) {
+          waBtn.setAttribute("data-counted", "");
+          fireConversion();               // the handover IS the delivery
+        }
         track("wa_opened", { lead_id: leadId, service: IS_AC ? value("problem") : value("service"), cta_location: "lead_success" });
       });
+    }
+    /* Say only what is true. An unstored enquiry has not reached anyone yet. */
+    if (successEl) {
+      var storedOnly = successEl.querySelectorAll("[data-when=stored]");
+      var handoverOnly = successEl.querySelectorAll("[data-when=handover]");
+      var i;
+      for (i = 0; i < storedOnly.length; i++) storedOnly[i].hidden = !stored;
+      for (i = 0; i < handoverOnly.length; i++) handoverOnly[i].hidden = stored;
     }
     if (refOut) refOut.textContent = ref;
     announce("");

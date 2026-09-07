@@ -201,30 +201,14 @@
     if (a) decorate(a);
   }, true);
 
-  // ---- persist the ref -> click-id mapping server-side ---------------------
-  // Only visits that actually carry a Google click id are reported, so this
-  // never fires for organic/direct traffic. Fire-and-forget: failures are
-  // silent and retried on a later page view (the `mapped` flag is only set
-  // after a confirmed 2xx), so an unconfigured endpoint costs nothing.
-  (function reportMap() {
-    try {
-      var t = attr.last;
-      if (!t || !(t.gclid || t.gbraid || t.wbraid)) return;
-      if (attr.mapped === attr.ref) return;
-      fetch("/api/click-map", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        keepalive: true,
-        body: JSON.stringify({
-          ref: attr.ref, gclid: t.gclid, gbraid: t.gbraid, wbraid: t.wbraid,
-          utm_source: t.utm_source, utm_campaign: t.utm_campaign, utm_term: t.utm_term,
-          landing_page: t.lp, landed_at: new Date(t.at).toISOString()
-        })
-      }).then(function (r) {
-        if (r && r.ok) { attr.mapped = attr.ref; writeStore(attr); }
-      }).catch(function () {});
-    } catch (e) {}
-  })();
+  // ---- no server-side click mapping ---------------------------------------
+  // A POST to /api/click-map used to run here on every ad click, to persist
+  // ref -> gclid for offline conversion uploads. It was removed with the
+  // endpoint: importing offline conversions needs a CRM-to-Google design that
+  // has not been made, and until it is, that request could only ever fail.
+  // Attribution itself is unaffected — the click ids are captured client-side
+  // above and the NCR ref still travels inside every WhatsApp message, so the
+  // mapping remains recoverable from the conversation whenever it is wanted.
 
   // Surface the attribution once per page for any future GTM/GA4 wiring.
   // No GTM trigger listens for this today, so it is inert until mapped.
