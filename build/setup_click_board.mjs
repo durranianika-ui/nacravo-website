@@ -17,6 +17,7 @@ const COLUMNS = [
   ["clk_tap_page", "Tap Page"], ["clk_click_time", "Click Time (UTC)"], ["clk_tap_time", "Tap Time (UTC)"],
   ["clk_device", "Device"], ["clk_utm_source", "UTM Source"], ["clk_utm_medium", "UTM Medium"],
   ["clk_utm_content", "UTM Content"], ["clk_ad_consent", "Ad Consent"],
+  ["clk_env", "Environment (prod/qa)"], ["clk_key", "Dedupe Key"],
 ];
 const token = (process.env.MONDAY_API_TOKEN || "").trim();
 if (!token) { console.error("Set MONDAY_API_TOKEN"); process.exit(1); }

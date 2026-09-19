@@ -44,6 +44,16 @@
 
 const BOARD_ID = "5101496395";
 const GROUP_ID = "group_mm5w5m6"; // "New"
+const QA_GROUP_ID = "group_mm6zbj6s"; // "Archive / QA Test (exclude from reporting)"
+
+/* A test enquiry must never reach the operators' "New" group, a report or Meta.
+   Only deliberate test markers qualify, so a real customer can never be routed
+   here by accident: a name beginning "QA TEST", or a click id beginning "QA-". */
+function isQaLead(lead) {
+  const a = lead.attribution || {};
+  return /^QA TEST/i.test(lead.name || "") ||
+    [a.gclid, a.gbraid, a.wbraid, a.fbclid].some((v) => /^QA-/i.test(v || ""));
+}
 
 const COL = {
   contact:      "text_mm5wf3sp",     // Contact Person
@@ -717,7 +727,7 @@ module.exports = async (req, res) => {
   const finalId = outcome.lead_id || leadId;
   /* Report to Meta only for an enquiry that genuinely landed, and only for a
      first submission — a duplicate replay is the same customer action. */
-  if (outcome.stored && !outcome.dup) await metaCapi(req, lead, finalId);
+  if (outcome.stored && !outcome.dup && !isQaLead(lead)) await metaCapi(req, lead, finalId);
   const finalRef = outcome.lead_ref || leadRef;
   /* A stored enquiry needs a follow-up opener; an unstored one needs to carry
      the whole enquiry, because sending it IS the delivery. */
@@ -780,7 +790,7 @@ async function storeMonday(token, lead, leadId, leadRef, submissionId) {
                       column_values: $vals, create_labels_if_missing: false) { id } }`,
       {
         board: BOARD_ID,
-        group: GROUP_ID,
+        group: isQaLead(lead) ? QA_GROUP_ID : GROUP_ID,
         name: itemName(lead, leadRef),
         vals: JSON.stringify(columnValues(lead, leadId, submissionId)),
       });
