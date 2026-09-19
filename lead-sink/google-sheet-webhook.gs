@@ -59,6 +59,11 @@ function doPost(e) {
     if (SHARED_SECRET && auth !== SHARED_SECRET) return reply(401, 'unauthorised');
     if (lead) delete lead.token;               // never write the secret to the sheet
 
+    /* Click records from /api/click (ref -> ad click join) go to their own
+       tab. Set CLICK_WEBHOOK_URL / CLICK_WEBHOOK_TOKEN in Vercel to this same
+       /exec URL and secret to use it. */
+    if (lead && lead.kind === 'click') return appendClick_(lead);
+
     if (!lead || !lead.lead_ref) return reply(400, 'lead_ref required');
 
     /* Serialise appends. Two enquiries landing in the same second must not
@@ -102,6 +107,32 @@ function doPost(e) {
 }
 
 function doGet() { return reply(200, 'nacravo lead sink ready'); }
+
+var CLICK_COLUMNS = [
+  'tap_time', 'ref', 'action', 'gclid', 'gbraid', 'wbraid', 'fbclid',
+  'campaign', 'ad_group', 'keyword', 'match_type', 'network',
+  'landing_page', 'tap_page', 'click_time', 'device',
+  'utm_source', 'utm_medium', 'utm_content', 'ad_consent'
+];
+
+function appendClick_(c) {
+  if (!/^NCR-[A-Z0-9]{2}-[A-Z0-9]{1,8}-[A-Z0-9]{2}$/.test(String(c.ref || ''))) return reply(400, 'ref required');
+  var lock = LockService.getScriptLock();
+  lock.waitLock(20000);
+  try {
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = ss.getSheetByName('Clicks') || ss.insertSheet('Clicks');
+    if (sheet.getLastRow() === 0) {
+      sheet.appendRow(CLICK_COLUMNS);
+      sheet.getRange(1, 1, 1, CLICK_COLUMNS.length).setFontWeight('bold');
+      sheet.setFrozenRows(1);
+    }
+    sheet.appendRow(CLICK_COLUMNS.map(function (k) { return c[k] == null ? '' : String(c[k]); }));
+  } finally {
+    lock.releaseLock();
+  }
+  return reply(200, 'stored', c.ref);
+}
 
 function openSheet_() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
