@@ -12,16 +12,19 @@
  * click time, so a WhatsApp conversation can be attributed even before any
  * lookup: char1 source (G google ads/paid, M meta, X other tagged, R referral,
  * D direct), char2 campaign (C cleaning, A ac, O office, U upholstery,
- * X unknown-tagged, 0 untagged), then base-36 minutes since 2026-01-01 UTC,
- * then 2 random chars.
+ * M annual maintenance / AMC, P pest control, X unknown-tagged, 0 untagged),
+ * then base-36 minutes since 2026-01-01 UTC, then 2 random chars.
  *
  * Rules:
  *  - first-touch record is written once and never overwritten while valid;
  *  - last-touch record updates ONLY when a new visit actually carries
  *    attribution (a plain internal navigation never clobbers a stored gclid);
  *  - the reference token is stable for the lifetime of the record;
- *  - nothing here sends data anywhere: it only stores locally, decorates
- *    wa.me links, and exposes window.nacravoAttr for the tracking layer.
+ *  - the only thing ever sent anywhere is the click beacon below: on a
+ *    WhatsApp or phone tap from a PAID visit, the ref and the ad click ids go
+ *    to /api/click (first-party) so the ref in a WhatsApp message can later be
+ *    joined back to the ad click. No name, phone or message text is sent, and
+ *    nothing is sent when the visitor rejected advertising cookies.
  */
 (function () {
   "use strict";
@@ -34,8 +37,11 @@
   var CAMPAIGNS = {
     "24026947888": "C", // NCR-Search-Cleaning-3Areas
     "24059561727": "A", // NCR | Search | AC Services | Dubai
+    "24262173810": "A", // NCR | Search | AC Recovery V2 | Dubai (paused draft)
     "24086406701": "O", // NCR | Search | Office & Commercial | Dubai
-    "24057101882": "U"  // NCR – Search – Upholstery Cleaning – Dubai
+    "24057101882": "U", // NCR – Search – Upholstery Cleaning – Dubai
+    "24043636201": "M", // NCR | Search | Annual AMC & Property Maintenance | Dubai
+    "24232450550": "P"  // NAC | Search | Pest Control
   };
   var RAND_SET = "23456789ABCDEFGHJKMNPQRSTVWXYZ"; // no 0/O/1/I lookalikes
 
@@ -55,7 +61,7 @@
     try {
       var q = new URLSearchParams(location.search);
       ["gclid", "gbraid", "wbraid", "fbclid", "utm_source", "utm_medium", "utm_campaign",
-       "utm_term", "utm_content"].forEach(function (k) {
+       "utm_term", "utm_content", "ag", "mt", "net"].forEach(function (k) {
         var v = q.get(k); if (v) t[k] = v.slice(0, 200);
       });
     } catch (e) {}
@@ -205,14 +211,54 @@
     if (a) decorate(a);
   }, true);
 
-  // ---- no server-side click mapping ---------------------------------------
-  // A POST to /api/click-map used to run here on every ad click, to persist
-  // ref -> gclid for offline conversion uploads. It was removed with the
-  // endpoint: importing offline conversions needs a CRM-to-Google design that
-  // has not been made, and until it is, that request could only ever fail.
-  // Attribution itself is unaffected — the click ids are captured client-side
-  // above and the NCR ref still travels inside every WhatsApp message, so the
-  // mapping remains recoverable from the conversation whenever it is wanted.
+  // ---- click beacon: ref -> ad click, on the tap that starts a lead --------
+  // Fires on a WhatsApp or phone tap, only for a visit that came from a paid
+  // click, at most once per ref + action per tab. It is fire-and-forget: the
+  // tap navigates exactly as before whether or not the beacon is accepted.
+  // Only ids the ad platform put in the URL are sent — never the message text,
+  // the phone number or anything the visitor typed.
+  function adConsentRejected() {
+    try { var c = JSON.parse(localStorage.getItem("nacravo_consent")); return !!(c && c.ad === false); }
+    catch (e) { return false; }
+  }
+  function adConsentState() {
+    try { var c = JSON.parse(localStorage.getItem("nacravo_consent")); return c ? (c.ad ? "granted" : "denied") : "not_set"; }
+    catch (e) { return "not_set"; }
+  }
+  function deviceClass() {
+    var w = window.innerWidth || 0, ua = navigator.userAgent || "";
+    if (/iPad|Tablet/i.test(ua) || (w >= 600 && w < 1024 && /Mobi|Android/i.test(ua))) return "tablet";
+    return /Mobi|Android|iPhone/i.test(ua) ? "mobile" : "desktop";
+  }
+  function clickPayload(action) {
+    var a = active(), p = { ref: attr.ref, action: action, landing_page: a.lp,
+      click_time: new Date(a.at).toISOString(), tap_page: location.pathname,
+      device: deviceClass(), ad_consent: adConsentState() };
+    ["gclid", "gbraid", "wbraid", "fbclid", "utm_source", "utm_medium", "utm_campaign",
+     "utm_term", "utm_content", "ag", "mt", "net"].forEach(function (k) { if (a[k]) p[k] = a[k]; });
+    return p;
+  }
+  function sendClick(action) {
+    try {
+      if (!window.nacravoAttr.isPaid() || adConsentRejected()) return;
+      var once = "nacravo_clk:" + attr.ref + ":" + action;
+      try { if (sessionStorage.getItem(once)) return; sessionStorage.setItem(once, "1"); } catch (e) {}
+      var body = JSON.stringify(clickPayload(action));
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon("/api/click", new Blob([body], { type: "application/json" }));
+      } else if (window.fetch) {
+        fetch("/api/click", { method: "POST", headers: { "Content-Type": "application/json" }, body: body, keepalive: true }).catch(function () {});
+      }
+    } catch (e) {}
+  }
+  document.addEventListener("click", function (e) {
+    var a = e.target && e.target.closest ? e.target.closest("a") : null;
+    if (!a) return;
+    var href = a.getAttribute("href") || "";
+    if (/wa\.me|api\.whatsapp\.com|web\.whatsapp\.com/i.test(href)) sendClick("whatsapp");
+    else if (/^tel:/i.test(href)) sendClick("call");
+  }, true);
+  window.nacravoAttr.clickPayload = clickPayload; // for tests and debugging
 
   // Surface the attribution once per page for any future GTM/GA4 wiring.
   // No GTM trigger listens for this today, so it is inert until mapped.
