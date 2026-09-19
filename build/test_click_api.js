@@ -11,7 +11,15 @@ let pass = 0, fail = 0;
 function ok(cond, msg) { if (cond) { pass++; console.log("PASS " + msg); } else { fail++; console.log("FAIL " + msg); } }
 
 let calls = [];
-global.fetch = async (url, opts) => { calls.push({ url, body: JSON.parse(opts.body) }); return { ok: true, json: async () => ({ data: { create_item: { id: "1" } } }) }; };
+let existing = new Set(); let failNext = 0;
+global.fetch = async (url, opts) => {
+  const body = JSON.parse(opts.body); calls.push({ url, body });
+  if (failNext > 0) { failNext--; throw new Error("transient"); }
+  if (/items_page_by_column_values/.test(body.query || "")) return { ok: true, json: async () => ({ data: { items_page_by_column_values: { items: existing.has(body.variables.val) ? [{ id: "9" }] : [] } } }) };
+  if (/create_item/.test(body.query || "")) { const v = JSON.parse(body.variables.v); existing.add(v.clk_key); }
+  return { ok: true, json: async () => ({ data: { create_item: { id: "1" } } }) };
+};
+const creates = () => calls.filter((c) => /create_item/.test(c.body.query || ""));
 
 function mockRes() {
   return { statusCode: 0, body: null, headers: {}, setHeader(k, v) { this.headers[k] = v; return this; },
@@ -43,21 +51,33 @@ const good = { ref: "NCR-GP-2QX1A-4K", action: "whatsapp", gclid: "Cj0KCQjw-test
 
   h = load({ MONDAY_API_TOKEN: "tkn", CLICK_BOARD_ID: "123456" }); calls = [];
   r = await post(h, good);
-  ok(r.statusCode === 204 && calls.length === 1 && /monday/.test(calls[0].url), "Monday sink -> one create_item");
-  const v = JSON.parse(calls[0].body.variables.v);
-  ok(calls[0].body.variables.n === "NCR-GP-2QX1A-4K" && calls[0].body.variables.b === "123456", "item named by ref on configured board");
+  ok(r.statusCode === 204 && creates().length === 1 && /monday/.test(calls[0].url), "Monday sink -> dedupe lookup then one create_item");
+  const cr = creates()[0];
+  const v = JSON.parse(cr.body.variables.v);
+  ok(cr.body.variables.n === "NCR-GP-2QX1A-4K" && cr.body.variables.b === "123456", "item named by ref on configured board");
+  ok(v.clk_env === "prod" && v.clk_key === "NCR-GP-2QX1A-4K|whatsapp|Cj0KCQjw-test_ID.1", "production row carries env=prod and dedupe key");
+  calls = []; r = await post(h, good);
+  ok(r.statusCode === 204 && creates().length === 0, "same ref + action + click id is not written twice");
+  calls = []; r = await post(h, Object.assign({}, good, { action: "call" }));
+  ok(creates().length === 1, "a call tap from the same click is its own row");
+  calls = []; failNext = 1; const e0 = console.error; console.error = () => {};
+  r = await post(h, Object.assign({}, good, { ref: "NCR-GP-2QX1A-7M" })); console.error = e0;
+  ok(r.statusCode === 204 && creates().length === 1, "transient failure is retried once and then stored");
+  calls = []; r = await post(h, Object.assign({}, good, { ref: "NCR-GP-2QX1A-8N", gclid: "QA-TEST-CLICK" }));
+  const qv = JSON.parse(creates()[0].body.variables.v);
+  ok(qv.clk_env === "qa" && /^QA · /.test(creates()[0].body.variables.n), "QA click id -> env=qa and 'QA ·' item name");
   ok(v.clk_gclid === "Cj0KCQjw-test_ID.1" && v.clk_campaign === "24232450550" && v.clk_adgroup === "201529659313" && v.clk_keyword === "pest control dubai" && v.clk_match === "Phrase" && v.clk_landing === "/pest-control" && v.clk_device === "mobile" && v.clk_ad_consent === "granted" && v.clk_action === "whatsapp", "all attribution fields mapped");
   const blob = JSON.stringify(calls[0].body);
   ok(!/SHOULD NOT PASS|\+971500000000|hello/.test(blob), "name / phone / message never forwarded");
 
   calls = [];
-  r = await post(h, Object.assign({}, good, { gclid: "", utm_medium: "", utm_source: "", fbclid: "" }));
+  r = await post(h, Object.assign({}, good, { ref: "NCR-GP-2QX1A-9P", gclid: "", utm_medium: "", utm_source: "", fbclid: "" }));
   ok(r.statusCode === 204 && calls.length === 0, "unpaid visit is acknowledged but not stored");
   r = await post(h, Object.assign({}, good, { ref: "BAD" }));
   ok(r.statusCode === 400, "malformed ref rejected");
   r = await post(h, Object.assign({}, good, { action: "email" }));
   ok(r.statusCode === 400, "unknown action rejected");
-  r = await post(h, Object.assign({}, good, { gclid: "<script>alert(1)</script>" }));
+  r = await post(h, Object.assign({}, good, { ref: "NCR-GP-2QX1A-QR", gclid: "<script>alert(1)</script>" }));
   ok(r.statusCode === 204 && !JSON.stringify(calls).includes("<script>"), "invalid click id dropped, not echoed");
   r = await post(h, good, { origin: "https://evil.example" });
   ok(r.statusCode === 403, "foreign origin refused");
