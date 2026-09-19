@@ -68,13 +68,14 @@ PAGES = {
             "and thermostat checked. Fixed price agreed before work, photo report after."
         ),
         "og_image": "svc-maintenance2-lg.jpg",
-        "h1": "AC Not Cooling Properly?",
-        "eyebrow": "AC Servicing in Dubai · Downtown · Business Bay · DIFC",
+        "h1": "AC Servicing in Dubai: Is Your AC Not Cooling Properly?",
+        "eyebrow": "Downtown Dubai · Business Bay · DIFC",
         "lead": (
             "Same-day AC servicing for apartments, villas and offices, subject to availability. Restore cooling, "
-            "airflow and drainage with a complete service by trained Nacravo technicians. Filters are cleaned and "
-            "reseated, coils and the drain line cleared, gas pressure and the thermostat checked — you approve a "
-            "fixed price before we start and get a photo report when it is done."
+            "airflow and drainage with a complete service by trained Nacravo technicians, including the routine AC "
+            "cleaning most units need: filters cleaned and reseated, coils and the drain line cleared, gas pressure "
+            "and the thermostat checked. You approve a fixed price before we start and get a photo report when it "
+            "is done."
         ),
         "trust": [
             ("shield", "Licensed and insured"),
@@ -212,6 +213,8 @@ PAGES = {
              "A standard split-unit service takes about 45 to 90 minutes per unit, depending on access and condition. Multi-unit properties take longer and are quoted per unit."),
             ("Will servicing fix my weak cooling?",
              "Usually, yes. Weak cooling is most often dirty filters and coils, a blocked drain or a clogged outdoor condenser, all of which a service restores. If cooling stays weak after a clean, the unit likely needs a chemical clean or a repair, and we will tell you which."),
+            ("Is AC cleaning the same as an AC service?",
+             "A standard service includes the regular AC cleaning most units need — filters, the indoor coil, the drain line and, on split systems, the outdoor condenser — plus gas and thermostat checks. If the coils are caked or mouldy, a deeper AC chemical cleaning is the right job instead."),
             ("Do I need a service or a chemical clean?",
              "If cooling has gently weakened and the coils are only dusty, a service is enough. If cooling is poor straight after a clean, or there is a persistent smell or visible mould on the coils, a chemical clean is the right job. Send photos on WhatsApp and we will advise honestly."),
             ("Do you service apartments, villas and offices?",
@@ -252,11 +255,11 @@ PAGES = {
             "The job for weak cooling and smells that a normal service will not fix."
         ),
         "og_image": "svc-maintenance2-lg.jpg",
-        "h1": "Bad Smell or Weak Cooling After a Regular Service?",
-        "eyebrow": "AC Chemical Cleaning Dubai · Downtown · Business Bay · DIFC",
+        "h1": "AC Chemical Cleaning in Dubai: Bad Smell or Weak Cooling?",
+        "eyebrow": "Downtown Dubai · Business Bay · DIFC",
         "lead": (
-            "Deep AC chemical cleaning that removes built-up dirt, mould and bacteria a routine service cannot "
-            "reach. The coils are removed and treated with specialised chemicals, the blower and drain pan flushed, "
+            "Deep AC chemical cleaning, also commonly called an AC chemical wash, that removes built-up dirt, "
+            "mould and bacteria a routine service cannot reach. The coils are removed and treated with specialised chemicals, the blower and drain pan flushed, "
             "and drainage cleared at the source. This is the job for cooling that stays weak after a clean, a "
             "persistent musty smell, or visible mould on the coils. Fixed price first, photo report after."
         ),
@@ -419,10 +422,10 @@ PAGES = {
             "before recommending work, and price it before we start."
         ),
         "og_image": "ba-ducts-1080.jpg",
-        "h1": "Dust Coming From Your AC Vents?",
-        "eyebrow": "AC Duct Cleaning Dubai · Downtown · Business Bay · DIFC",
+        "h1": "AC Duct Cleaning in Dubai: Dust Coming From Your Vents?",
+        "eyebrow": "Downtown Dubai · Business Bay · DIFC",
         "lead": (
-            "Professional duct cleaning for cleaner air and better airflow. When fine dust settles inside the "
+            "Professional AC and air duct cleaning for cleaner air and better airflow. When fine dust settles inside the "
             "ductwork, the system blows it straight back into the room every time it runs. We inspect the runs "
             "first, clean the accessible ducts and grilles, and check for damp or damaged insulation that would "
             "let the problem return. Inspection before recommendation, fixed price before work."
@@ -592,13 +595,14 @@ PAGES = {
             "Parts shown before fitting, repair price approved before work. Daily 7am-10pm."
         ),
         "og_image": "svc-maintenance2-lg.jpg",
-        "h1": "AC Leaking, Noisy or Not Cooling?",
-        "eyebrow": "AC Repair Dubai · Downtown · Business Bay · DIFC",
+        "h1": "AC Repair in Dubai: Leaking, Noisy or Not Cooling?",
+        "eyebrow": "Downtown Dubai · Business Bay · DIFC",
         "lead": (
             "Fast AC fault diagnosis and repair, with the price approved before work starts. Water leaks, a unit "
             "that trips the breaker, ice on the pipework, strange noises, error codes or cooling that has stopped "
             "altogether — we trace the actual cause instead of guessing, show you any part before it is fitted, "
-            "and confirm the repair price first. We work daily, 7:00 AM to 10:00 PM."
+            "and confirm the repair price first. Urgent repairs get the earliest same-day slot a technician has "
+            "free, subject to availability; we work daily, 7:00 AM to 10:00 PM."
         ),
         "trust": [
             ("shield", "Licensed and insured"),
@@ -724,7 +728,7 @@ PAGES = {
              "It can be a failing compressor, a refrigerant leak, an electrical fault, a frozen coil or a controls problem. These need diagnosis, not a guess — we test the system to find the actual cause before quoting a repair."),
             ("Why does my AC trip the breaker?",
              "A tripping breaker usually points to an electrical fault, a failing compressor or capacitor, or a wiring issue, and should not be repeatedly reset. We diagnose it safely and quote the repair before proceeding."),
-            ("Do you offer same-day AC repair?",
+            ("Do you offer urgent or same-day AC repair?",
              "Subject to availability. We prioritise repair call-outs and work daily from 7:00 AM to 10:00 PM. Message us the fault and your area and we will give you the earliest realistic slot. We do not advertise a 24-hour service."),
             ("Will I know the price before you start?",
              "Yes. We diagnose the fault, explain it, and give you a fixed repair price before any work begins. Any part that needs replacing is shown to you before it is fitted."),
