@@ -284,3 +284,91 @@ PAGE["jump_links"] = [
 
 # Sub-service preselection map for the hero form.
 PAGE["subservices"] = {s["anchor"]: s["title"] for s in PAGE["sections"]}
+
+
+# ---------------------------------------------------------------------------
+# /ac-service-dubai: SEO + GEO + AEO update (primary keyword: ac service dubai).
+# Hub page: it keeps routing to the six dedicated AC pages. AC coverage stays
+# scoped to Downtown, Business Bay and DIFC (never claim Dubai-wide cover).
+# No prices are published; hours match the Google Business Profile.
+# ---------------------------------------------------------------------------
+_GBP = "https://www.google.com/maps/place/NACRAVO+L.L.C/@25.1870878,55.2604443,17z"
+PAGE.update({
+    "title": "AC Service Dubai | Maintenance, Cleaning & Repair",
+    "meta_description": "AC service in Dubai from a Business Bay team: servicing, chemical wash, duct cleaning and repair. Fixed quote first, photo report after. Get a quote.",
+    "og_title": "AC Service in Dubai | Nacravo",
+    "og_description": "AC servicing, chemical wash, duct cleaning and repair in Business Bay, Downtown and DIFC. Fixed quote first, photo report after.",
+    "h1": "AC Service and Maintenance in Dubai",
+    "eyebrow": "AC service · AC maintenance · Chemical wash · Business Bay · Downtown · DIFC",
+    "lead": (
+        "Nacravo is a Business Bay AC service company for split, window and ducted systems: servicing, "
+        "chemical washing, duct cleaning, repair and installation. Our AC team focuses on " + AC_FOCUS +
+        ", so arrival times stay tight. Technicians are employed by us, you approve a fixed price before "
+        "work starts, and you get a before-and-after photo report when it is done."
+    ),
+    "hours_line": "Mon–Sat, 9 AM–9 PM · Closed Sunday · Same-day subject to availability",
+    "quick_answer": {
+        "heading": "What does an AC service in Dubai include?",
+        "html": ("An AC service in Dubai cleans the filters and coils, clears the drain line, checks gas pressure, "
+                 "the thermostat and airflow, and tests cooling before the technician leaves. Most units need it every "
+                 "3 to 4 months, and at least twice a year, because dust and year-round running wear them faster. "
+                 "At Nacravo you agree a fixed price first and receive a photo report. Weak cooling that survives a "
+                 "service usually needs an <a href=\"/ac-chemical-cleaning-dubai\">AC chemical wash</a> or an "
+                 "<a href=\"/ac-repair-dubai\">AC repair</a> instead."),
+    },
+    "local_schema": {
+        "address": {"@type": "PostalAddress", "streetAddress": "Regal Tower, 1905 Al Mustaqbal St", "addressLocality": "Business Bay", "addressRegion": "Dubai", "addressCountry": "AE"},
+        "geo": {"@type": "GeoCoordinates", "latitude": 25.1870878, "longitude": 55.2604443},
+        "hasMap": _GBP,
+        "hours": [{"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], "opens": "09:00", "closes": "21:00"}],
+        "areaServed": [{"@type": "Place", "name": "Business Bay"}, {"@type": "Place", "name": "Downtown Dubai"}, {"@type": "Place", "name": "DIFC"}],
+    },
+    "pricing_heading": "How much does AC service cost in Dubai?",
+    "pricing_intro": (
+        "There is no single price, because a studio with one split unit and a villa with six are different jobs. "
+        "The cost depends on the system type, the number of units and whether you need routine servicing or a "
+        "deep chemical wash. You get a fixed figure before any work begins."
+    ),
+    "areas_heading": "AC service in Business Bay, Downtown Dubai and DIFC",
+    "areas_intro": (
+        "Our office is at Regal Tower on Al Mustaqbal Street, Business Bay. Our AC team currently focuses on " + AC_FOCUS +
+        " to deliver faster scheduling and consistent service quality."
+    ),
+    "areas": [
+        ("Business Bay",
+         "Our home district. High-rise apartments and small offices along the canal, with visits scheduled to suit residents and working hours alike."),
+        ("Downtown Dubai",
+         "Apartment split and fan-coil units in Downtown towers, serviced around building access rules and service-lift booking windows."),
+        ("DIFC",
+         "Offices and residences in and around the centre, serviced with low disruption and scheduling that works around the business day."),
+    ],
+    "faq_heading": "AC service in Dubai: your questions answered",
+    "blocks": [
+        {"where": "before_pricing", "kind": "cards", "id": "service-frequency", "eyebrow": "When to book",
+         "heading": "How often should you service your AC in Dubai?",
+         "intro": "Dubai runs AC for most of the year and sand dust loads filters fast, so the usual advice for milder climates does not apply.",
+         "cards": [
+            ("Every 3 to 4 months", "The standard for homes that run AC daily, especially villas, families and homes with pets. At a minimum, twice a year."),
+            ("Before the hottest months", "A service before summer catches clogged coils and weak drainage while a fix is still easy to schedule."),
+            ("After building work or a long vacancy", "Fine dust and idle drain lines show up as weak cooling or smells. Book a service, or a deeper <a href=\"/ac-chemical-cleaning-dubai\">chemical wash</a>."),
+            ("When cooling or smell changes", "Do not wait for the schedule. See the symptom guide above to pick servicing, chemical wash, duct cleaning or repair."),
+         ]},
+        {"where": "after_areas", "kind": "cards", "id": "find-us", "eyebrow": "Find us",
+         "heading": "Visit or contact our Business Bay office",
+         "intro": "Nacravo L.L.C. is based in Business Bay, Dubai.",
+         "cards": [
+            ("Address", "Regal Tower, 1905 Al Mustaqbal St, Business Bay, Dubai. <a href=\"" + _GBP + "\" target=\"_blank\" rel=\"noopener\">Open in Google Maps</a>."),
+            ("Opening hours", "Monday to Saturday, 9:00 AM to 9:00 PM. Closed on Sundays. Same-day service is subject to availability."),
+            ("Outside our districts?", "Message us on WhatsApp with your building or community and we will tell you honestly whether we can reach you."),
+         ]},
+    ],
+    "band2_body": "Send your details and we will come back with a fixed price and the earliest slot we have. Open Monday to Saturday, 9 AM to 9 PM.",
+})
+PAGE["faq"] += [
+    ("How much does AC service cost in Dubai?",
+     "The price depends on the system type, the number of units and whether you need servicing or a chemical wash. We send a fixed quote before any work begins, with what is included, so there are no surprises on the invoice. Message us on WhatsApp with your area and number of units to get yours."),
+    ("Do you offer 24/7 AC service in Dubai?",
+     "No, we are not a 24/7 service. We are open Monday to Saturday, 9:00 AM to 9:00 PM, and closed on Sundays. Same-day visits are possible subject to availability, so message us early in the day with your area and the issue."),
+    ("How do I choose a good AC service company in Dubai?",
+     "Ask whether the technicians are employed or sent by a marketplace, whether you get a fixed price in writing before work starts, and whether you receive proof of the work. At Nacravo, technicians are on our payroll, the price is fixed first, and every visit ends with a before-and-after photo report."),
+]
