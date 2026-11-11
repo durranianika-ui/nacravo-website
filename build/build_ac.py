@@ -71,7 +71,10 @@ GENERAL_FAQ_QUESTIONS = [
     "Which areas do you cover for AC service?",
     "Do you service apartments and villas?",
     "What AC brands do you service?",
+    "How much does AC service cost in Dubai?",
     "Do you offer same-day AC service?",
+    "Do you offer 24/7 AC service in Dubai?",
+    "How do I choose a good AC service company in Dubai?",
     "Is your AC pricing transparent?",
     "Are your AC technicians licensed and insured?",
     "How do I book an AC service?",
@@ -277,14 +280,17 @@ def main():
     body = (
         T.render_header(PAGE)
         + T.render_hero(PAGE)
+        + T.render_quick(PAGE)
         + service_selection()
         + decision_guide()
         + comparison_table()
         + ac_blocks.COMPARISON
         + TRUST_SECTION
         + ac_blocks.PROCESS
+        + T.render_blocks(PAGE, "before_pricing")
         + T.render_pricing(PAGE)
         + T.render_areas(PAGE)
+        + T.render_blocks(PAGE, "after_areas")
         + ac_blocks.BRANDS
         + T.render_faq(PAGE)
         + T.render_related(PAGE)
