@@ -585,3 +585,108 @@ PAGES = {
         ],
     },
 }
+
+
+# ---------------------------------------------------------------------------
+# /home-cleaning: SEO + GEO + AEO rewrite (primary keyword: home cleaning dubai).
+# Applied over the base dict above so the sub-service sections stay intact.
+# No prices are published; hours match the Google Business Profile.
+# ---------------------------------------------------------------------------
+_GBP = "https://www.google.com/maps/place/NACRAVO+L.L.C/@25.1870878,55.2604443,17z"
+_HC = PAGES["home-cleaning"]
+_HC.update({
+    "title": "Home Cleaning Services Dubai | Photo Proof | Nacravo",
+    "meta_description": "Home cleaning services in Dubai by employed, vetted cleaners. Fixed price first, materials included, photo report. Business Bay team. Get a quote.",
+    "og_title": "Home Cleaning Services in Dubai",
+    "og_description": "Employed, vetted cleaners for Dubai apartments and villas. Fixed price first, materials included, before-and-after photo report.",
+    "h1": "Home Cleaning Services in Dubai",
+    "eyebrow": "Home cleaning · Apartments · Villas · Business Bay, Dubai",
+    "lead": "Nacravo is a Business Bay home cleaning company serving apartments, townhouses and villas across Dubai, from Downtown, Business Bay and DIFC to Marina, JLT and JVC. Our cleaners are employed by us, not sourced from a marketplace, so the same standards come back every visit. Materials and equipment come with the team, and you approve a fixed price before anyone starts. Book a one-off clean or a regular weekly or monthly visit.",
+    "hours_line": "Mon–Sat, 9 AM–9 PM · Closed Sunday · Same-day subject to availability",
+    "quick_answer": {
+        "heading": "What does a home cleaning service in Dubai include?",
+        "html": ("A home cleaning service in Dubai covers the routine upkeep of your property: dusting, vacuuming and mopping every floor, "
+                 "cleaning the kitchen and bathrooms, wiping surfaces and emptying bins. At Nacravo, trained employed cleaners arrive with all "
+                 "materials and equipment, you agree a fixed price first, and you receive a before-and-after photo report. Book it once, weekly or monthly. "
+                 "Heavier jobs such as built-up grease or limescale are a <a href=\"/deep-cleaning\">deep clean</a> instead."),
+    },
+    "local_schema": {
+        "address": {"@type": "PostalAddress", "streetAddress": "Regal Tower, 1905 Al Mustaqbal St", "addressLocality": "Business Bay", "addressRegion": "Dubai", "addressCountry": "AE"},
+        "geo": {"@type": "GeoCoordinates", "latitude": 25.1870878, "longitude": 55.2604443},
+        "hasMap": _GBP,
+        "hours": [{"@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"], "opens": "09:00", "closes": "21:00"}],
+        "areaServed": [{"@type": "City", "name": "Dubai"}, {"@type": "Place", "name": "Business Bay"}, {"@type": "Place", "name": "Downtown Dubai"},
+                       {"@type": "Place", "name": "DIFC"}, {"@type": "Place", "name": "Dubai Marina"}, {"@type": "Place", "name": "Jumeirah Lake Towers"},
+                       {"@type": "Place", "name": "Jumeirah Village Circle"}],
+    },
+    "sections_heading": "Types of home cleaning we offer in Dubai",
+    "sections_intro": "Pick the visit that fits how you live. Every option is quoted at a fixed price after we understand the property.",
+    "blocks": [
+        {"where": "after_sections", "kind": "lists", "id": "whats-included", "eyebrow": "What is included",
+         "heading": "What is included in a Nacravo home clean",
+         "intro": "A standard visit follows an agreed room-by-room checklist, so you know what will be done before we arrive.",
+         "lists": [
+            ("Kitchen", ["Worktops, hob and splashback wiped and degreased", "Sink and taps cleaned and polished", "Cupboard and appliance exteriors cleaned", "Floor vacuumed and mopped, bins emptied"]),
+            ("Bathrooms", ["Toilet, basin and shower cleaned and sanitised", "Taps, glass and mirrors polished", "Visible limescale treated", "Floor mopped, bins emptied"]),
+            ("Bedrooms and living areas", ["Dusting of surfaces, shelves and furniture", "Floors vacuumed and mopped", "Beds made on request", "Mirrors, glass and door handles wiped"]),
+            ("Extras you can add", ["In-home ironing", "Interior windows and tracks", "Steam cleaning for grout and mattresses", "Balcony or terrace sweep"]),
+         ],
+         "foot": "Need the oven, fridge interior or cupboard insides cleaned too? That is a <a href=\"/deep-cleaning\">deep clean</a>. Moving out? See <a href=\"/move-in-out-cleaning\">move-in and move-out cleaning</a>."},
+        {"where": "after_sections", "kind": "cards", "id": "regular-vs-deep", "eyebrow": "Regular or deep clean",
+         "heading": "Regular clean or deep clean: which one do you need?",
+         "intro": "A short guide so you book the right visit the first time.",
+         "cards": [
+            ("Regular home cleaning", "Maintains a home already in reasonable condition. Best booked weekly, fortnightly or monthly. Shorter visits, lower effort per clean."),
+            ("Deep cleaning", "Resets a home with built-up grease, limescale or dust. Best before moving in, after a long gap or after building work. See <a href=\"/deep-cleaning\">deep cleaning</a>."),
+            ("The usual route", "Start with a deep clean if the home has been left a while, then hold the standard with a regular visit. Most Dubai households do exactly this."),
+         ]},
+        {"where": "before_process", "kind": "cards", "id": "how-to-choose", "eyebrow": "Choosing a cleaner",
+         "heading": "How to choose a home cleaning company in Dubai",
+         "intro": "Three questions worth asking any provider before you book, and how we answer them.",
+         "cards": [
+            ("Who actually comes to my home?", "Ask whether cleaners are employed or sent by a marketplace. Ours are on Nacravo’s own payroll, background-checked, uniformed and trained to one standard."),
+            ("Is the price fixed, and what is included?", "Ask for the price in writing before the visit, and who supplies materials. We quote a fixed price first, and materials and equipment arrive with the team."),
+            ("How will I know it was done?", "Ask for proof. We send a before-and-after photo report after every visit, useful if you are not home."),
+         ],
+         "foot": "Hiring a live-in or part-time maid directly is a different arrangement. Nacravo provides a company-managed service with no visa, contract or notice period for you to handle."},
+    ],
+    "process": [
+        ("Tell us the property", "Send the size, bedroom and bathroom count, and what you want covered, by WhatsApp, phone or the form."),
+        ("Get a fixed quote", "We confirm scope, duration and price in writing before anything is scheduled, so there are no surprises."),
+        ("Pick your slot", "Choose a time between 9:00 AM and 9:00 PM, Monday to Saturday. Same-day is subject to availability."),
+        ("Receive the photo report", "The team completes the agreed checklist and you get before-and-after photos once the visit finishes."),
+    ],
+    "pricing_heading": "How much does home cleaning cost in Dubai?",
+    "pricing_intro": "There is no single rate, because a studio and a five-bedroom villa are different jobs. We quote a fixed price per property, after you tell us the size, the type of clean and the frequency. If you are comparing cheap offers, compare what is included, not just the number.",
+    "pricing_points": [
+        "Quoted on bedrooms, bathrooms and property type, apartment through to villa",
+        "Recurring visits are scoped once, then repeated at the agreed price",
+        "Hourly and part-time requests are scoped by the work needed, so you pay for the result, not for waiting",
+        "Materials, equipment and technician travel are included, never billed separately",
+    ],
+    "areas_heading": "Home cleaning in Business Bay, Downtown Dubai and across the city",
+    "areas_intro": "Our office is at Regal Tower on Al Mustaqbal Street, Business Bay, so towers around the canal, Downtown and DIFC are on our doorstep. We clean across Dubai, subject to availability.",
+    "areas": [
+        ("Business Bay, Downtown and DIFC", "Our home district. High-rise apartments where building access, service lifts and parking need arranging in advance. We handle the access paperwork with security so your visit starts on time."),
+        ("Marina, JLT, JVC and Al Barsha", "Popular apartment communities across Dubai. Coverage depends on team availability for the slot you request, so book ahead where you can."),
+        ("Villa and townhouse communities", "Arabian Ranches, Mirdif, Jumeirah, Dubai Hills, Damac Hills and similar. Larger properties are scoped before quoting so we send a crew of the right size."),
+    ],
+    "faq_heading": "Home cleaning in Dubai: your questions answered",
+    "faq": [
+        ("How much does home cleaning cost in Dubai?", "The price depends on the size of the property, the type of clean and how often you book. We send a fixed quote before we start, with what is included, so there are no hidden extras. Message us on WhatsApp with your bedroom and bathroom count to get yours."),
+        ("What is included in a home cleaning service?", "A standard visit covers dusting, vacuuming and mopping all floors, cleaning the kitchen and bathrooms, wiping surfaces and emptying bins. Extras such as ironing, interior windows or steam cleaning can be added. Oven interiors, fridge interiors and cupboard insides belong to a deep clean."),
+        ("How often should I book home cleaning?", "Weekly suits busy families and larger homes, fortnightly suits most apartments, and monthly works for lightly used or single-occupant homes. If you are unsure, start with a one-off clean and we will suggest a frequency based on the condition of the property."),
+        ("What is the difference between a regular clean and a deep clean?", "A regular clean maintains a home that is already in reasonable condition. A deep clean tackles built-up grease, limescale, grout and areas a routine visit does not reach, and takes longer. Many households deep clean first, then switch to regular visits."),
+        ("Do I need to provide cleaning products or equipment?", "No. Materials and equipment are included and arrive with the cleaners. If you want a specific product used, or a gentler eco option for children or pets, tell us when you book."),
+        ("Are your cleaners employed by Nacravo and background-checked?", "Yes. Every cleaner is on Nacravo’s own payroll, background-checked, uniformed and trained to one standard. We do not dispatch from a marketplace, so you know who is coming into your home."),
+        ("Can I get the same cleaner each time?", "For recurring bookings we keep the same team on your address wherever scheduling allows, because a team that knows your home works faster. Leave or illness can occasionally require a substitute, and your agreed checklist goes with them."),
+        ("Do I have to be home during the cleaning?", "No. Many customers leave access with building security or a concierge. The before-and-after photo report lets you see the completed work without being present. Tell us your access method when you book."),
+        ("Do you offer hourly or part-time cleaning in Dubai?", "Yes, for smaller jobs we scope the visit by the work needed and quote a fixed price, rather than billing by the clock. Tell us what you want covered and we will confirm the duration and price before booking."),
+        ("Which areas of Dubai do you cover?", "We are based at Regal Tower in Business Bay and clean across Dubai, including Downtown, DIFC, Dubai Marina, JLT, JVC and villa communities, subject to availability. Message us your building or community to check."),
+        ("What are your working hours?", "We are open Monday to Saturday, 9:00 AM to 9:00 PM, and closed on Sundays. Same-day bookings are possible subject to availability, but earlier notice gives you more choice of time."),
+        ("How do I book, and how is the price confirmed?", "Book by WhatsApp, phone or the form on this page. Describe the property and what you want covered, and we reply with a fixed price and a duration. Nothing is scheduled until you agree to the quote."),
+    ],
+    "band2_heading": "Ready to book your home clean?",
+    "band2_body": "Message us your property details and we will come back with a fixed price and available slots. Open Monday to Saturday, 9 AM to 9 PM.",
+})
+_HC["jump_links"] = _HC["jump_links"]

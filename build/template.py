@@ -328,6 +328,18 @@ def render_head(page):
         },
     ]
 
+    if page.get("local_schema"):
+        svc = schema_blocks[0]
+        ls = page["local_schema"]
+        svc["provider"]["address"] = ls["address"]
+        svc["provider"]["geo"] = ls["geo"]
+        svc["provider"]["hasMap"] = ls["hasMap"]
+        svc["provider"]["openingHoursSpecification"] = ls["hours"]
+        svc["provider"]["priceRange"] = None
+        del svc["provider"]["priceRange"]
+        svc["areaServed"] = ls["areaServed"]
+        schema_blocks[0] = svc
+
     schema_html = "\n".join(
         '<script type="application/ld+json">\n' + json.dumps(b, indent=2, ensure_ascii=False) + "\n</script>"
         for b in schema_blocks
@@ -639,7 +651,7 @@ def render_hero(page):
           <a href="{wa}" target="_blank" rel="noopener" class="btn btn-wa" data-track="booking" data-service-name="{esc(page['service_value'])}" data-track-label="Hero: WhatsApp">{WA_ICON.format(s=18)} {esc(wa_cta)}</a>
           <a href="tel:{PHONE_TEL}" class="btn btn-call">{PHONE_ICON} Call {PHONE_DISPLAY}</a>
         </div>
-        <p class="lp-hero-avail">{esc(HOURS_LINE)}</p>{render_hero_rating()}
+        <p class="lp-hero-avail">{esc(page.get('hours_line', HOURS_LINE))}</p>{render_hero_rating()}
         <div class="trust">{trust}</div>
       </div>{media}
     </div>
@@ -756,8 +768,8 @@ def render_hero(page):
         <div class="lf-success" id="leadSuccess" hidden>
           <h2 data-when="stored">Thanks \u2014 your request is with Nacravo.</h2>
           <h2 data-when="handover" hidden>One more tap and it is sent.</h2>
-          <p data-when="stored">We have your details and will come back to you during opening hours ({esc(HOURS_LINE.split(' \u00b7 ')[0])}). Quote your reference if you contact us:</p>
-          <p data-when="handover" hidden>Your answers are written into a message for you \u2014 nothing to retype. Send it and we reply during opening hours ({esc(HOURS_LINE.split(' \u00b7 ')[0])}). Your reference:</p>
+          <p data-when="stored">We have your details and will come back to you during opening hours ({esc(page.get('hours_line', HOURS_LINE).split(' \u00b7 ')[0])}). Quote your reference if you contact us:</p>
+          <p data-when="handover" hidden>Your answers are written into a message for you \u2014 nothing to retype. Send it and we reply during opening hours ({esc(page.get('hours_line', HOURS_LINE).split(' \u00b7 ')[0])}). Your reference:</p>
           <p class="lf-ref"><span id="leadRefOut"></span></p>
           <div class="lf-success-cta">
             <a href="https://wa.me/{WA_NUMBER}" target="_blank" rel="noopener" class="btn btn-wa" id="leadWaBtn">{WA_ICON.format(s=18)} <span data-when="stored">Continue on WhatsApp</span><span data-when="handover" hidden>Send my request on WhatsApp</span></a>
@@ -879,6 +891,53 @@ def render_process(page):
   </div>
 </section>
 """
+
+
+def render_quick(page):
+    q = page.get("quick_answer")
+    if not q:
+        return ""
+    return f"""
+<section id="quick-answer" style="padding:36px 0 8px">
+  <div class="wrap">
+    <div class="anchor-card" style="max-width:880px">
+      <h2 style="font-size:26px;line-height:1.2;margin:0 0 10px">{esc(q['heading'])}</h2>
+      <p style="font-size:17px;color:#33382E;line-height:1.65">{q['html']}</p>
+    </div>
+  </div>
+</section>
+"""
+
+
+def render_blocks(page, where):
+    out = ""
+    for b in page.get("blocks", []):
+        if b.get("where") != where:
+            continue
+        if b["kind"] == "cards":
+            cards = "".join(f"""
+      <div class="serve-card"><h3>{esc(t)}</h3><p>{body}</p></div>""" for t, body in b["cards"])
+            inner = f'<div class="serve-grid">{cards}\n    </div>'
+        else:
+            cols = ""
+            for t, its in b["lists"]:
+                lis = "".join(f'<li><span class="ck">\u2713</span>{esc(i)}</li>' for i in its)
+                cols += f'<div class="anchor-card"><h3>{esc(t)}</h3><ul>{lis}</ul></div>'
+            inner = f'<div class="anchor-grid">{cols}</div>'
+        foot = f'\n    <p class="ctx-note">{b["foot"]}</p>' if b.get("foot") else ""
+        out += f"""
+<section id="{b['id']}">
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="eyebrow">{esc(b['eyebrow'])}</span>
+      <h2>{esc(b['heading'])}</h2>
+      <p>{b['intro']}</p>
+    </div>
+    {inner}{foot}
+  </div>
+</section>
+"""
+    return out
 
 
 def render_areas(page):
@@ -1193,17 +1252,21 @@ def render_page(page):
         + render_header(page)
         + render_hero(page)
         + render_proof_strip(page)
+        + render_quick(page)
         # Proof before persuasion: real photographs and the employed-team story
         # come ahead of the service grid, so a first-time visitor sees evidence
         # before another page of benefit copy.
         + render_gallery(page)
         + render_why(page)
         + render_sections(page)
+        + render_blocks(page, "after_sections")
         + render_cta_band(page, page["band1_heading"], page["band1_body"], "quote")
         + render_pricing(page)
+        + render_blocks(page, "before_process")
         + render_process(page)
         + render_reviews(page)
         + render_areas(page)
+        + render_blocks(page, "after_areas")
         + render_faq(page)
         + render_related(page)
         + render_cta_band(page, page["band2_heading"], page["band2_body"], "book")
